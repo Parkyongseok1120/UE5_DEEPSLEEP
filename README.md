@@ -11,11 +11,12 @@
 
 ### Windows
 1. OS : Windows 10 22H2 Build
-2. CPU : intel i5 6500 or AMD Ryzen 5 1600
-3. RAM : DDR4 Memory 16GB
-4. GPU : Nvidia Geforce GTX 1060(6G) or AMD Radeon RX 570(8G)
-5. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
-6. IDE 2 : Rider 2024.1.2
+2. Desktop CPU : intel i5 6500 or AMD Ryzen 5 1600
+3. Laptop CPU : intel i5 8300H 
+4. RAM : DDR4 Memory 16GB
+5. GPU : Nvidia Geforce GTX 1060(6G) or AMD Radeon RX 570(8G)
+6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
+7. IDE 2 : Rider 2024.1.2
 
 ### Mac
 1. OS : macOS Ventura 13.6 or high version
@@ -29,11 +30,12 @@
 
 ### Windows
 1. OS : Windows 10 22H2 Build
-2. CPU : intel i5 8500 or AMD Ryzen 7 2700
-3. RAM : DDR4 Memory 32GB
-4. GPU : Nvidia Geforce RTX 3060 Ti or AMD Radeon RX 6600XT
-5. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
-6. IDE 2 : Rider 2024.1.2
+2. Desktop CPU : intel i5 8500 or AMD Ryzen 7 2700
+3. Laptop CPU : intel i5 10500H or AMD Ryzen 7 4800H
+4. RAM : DDR4 Memory 32GB
+5. GPU : Nvidia Geforce RTX 3060 Ti or AMD Radeon RX 6600XT
+6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
+7. IDE 2 : Rider 2024.1.2
 
 ### Mac
 1. OS : macOS Ventura 13.6 or high version
