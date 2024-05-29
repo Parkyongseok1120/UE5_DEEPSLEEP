@@ -5,6 +5,44 @@
 
 - Discord Link : https://discord.gg/PuKnyCGV4Y
 
+-----------------------------------------------------------
+
+# 프로젝트 PC 최소사양
+
+### Windows
+1. OS : Windows 10 22H2 Build
+2. CPU : intel i5 6500 or AMD Ryzen 5 2600
+3. RAM : DDR4 Memory 16GB
+4. GPU : Nvidia Geforce GTX 1060(6G) or AMD Radeon RX 570(8G)
+5. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
+6. IDE 2 : Rider 2024.1.2
+
+### Mac
+1. OS : macOS Ventura 13.6 or high version
+2. Processer : Apple m2(need to Nanite & Lumen)
+3. IDE 1 : Xcode 14.4
+4. IDE 2 : Rider 2024.1.2
+
+-----------------------------------------------------------
+
+# 프로젝트 PC 권장사양
+
+### Windows
+1. OS : Windows 10 22H2 Build
+2. CPU : intel i5 8500 or AMD Ryzen 7 2700
+3. RAM : DDR4 Memory 32GB
+4. GPU : Nvidia Geforce RTX 3060 Ti or AMD Radeon RX 6600XT
+5. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
+6. IDE 2 : Rider 2024.1.2
+
+### Mac
+1. OS : macOS Ventura 13.6 or high version
+2. Processer : Apple m3 pro (need to Nanite & Lumen - Hardware RTcore)
+3. IDE 1 : Xcode 15
+4. IDE 2 : Rider 2024.1.2
+
+-----------------------------------------------------------
+
 # 프로젝트 작업 시 설치법 및 주의사항
 (Korean)
 
