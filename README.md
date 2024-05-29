@@ -88,6 +88,11 @@ Github 쪽의 개발자용 언리얼 엔진을 사용합니다.
 
 ### 1. Gihtub Unreal engine 5.4.1 다운로드
 
+Github version Unreal Engine 5.4.1 Link(엑세스 요청 필요)
+```
+https://github.com/Parkyongseok1120/UnrealEngine
+```
+
 해당 프로젝트에 참여하는 모든 인원은 GIthub 언리얼 엔진 페이지에서 Unreal engine 5.4.1 릴리즈 버전을 다운 받아주시길 바랍니다.
 
 엔진은 더이상 해당 버전에서 마이너 업데이트만 업데이트하고 (5.4.2~5.4.x)
