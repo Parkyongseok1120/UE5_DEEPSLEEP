@@ -1,9 +1,9 @@
 # DEEPSLEEP by Unreal Engine 5.4.1
 
-- Discord Link : https://discord.gg/PuKnyCGV4Y
 
 ![image](https://github.com/Parkyongseok1120/DEEPSLEEP_NextdayStudio/assets/41354468/24be626d-4550-42d4-9687-a06bfae252cf)
 
+- Discord Link : https://discord.gg/PuKnyCGV4Y
 
 # 프로젝트 작업 시 설치법 및 주의사항
 (Korean)
