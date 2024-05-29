@@ -19,7 +19,7 @@
 
 ### Mac
 1. OS : macOS Ventura 13.6 or high version
-2. Processer : Apple M2(need to Nanite & Lumen)
+2. Processer : Apple M2(need to Nanite & Lumen) - **Don't buy Macbook Air M2**
 3. IDE 1 : Xcode 14.4
 4. IDE 2 : Rider 2024.1.2
 
