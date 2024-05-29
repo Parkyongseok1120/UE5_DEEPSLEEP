@@ -11,7 +11,7 @@
 
 ### Windows
 1. OS : Windows 10 22H2 Build
-2. CPU : intel i5 6500 or AMD Ryzen 5 2600
+2. CPU : intel i5 6500 or AMD Ryzen 5 1600
 3. RAM : DDR4 Memory 16GB
 4. GPU : Nvidia Geforce GTX 1060(6G) or AMD Radeon RX 570(8G)
 5. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
