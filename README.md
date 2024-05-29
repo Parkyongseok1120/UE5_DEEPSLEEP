@@ -58,7 +58,7 @@
 참고 : 기존 SVN의 서버 주소도 변경되었습니다.
 -----------------------------------------------------------
 
-- SVN 서버주소 **nextday.iptime.org:443입니다.
+- SVN 소스컨트롤 Nextday 서버주소
 ```
 https://nextday.iptime.org:443/svn/DEEPSLEEP_5.4/trunk
 ```
