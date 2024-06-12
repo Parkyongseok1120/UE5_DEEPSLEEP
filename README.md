@@ -14,7 +14,7 @@
 2. Desktop CPU : intel i5 6500 or AMD Ryzen 5 1600
 3. Laptop CPU : intel i5 8300H 
 4. RAM : DDR4 Memory 16GB
-5. GPU : Nvidia Geforce GTX 1060(6G) or AMD Radeon RX 570(8G)
+5. GPU : Nvidia Geforce GTX 1050(4G) or AMD Radeon RX 560(4G)
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.2
 
