@@ -21,7 +21,7 @@
 ### Mac
 1. OS : macOS Ventura 13.6 or high version
 2. Processor : Apple M2(need to Nanite & Lumen) - **Don't buy Macbook Air M2**
-3. IDE 1 : Xcode 14.4
+3. IDE 1 : Xcode 14.4(no support Xcode 15)
 4. IDE 2 : Rider 2024.1.2
 
 -----------------------------------------------------------
@@ -33,14 +33,14 @@
 2. Desktop CPU : intel i5 8500 or AMD Ryzen 7 2700
 3. Laptop CPU : intel i5 10500H or AMD Ryzen 7 4800H
 4. RAM : DDR4 Memory 32GB
-5. GPU : Nvidia Geforce RTX 3060 Ti or AMD Radeon RX 6600XT
+5. GPU : Nvidia Geforce RTX 2060 or AMD Radeon RX 6500
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.2
 
 ### Mac
 1. OS : macOS Ventura 13.6 or high version
 2. Processor : Apple M3 pro (need to Nanite & Lumen - Hardware RTcore)
-3. IDE 1 : Xcode 15
+3. IDE 1 : Xcode 14.4(no support Xcode 15)
 4. IDE 2 : Rider 2024.1.2
 
 -----------------------------------------------------------
