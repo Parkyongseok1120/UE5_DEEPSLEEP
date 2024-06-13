@@ -19,9 +19,9 @@
 7. IDE 2 : Rider 2024.1.2
 
 ### Mac
-1. OS : macOS Ventura 13.6 or high version
+1. OS : macOS Ventura 13.6
 2. Processor : Apple M2(need to Nanite & Lumen) - **Don't buy Macbook Air M2**
-3. IDE 1 : Xcode 14.4(no support Xcode 15)
+3. IDE 1 : Xcode 14.3.1(no support Xcode 15)
 4. IDE 2 : Rider 2024.1.2
 
 -----------------------------------------------------------
@@ -38,9 +38,9 @@
 7. IDE 2 : Rider 2024.1.2
 
 ### Mac
-1. OS : macOS Ventura 13.6 or high version
+1. OS : macOS Ventura 13.6
 2. Processor : Apple M3 pro (need to Nanite & Lumen - Hardware RTcore)
-3. IDE 1 : Xcode 14.4(no support Xcode 15)
+3. IDE 1 : Xcode 14.3.1(no support Xcode 15)
 4. IDE 2 : Rider 2024.1.2
 
 -----------------------------------------------------------
