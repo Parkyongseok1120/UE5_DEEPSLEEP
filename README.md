@@ -20,7 +20,7 @@
 
 ### Mac
 1. OS : macOS Ventura 13.6
-2. Processor : Apple M2(need to Nanite & Lumen) - **Don't buy Macbook Air M2**
+2. Processor : Apple M2(need to Nanite & Lumen)
 3. IDE 1 : Xcode 14.3.1(no support Xcode 15)
 4. IDE 2 : Rider 2024.1.2
 
@@ -33,7 +33,7 @@
 2. Desktop CPU : intel i5 8500 or AMD Ryzen 7 2700
 3. Laptop CPU : intel i5 10500H or AMD Ryzen 7 4800H
 4. RAM : DDR4 Memory 32GB
-5. GPU : Nvidia Geforce RTX 2060 or AMD Radeon RX 6500
+5. GPU : Nvidia Geforce RTX 2060 or AMD Radeon RX 6500XT
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.2
 
@@ -83,6 +83,8 @@ Github 쪽의 개발자용 언리얼 엔진을 사용합니다.
 3. 에픽게임즈 런처의 엔진으로 해당 프로젝트를 실행하지 않습니다.
 4. 해당 프로젝트의 모든 저작권은 박용석(NEXTDAY Studio - DEEPSLEEP 프로젝트 디렉터)에게 있습니다.
 5. 해당 프로젝트를 사용하여 포트폴리오 내용을 작성하는 것까지는 가능하나, 이외 외부에 함부로 유출하지 않습니다.
+6. MacOS의 경우는 깃허브 언리얼 엔진을 사용하지 않고, 에픽게임즈 런처의 엔진을 사용하시기 바랍니다.
+
 
 -----------------------------------------------------------
 
