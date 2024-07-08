@@ -1,7 +1,8 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "DEEPSLEEP427Character.h"
-#include "DEEPSLEEP427/Projectile/DEEPSLEEP427Projectile.h"
+
+#include "Player/Deepsleep_LegacyCharacter.h"
+#include "Projectile/ProjectileBase.h"
 #include "TimerManager.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -10,14 +11,10 @@
 #include "GameFramework/InputSettings.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
-#include "MotionControllerComponent.h"
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
-//////////////////////////////////////////////////////////////////////////
-// ADEEPSLEEP427Character
-
-ADEEPSLEEP427Character::ADEEPSLEEP427Character()
-	:MuzzleSocketName(FName(TEXT("Muzzle")))
+// Sets default values
+ADeepsleep_LegacyCharacter::ADeepsleep_LegacyCharacter():MuzzleSocketName(FName(TEXT("Muzzle")))
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -68,16 +65,19 @@ ADEEPSLEEP427Character::ADEEPSLEEP427Character()
 	
 }
 
-void ADEEPSLEEP427Character::BeginPlay()
+
+// Called when the game starts or when spawned
+void ADeepsleep_LegacyCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+	
 }
 
-void ADEEPSLEEP427Character::PlayFireEffects()
+void ADeepsleep_LegacyCharacter::PlayFireEffects()
 {
 	if (MuzzleEffect)
 	{
@@ -93,7 +93,7 @@ void ADEEPSLEEP427Character::PlayFireEffects()
 	}
 }
 
-void ADEEPSLEEP427Character::Reload()
+void ADeepsleep_LegacyCharacter::Reload()
 {
 	if(bCanReload != false)
 	{
@@ -120,7 +120,7 @@ void ADEEPSLEEP427Character::Reload()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ADEEPSLEEP427Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ADeepsleep_LegacyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
@@ -130,23 +130,23 @@ void ADEEPSLEEP427Character::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ADEEPSLEEP427Character::OnFire);
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ADEEPSLEEP427Character::Reload);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ADeepsleep_LegacyCharacter::OnFire);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ADeepsleep_LegacyCharacter::Reload);
 
 	// Bind movement events
-	PlayerInputComponent->BindAxis("MoveForward", this, &ADEEPSLEEP427Character::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ADEEPSLEEP427Character::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ADeepsleep_LegacyCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ADeepsleep_LegacyCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &ADEEPSLEEP427Character::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &ADeepsleep_LegacyCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ADEEPSLEEP427Character::LookUpAtRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ADeepsleep_LegacyCharacter::LookUpAtRate);
 }
 
-void ADEEPSLEEP427Character::OnFire()
+void ADeepsleep_LegacyCharacter::OnFire()
 {
 	if(AmmoCount < 30 && RemainAmmoCount > 0 && bisStopShooting == false)
 	{
@@ -156,14 +156,7 @@ void ADEEPSLEEP427Character::OnFire()
 			UWorld* const World = GetWorld();
 			if (World != nullptr)
 			{
-				if (bUsingMotionControllers)
-				{
-					const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-					const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-					World->SpawnActor<ADEEPSLEEP427Projectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-				}
-				else
-				{
+				
 					const FRotator SpawnRotation = GetControlRotation();
 					// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 					const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
@@ -173,13 +166,13 @@ void ADEEPSLEEP427Character::OnFire()
 					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 					// spawn the projectile at the muzzle
-					PlayerProjectile = GetWorld()->SpawnActor<ADEEPSLEEP427Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					PlayerProjectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 					if(PlayerProjectile)
 					{
 						PlayerProjectile->SetOwner(this);
 					}
 					PlayFireEffects();
-				}
+				
 			}
 		}
 
@@ -213,7 +206,7 @@ void ADEEPSLEEP427Character::OnFire()
 		
 }
 
-void ADEEPSLEEP427Character::MoveForward(float Value)
+void ADeepsleep_LegacyCharacter::MoveForward(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -222,7 +215,7 @@ void ADEEPSLEEP427Character::MoveForward(float Value)
 	}
 }
 
-void ADEEPSLEEP427Character::MoveRight(float Value)
+void ADeepsleep_LegacyCharacter::MoveRight(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -231,15 +224,14 @@ void ADEEPSLEEP427Character::MoveRight(float Value)
 	}
 }
 
-void ADEEPSLEEP427Character::TurnAtRate(float Rate)
+void ADeepsleep_LegacyCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ADEEPSLEEP427Character::LookUpAtRate(float Rate)
+void ADeepsleep_LegacyCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
-

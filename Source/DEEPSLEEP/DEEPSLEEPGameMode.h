@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "DEEPSLEEP427GameMode.generated.h"
+#include "DEEPSLEEPGameMode.generated.h"
 
 UCLASS(minimalapi)
-class ADEEPSLEEP427GameMode : public AGameModeBase
+class ADEEPSLEEPGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	ADEEPSLEEP427GameMode();
+	ADEEPSLEEPGameMode();
 };
 
 

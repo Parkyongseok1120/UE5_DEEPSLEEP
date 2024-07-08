@@ -1,20 +1,22 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "DEEPSLEEP427Projectile.h"
+
+#include "Projectile//ProjectileBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
-#include "DEEPSLEEP427/Player/DEEPSLEEP427Character.h"
+#include "Player/Deepsleep_LegacyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/EngineTypes.h"
 
-ADEEPSLEEP427Projectile::ADEEPSLEEP427Projectile() 
+// Sets default values
+AProjectileBase::AProjectileBase()
 {
 	BaseDamage=20.f;
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
-	CollisionComp->OnComponentHit.AddDynamic(this, &ADEEPSLEEP427Projectile::OnHit);		// set up a notification for when this component hits something blocking
+	CollisionComp->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);		// set up a notification for when this component hits something blocking
 
 	// Players can't walk on it
 	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
@@ -33,9 +35,9 @@ ADEEPSLEEP427Projectile::ADEEPSLEEP427Projectile()
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.f;
-}
 
-void ADEEPSLEEP427Projectile::PlayImpactEffects(FVector ImpactPoint)
+}
+void AProjectileBase::PlayImpactEffects(FVector ImpactPoint)
 {
 	UParticleSystem* SelectedEffect = nullptr;
 	if(DefaultImpactEffect)
@@ -49,7 +51,7 @@ void ADEEPSLEEP427Projectile::PlayImpactEffects(FVector ImpactPoint)
 	
 }
 
-void ADEEPSLEEP427Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	AActor* MyOwner = GetOwner();
 	if(MyOwner)

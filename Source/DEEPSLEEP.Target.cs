@@ -3,14 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class DEEPSLEEP427Target : TargetRules
+public class DEEPSLEEPTarget : TargetRules
 {
-	public DEEPSLEEP427Target(TargetInfo Target) : base(Target)
+	public DEEPSLEEPTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
-
-        ExtraModuleNames.Add("DEEPSLEEP427");
+		ExtraModuleNames.Add("DEEPSLEEP");
 	}
 }

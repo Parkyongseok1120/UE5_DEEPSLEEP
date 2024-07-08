@@ -1,19 +1,19 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "DEEPSLEEP427Projectile.generated.h"
+#include "ProjectileBase.generated.h"
 
 class USphereComponent;
 class UProjectileMovementComponent;
 
 UCLASS(config=Game)
-class ADEEPSLEEP427Projectile : public AActor
+class DEEPSLEEP_API AProjectileBase : public AActor
 {
 	GENERATED_BODY()
-
+	
 	/** Sphere collision component */
 	UPROPERTY(VisibleDefaultsOnly, Category=Projectile)
 	USphereComponent* CollisionComp;
@@ -22,10 +22,11 @@ class ADEEPSLEEP427Projectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-public:
-	ADEEPSLEEP427Projectile();
+	
+public:	
+	// Sets default values for this actor's properties
+	AProjectileBase();
 
-	/** called when projectile hits something */
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
@@ -50,4 +51,3 @@ protected:
 	float BulletSpread;
 		
 };
-

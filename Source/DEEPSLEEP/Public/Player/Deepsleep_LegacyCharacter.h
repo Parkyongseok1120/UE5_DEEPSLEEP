@@ -1,21 +1,21 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "DEEPSLEEP427Character.generated.h"
+#include "Deepsleep_LegacyCharacter.generated.h"
 
 class UInputComponent;
 class USkeletalMeshComponent;
 class USceneComponent;
 class UCameraComponent;
-class UMotionControllerComponent;
 class UAnimMontage;
 class USoundBase;
+class AProjectileBase;
 
 UCLASS(config=Game)
-class ADEEPSLEEP427Character : public ACharacter
+class DEEPSLEEP_API ADeepsleep_LegacyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -28,35 +28,21 @@ class ADEEPSLEEP427Character : public ACharacter
 	USkeletalMeshComponent* FP_Gun;
 
 	UPROPERTY()
-	class ADEEPSLEEP427Projectile* PlayerProjectile;
+	AProjectileBase* PlayerProjectile;
 
 	
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USceneComponent* FP_MuzzleLocation;
 
-	/** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USkeletalMeshComponent* VR_Gun;
-
-	/** Location on VR gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USceneComponent* VR_MuzzleLocation;
-
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
-	/** Motion controller (right hand) */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UMotionControllerComponent* R_MotionController;
-
-	/** Motion controller (left hand) */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UMotionControllerComponent* L_MotionController;
 
 public:
-	ADEEPSLEEP427Character();
+	// Sets default values for this character's properties
+	ADeepsleep_LegacyCharacter();
 
 	UPROPERTY(BlueprintReadOnly, Category=Reload)
 	int32 AmmoCount;
@@ -73,15 +59,13 @@ public:
 	USoundBase* ReloadingSound;
 
 protected:
-	virtual void BeginPlay();
-
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	virtual void PlayFireEffects();
-
 	void Reload();
 
-	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponEffect")
-    UParticleSystem* MuzzleEffect;
+	UParticleSystem* MuzzleEffect;
     
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	FName MuzzleSocketName;
@@ -104,7 +88,7 @@ public:
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class ADEEPSLEEP427Projectile> ProjectileClass;
+	TSubclassOf<class AProjectileBase> ProjectileClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
@@ -113,10 +97,10 @@ public:
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	UAnimMontage* FireAnimation;
+	
 
-	/** Whether to use motion controller location for aiming. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	uint8 bUsingMotionControllers : 1;
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	
@@ -128,11 +112,7 @@ protected:
 
 	/** Handles stafing movement, left and right */
 	void MoveRight(float Val);
-
-	/**
-	 * Called via input to turn at a given rate.
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
+	
 	void TurnAtRate(float Rate);
 
 	/**
@@ -140,19 +120,6 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
-
-	
-protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
-	// End of APawn interface
-
-	/* 
-	 * Configures input for touchscreen devices if there is a valid touch interface for doing so 
-	 *
-	 * @param	InputComponent	The input component pointer to bind controls to
-	 * @returns true if touch controls were enabled.
-	 */
 
 
 public:
