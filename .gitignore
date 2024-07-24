@@ -10,7 +10,7 @@
 *.lo
 *.o
 *.obj
-*.DS_Store
+.DS_Store
 
 # Precompiled Headers
 *.gch
@@ -77,6 +77,9 @@ Plugins/*/Intermediate/*
 
 # Contents Asset Files
 Content/*
+
+# Rider IDE Cache Files
+*.idea/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
