@@ -1,5 +1,4 @@
-# DEEPSLEEP by Unreal Engine 5.4.2
-(엔진이 업데이트 되었습니다.)
+# DEEPSLEEP by Unreal Engine 5.4.3
 
 
 
@@ -33,13 +32,13 @@
 # 프로젝트 PC 권장사양
 
 ### Windows
-1. OS : Windows 10 22H2 Build
+1. OS : Windows 11 23H2 Build
 2. Desktop CPU : intel i7 10700 or AMD Ryzen 7 3700
 3. Laptop CPU : intel i7 12700H or AMD Ryzen 7 6800H
 4. RAM : DDR4 Memory 32GB
 5. GPU : Nvidia Geforce RTX 2060 or AMD Radeon RX 6500XT
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
-7. IDE 2 : Rider 2024.1.2
+7. IDE 2 : Rider 2024.1.4
 
 ### Mac
 1. OS : macOS 14 Sonoma
