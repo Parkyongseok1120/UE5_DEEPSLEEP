@@ -4,7 +4,7 @@
 
 
 
-![image](https://github.com/Parkyongseok1120/DEEPSLEEP_NextdayStudio/assets/41354468/24be626d-4550-42d4-9687-a06bfae252cf)
+![image](https://github.com/Parkyongseok1120/DEEPSLEEP_NextdayStudio/issues/2#issue-2438264641)
 
 - Discord Link : https://discord.gg/PuKnyCGV4Y
 
