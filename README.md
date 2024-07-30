@@ -4,9 +4,9 @@
 
 
 
-![image](https://github.com/Parkyongseok1120/DEEPSLEEP_NextdayStudio/issues/2#issue-2438264641)
+![TitleImage](https://github.com/user-attachments/assets/254dd2e6-81a6-4909-b531-b18499fb5379)
 
-- Discord Link : https://discord.gg/PuKnyCGV4Y
+- Dev Discord Link : https://discord.gg/PuKnyCGV4Y
 
 -----------------------------------------------------------
 
@@ -19,13 +19,14 @@
 4. RAM : DDR4 Memory 16GB
 5. GPU : Nvidia Geforce GTX 1050(4G) or AMD Radeon RX 560(4G)
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
-7. IDE 2 : Rider 2024.1.2
+7. IDE 2 : Rider 2024.1.4
 
 ### Mac
-1. OS : macOS Ventura 13.6
+1. OS : macOS 14 Sonoma
 2. Processor : Apple M2(need to Nanite & Lumen)
-3. IDE 1 : Xcode 14.3.1(no support Xcode 15)
-4. IDE 2 : Rider 2024.1.2
+3. RAM : 16g
+4. IDE 1 : Xcode 15
+5. IDE 2 : Rider 2024.1.4
 
 -----------------------------------------------------------
 
@@ -33,18 +34,19 @@
 
 ### Windows
 1. OS : Windows 10 22H2 Build
-2. Desktop CPU : intel i5 8500 or AMD Ryzen 7 2700
-3. Laptop CPU : intel i5 10500H or AMD Ryzen 7 4800H
+2. Desktop CPU : intel i7 10700 or AMD Ryzen 7 3700
+3. Laptop CPU : intel i7 12700H or AMD Ryzen 7 6800H
 4. RAM : DDR4 Memory 32GB
 5. GPU : Nvidia Geforce RTX 2060 or AMD Radeon RX 6500XT
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.2
 
 ### Mac
-1. OS : macOS Ventura 13.6
+1. OS : macOS 14 Sonoma
 2. Processor : Apple M3 pro (need to Nanite & Lumen - Hardware RTcore)
-3. IDE 1 : Xcode 14.3.1(no support Xcode 15)
-4. IDE 2 : Rider 2024.1.2
+3. RAM : 32g
+4. IDE 1 : Xcode 15
+5. IDE 2 : Rider 2024.1.4
 
 -----------------------------------------------------------
 
