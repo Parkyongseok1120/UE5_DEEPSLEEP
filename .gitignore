@@ -4,6 +4,7 @@
 ### UnrealEngine ###
 # Visual Studio 2015 user specific files
 .vs/
+.svn/
 
 # Compiled Object files
 *.slo
@@ -11,6 +12,7 @@
 *.o
 *.obj
 .DS_Store
+.vsconfig
 
 # Precompiled Headers
 *.gch
