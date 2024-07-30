@@ -60,7 +60,7 @@ Content(에셋 폴더) 다운로드는 SVN 서버를 사용하며,
 
 리비전 컨트롤 개념은 아래 언리얼 문서에서 확인해주세요.
 
-*언리얼 문서 : https://docs.unrealengine.com/4.27/ko/ProductionPipelines/SourceControl/InEditor/
+### 언리얼 문서 : https://docs.unrealengine.com/4.27/ko/ProductionPipelines/SourceControl/InEditor/
 
 
 참고 : 기존 SVN의 서버 주소도 변경되었습니다.
