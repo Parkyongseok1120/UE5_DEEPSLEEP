@@ -2,6 +2,7 @@
 
 
 #include "Player/PlayerCharacter.h"
+#include "Util/Global.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
