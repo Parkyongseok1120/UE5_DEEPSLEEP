@@ -1,12 +1,11 @@
-# DEEPSLEEP by Unreal Engine 5.4.2
-(엔진이 업데이트 되었습니다.)
+# DEEPSLEEP by Unreal Engine 5.4.3
 
 
 
 
-![image](https://github.com/Parkyongseok1120/DEEPSLEEP_NextdayStudio/assets/41354468/24be626d-4550-42d4-9687-a06bfae252cf)
+![TitleImage](https://github.com/user-attachments/assets/254dd2e6-81a6-4909-b531-b18499fb5379)
 
-- Discord Link : https://discord.gg/PuKnyCGV4Y
+- Dev Discord Link : https://discord.gg/PuKnyCGV4Y
 
 -----------------------------------------------------------
 
@@ -19,45 +18,49 @@
 4. RAM : DDR4 Memory 16GB
 5. GPU : Nvidia Geforce GTX 1050(4G) or AMD Radeon RX 560(4G)
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
-7. IDE 2 : Rider 2024.1.2
+7. IDE 2 : Rider 2024.1.4
 
 ### Mac
-1. OS : macOS Ventura 13.6
+1. OS : macOS 14 Sonoma
 2. Processor : Apple M2(need to Nanite & Lumen)
-3. IDE 1 : Xcode 14.3.1(no support Xcode 15)
-4. IDE 2 : Rider 2024.1.2
+3. RAM : 16g
+4. IDE 1 : Xcode 15
+5. IDE 2 : Rider 2024.1.4
 
 -----------------------------------------------------------
 
 # 프로젝트 PC 권장사양
 
 ### Windows
-1. OS : Windows 10 22H2 Build
-2. Desktop CPU : intel i5 8500 or AMD Ryzen 7 2700
-3. Laptop CPU : intel i5 10500H or AMD Ryzen 7 4800H
+1. OS : Windows 11 23H2 Build
+2. Desktop CPU : intel i7 10700 or AMD Ryzen 7 3700
+3. Laptop CPU : intel i7 12700H or AMD Ryzen 7 6800H
 4. RAM : DDR4 Memory 32GB
 5. GPU : Nvidia Geforce RTX 2060 or AMD Radeon RX 6500XT
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
-7. IDE 2 : Rider 2024.1.2
+7. IDE 2 : Rider 2024.1.4
 
 ### Mac
-1. OS : macOS Ventura 13.6
+1. OS : macOS 14 Sonoma
 2. Processor : Apple M3 pro (need to Nanite & Lumen - Hardware RTcore)
-3. IDE 1 : Xcode 14.3.1(no support Xcode 15)
-4. IDE 2 : Rider 2024.1.2
+3. RAM : 32g
+4. IDE 1 : Xcode 15
+5. IDE 2 : Rider 2024.1.4
 
 -----------------------------------------------------------
 
 # 프로젝트 작업 시 설치법 및 주의사항
 (Korean)
 
-프로젝트 파일 관리를 위해서 소스코드와 일부 바이너리 파일들(에셋 및 config폴더 등등)을 
+프로젝트 파일 관리는 Content(에셋 폴더)를 제외한 나머지 중요 파일은
+모두 해당 레포지토리에 보관됩니다.(Source, Config, .uproject)
 
-소스컨트롤 종류를 나눠서 작업하는 방식으로 바꾸는 중입니다. 
+Content(에셋 폴더) 다운로드는 SVN 서버를 사용하며,
+언리얼의 리비전 컨트롤을 사용합니다.
 
-즉,  소스코드 파일은 github, 이외의 파일들은 전부 기존의 SVN을 사용하여 파일을 관리하도록 바꿨습니다. 
+리비전 컨트롤 개념은 아래 언리얼 문서에서 확인해주세요.
 
-
+### 언리얼 문서 : https://docs.unrealengine.com/4.27/ko/ProductionPipelines/SourceControl/InEditor/
 
 
 참고 : 기존 SVN의 서버 주소도 변경되었습니다.
@@ -67,7 +70,7 @@
 ```
 https://nextday.iptime.org:443/svn/DEEPSLEEP_5.4/trunk
 ```
-- Github fork 주소
+- Github 레포지토리 주소
 ```
 https://github.com/Parkyongseok1120/DEEPSLEEP_NextdayStudio
 ```
@@ -76,6 +79,7 @@ https://github.com/Parkyongseok1120/DEEPSLEEP_NextdayStudio
 가장 중요한 점은 더 이상 에픽게임즈 런처 내의 엔진을 사용하지 않으며,
 
 Github 쪽의 개발자용 언리얼 엔진을 사용합니다.
+### (*단, macOS의 경우 에픽게임즈 언리얼 엔진 버전을 사용합니다.)
 
 -----------------------------------------------------------
 
@@ -93,20 +97,21 @@ Github 쪽의 개발자용 언리얼 엔진을 사용합니다.
 
 # 프로젝트 실행을 위한 세팅
 
-### 1. Gihtub Unreal engine 5.4.2 다운로드
+### 1. Gihtub Unreal engine 5.4.3 다운로드
 
-Github version Unreal Engine 5.4.2 Link(계정 엑세스 관리자 요청 필요)
+Github version Unreal Engine 5.4.3 Link(계정 엑세스 관리자 요청 필요)
 ```
 https://github.com/Parkyongseok1120/UnrealEngine
 ```
 
 
-해당 프로젝트에 참여하는 모든 인원은 GIthub 언리얼 엔진 페이지에서 Unreal engine 5.4.2 릴리즈 버전을 다운 받아주시길 바랍니다.
+해당 프로젝트에 참여하는 모든 인원은 GIthub 언리얼 엔진 페이지에서 Unreal engine 5.4.3 릴리즈 버전을 다운 받아주시길 바랍니다.
 
 엔진은 더이상 해당 버전에서 마이너 업데이트만 업데이트하고 (5.4.2~5.4.x)
 
 메이저 업데이트의 경우는 실시하지 않을 것입니다.(5.5.0~5.6.0등등)
 
+-----------------------------------------------------------
 
 ### 2. 비주얼 스튜디오 설치(LTSC 17.8)
 
@@ -121,6 +126,7 @@ https://github.com/Parkyongseok1120/UnrealEngine
 
 해당 Visual studio 2022 LTSC 17.8 버전의 설치 파일은 팀 디스코드 공지에 올려두었습니다.
 
+-----------------------------------------------------------
 
 ### 3. 엔진 빌드 완료시 
 
@@ -128,18 +134,20 @@ https://github.com/Parkyongseok1120/UnrealEngine
 
 프로젝트 폴더를 구성할시에, 먼저 소스파일을 다운 받도록 합니다.
 
+-----------------------------------------------------------
 
 ### 4. Github 프로젝트 다운로드
 
 Github Desktop 이나 Github Fork 를 다운 받아서 해당 프로젝트를 클론하고서 프로젝트를 컴퓨터 저장소 내에 세팅을 합니다.
 
-이후 SVN을 사용하여 나머지 바이너리 파일들을 다운 받습니다.
+이후 SVN을 사용하여 Content(에셋 폴더)를 체크아웃하여 다운로드 합니다.
 
 
 ***주의, github에서 내려받은 Source 폴더와 SVN에서 받은***
 
 ***Contents, Config등등의 파일은 모두 한 폴더 안에 다같이 있어야 합니다.)***
 
+-----------------------------------------------------------
 
 ### 5. SVN 파일 다운로드
 
@@ -147,6 +155,7 @@ Github 프로젝트 클론 폴더에서 SVN 서버주소를 입력 후
 
 다운 받아 .uproject 파일을 우클릭하여 "Generate Visual Studio Project Files"를 실행합니다.
 
+-----------------------------------------------------------
 
 ### 6. 에디터 실행
 이후 해당 프로젝트 파일의 .sln 파일을 눌러 비주얼 스튜디오를 실행시키고
