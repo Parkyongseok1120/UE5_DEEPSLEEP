@@ -7,5 +7,5 @@
 
 ADEEPSLEEP_Player_GameMode::ADEEPSLEEP_Player_GameMode()
 {
-	CHelpers::GetClass<APawn>(&DefaultPawnClass, "/Script/Engine.Blueprint'/Game/Blueprints/Player/BPCPlayerCharacter.BPCPlayerCharacter_C'");
+	CHelpers::GetClass<APawn>(&DefaultPawnClass, "/Script/Engine.Blueprint'/Game/Blueprints/Player/BPC_PlayerCharacter.BPC_PlayerCharacter_C'");
 }
