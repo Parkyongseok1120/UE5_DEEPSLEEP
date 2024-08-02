@@ -17,26 +17,32 @@ void UC_PlayerMovementComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	
 }
 
-void UC_PlayerMovementComponent::OnSprint()
+void UC_PlayerMovementComponent::BeginSprint()
 {
-	SetSpeed(ESpeedType::Sprint);
+	bIsSprinting = true;
+	SetSpeed(PlayerSpeed[2]);
 }
 
-void UC_PlayerMovementComponent::OnRun()
+void UC_PlayerMovementComponent::EndSprint()
 {
-	SetSpeed(ESpeedType::Run);
+	bIsSprinting = false;
+	SetSpeed(PlayerSpeed[1]);
 }
 
 void UC_PlayerMovementComponent::OnWalk()
 {
-	SetSpeed(ESpeedType::Walk);
+	if(bIsSprinting == false)
+	{
+		SetSpeed(PlayerSpeed[1]);
+	}
 }
 
-void UC_PlayerMovementComponent::SetSpeed(ESpeedType InType)
+void UC_PlayerMovementComponent::SetSpeed(float Speed)
 {
-	OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed[(int32)InType];
+	OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed;
 }
 
 void UC_PlayerMovementComponent::OnMoveForward(float InAxis)
@@ -95,4 +101,17 @@ void UC_PlayerMovementComponent::Move()
 void UC_PlayerMovementComponent::Stop()
 {
 	bCanMove = false;
+}
+
+bool UC_PlayerMovementComponent::GetbIsSprinting()
+{
+	bool getbisSprintState;
+	getbisSprintState = bIsSprinting;
+	return getbisSprintState;
+}
+
+float UC_PlayerMovementComponent::GetPlayerSpeed()
+{
+	float currentSpeed = OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed;
+	return currentSpeed;
 }

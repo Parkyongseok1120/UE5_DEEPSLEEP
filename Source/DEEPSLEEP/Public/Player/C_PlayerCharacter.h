@@ -23,12 +23,34 @@ public:
 
 private:
 
+	//MovementComponent
+
+	bool PlayerSprinting;
+	
 	//Camera 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArm;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* PlayerCamera;
+
+	UPROPERTY()
+	bool bWantsToZoom;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	float ZoomedFOV = 65.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
+	float ZoomInterpSpeed = 20.0f;
+
+	//Default camera status value at game startup
+	float DefaultFOV;
+	
+	void BeginZoom();
+	void EndZoom();
+
+private:
+	FVector GetPawnViewLocation() const override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,4 +68,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+protected:
+	bool bIsPlayerSprinting;
 };

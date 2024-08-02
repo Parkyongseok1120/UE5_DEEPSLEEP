@@ -15,7 +15,6 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	//CreateComponent : Use to CHelpers.hpp
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
-
 	CHelpers::CreateActorComponent<UC_PlayerMovementComponent>(this, &Movement, "Movement");
 
 	
@@ -30,8 +29,37 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->bEnableCameraLag = true;
+
+	bIsPlayerSprinting = Movement->GetbIsSprinting();
 	
 	
+}
+
+FVector AC_PlayerCharacter::GetPawnViewLocation() const
+{
+	if (PlayerCamera)
+	{
+		return PlayerCamera->GetComponentLocation();
+	}
+
+	return Super::GetPawnViewLocation();
+}
+void AC_PlayerCharacter::BeginZoom()
+{
+	bWantsToZoom = true;
+	
+	if( bIsPlayerSprinting == true )
+    {
+    bIsPlayerSprinting = false;
+   // GetCharacterMovement()->MaxWalkSpeed = SetSpeed();
+    }
+
+}
+
+void AC_PlayerCharacter::EndZoom()
+{
+	bWantsToZoom = false;
+	SpringArm->bEnableCameraLag = true;
 }
 
 // Called when the game starts or when spawned
@@ -39,7 +67,9 @@ void AC_PlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Movement->OnRun();
+	DefaultFOV = PlayerCamera->FieldOfView;
+	
+	Movement->EndSprint();
 	Movement->DisableControlRotation();
 	
 }
@@ -58,9 +88,11 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("VerticalLook", Movement, &UC_PlayerMovementComponent::OnVerticalLook);
 	PlayerInputComponent->BindAxis("HorizontalLook", Movement, &UC_PlayerMovementComponent::OnHorizontalLook);
 
-	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, Movement, &UC_PlayerMovementComponent::OnSprint);
-	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UC_PlayerMovementComponent::OnRun);
+	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, Movement, &UC_PlayerMovementComponent::BeginSprint);
+	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UC_PlayerMovementComponent::EndSprint);
 
+	PlayerInputComponent->BindAction("CameraZoom", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
+	PlayerInputComponent->BindAction("CameraZoom", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
 	//--------------------------------KeyBoard----------------------------------------
 }
@@ -69,6 +101,23 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 void AC_PlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	int32 i = 0;
+	float CurrentSpeed = this->Movement->GetPlayerSpeed();
+	CLog::Log(CurrentSpeed);
+
+	//'ZoomedFOV' if zoom promotion is required, otherwise 'DefaultFOV' is retained.
+	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
+
+	//CurrentFOV : Current field of view
+	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
+
+	PlayerCamera->SetFieldOfView(NewFOV);
+	
+	if(bWantsToZoom == true)
+	{
+		//this->SetActorRelativeRotation(FRotator(DefaultFOV));
+	}
 
 }
 

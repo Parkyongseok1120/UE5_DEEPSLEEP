@@ -7,12 +7,6 @@
 #include "C_PlayerMovementComponent.generated.h"
 
 
-UENUM(BlueprintType)
-enum class ESpeedType : uint8
-{
-	Walk = 0, Run, Sprint, Max,
-};
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEP_API UC_PlayerMovementComponent : public UActorComponent
 {
@@ -35,7 +29,7 @@ private:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Speed")
-	float Speed[(int32)ESpeedType::Max] = { 200, 350, 700 };
+	float PlayerSpeed[3] = { 200, 350, 700 };
 
 public:
 	FORCEINLINE bool CanMove() { return bCanMove; }
@@ -44,14 +38,14 @@ public:
 	FORCEINLINE void EnableFixedCamera() { bFixedCamera = true; }
 	FORCEINLINE void DisableFixedCamera() { bFixedCamera = false; }
 
-
+//---------Movment----------------
 public:
-	void OnSprint();
-	void OnRun();
+	void BeginSprint();
+	void EndSprint();
 	void OnWalk();
 
 private:
-	void SetSpeed(ESpeedType InType);
+	void SetSpeed(float Speed);
 
 public:
 	void OnMoveForward(float InAxis);
@@ -67,6 +61,22 @@ public:
 	void Move();
 	void Stop();
 
+private:
+	bool bIsSprinting;
+
+
+
+public:
+	bool GetbIsSprinting();
+	float GetPlayerSpeed();
+//---------Movment----------------
+
+
+//---------CameraZoom-------------
+
+
+
+	
 private:
 	class ACharacter* OwnerCharacter;
 
