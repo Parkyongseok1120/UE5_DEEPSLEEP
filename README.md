@@ -62,10 +62,27 @@ Content(에셋 폴더) 다운로드는 SVN 서버를 사용하며,
 
 ### 언리얼 문서 : https://docs.unrealengine.com/4.27/ko/ProductionPipelines/SourceControl/InEditor/
 
-
-참고 : 기존 SVN의 서버 주소도 변경되었습니다.
 -----------------------------------------------------------
 
+# 브랜치 관리법 
+
+### Master <- Develop <- Feature/[기능이름]
+
+구조로 브랜치를 관리한다.
+
+1. 기본적으로 Develop 브랜치에서 작업하며, 기능을 추가할 때마다 Feature 브랜치를 생성하여 작업한다.
+
+2. Feature 브랜치에서 작업이 완료되면 dev브랜치로 merge한다.
+
+3. Develop 브랜치에서 작업이 완료되면 main브랜치로 merge한다.
+
+- Master 브랜치는 게임의 최종 빌드 버전이다.
+
+
+
+
+-----------------------------------------------------------
+### 참고 : 기존 SVN의 서버 주소도 변경되었습니다.
 - SVN 소스컨트롤 Nextday 서버주소
 ```
 https://nextday.iptime.org:443/svn/DEEPSLEEP_5.4/trunk
