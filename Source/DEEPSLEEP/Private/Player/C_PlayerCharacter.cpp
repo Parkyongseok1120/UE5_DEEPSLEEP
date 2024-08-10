@@ -31,8 +31,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	SpringArm->bEnableCameraLag = true;
 
 	bIsPlayerSprinting = Movement->GetbIsSprinting();
-	
-	
+	bWantsToZoom = false;
 }
 
 FVector AC_PlayerCharacter::GetPawnViewLocation() const
@@ -47,12 +46,11 @@ FVector AC_PlayerCharacter::GetPawnViewLocation() const
 void AC_PlayerCharacter::BeginZoom()
 {
 	bWantsToZoom = true;
-	
-	if( bIsPlayerSprinting == true )
-    {
-    bIsPlayerSprinting = false;
-   // GetCharacterMovement()->MaxWalkSpeed = SetSpeed();
-    }
+	SpringArm->bEnableCameraLag = false;
+	Movement->EndSprint();
+
+	SpringArm->SetRelativeLocation(FVector(-30,-10,+160));;
+ 
 
 }
 
@@ -60,6 +58,8 @@ void AC_PlayerCharacter::EndZoom()
 {
 	bWantsToZoom = false;
 	SpringArm->bEnableCameraLag = true;
+	SpringArm->SetRelativeLocation(FVector(-19,-10,+130));
+	
 }
 
 // Called when the game starts or when spawned
@@ -88,8 +88,12 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("VerticalLook", Movement, &UC_PlayerMovementComponent::OnVerticalLook);
 	PlayerInputComponent->BindAxis("HorizontalLook", Movement, &UC_PlayerMovementComponent::OnHorizontalLook);
 
-	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, Movement, &UC_PlayerMovementComponent::BeginSprint);
-	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UC_PlayerMovementComponent::EndSprint);
+	if(bWantsToZoom == false)
+	{
+		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, Movement, &UC_PlayerMovementComponent::BeginSprint);
+		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, Movement, &UC_PlayerMovementComponent::EndSprint);
+	}
+
 
 	PlayerInputComponent->BindAction("CameraZoom", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
 	PlayerInputComponent->BindAction("CameraZoom", IE_Released, this, &AC_PlayerCharacter::EndZoom);
@@ -104,7 +108,16 @@ void AC_PlayerCharacter::Tick(float DeltaTime)
 
 	int32 i = 0;
 	float CurrentSpeed = this->Movement->GetPlayerSpeed();
-	CLog::Log(CurrentSpeed);
+
+	if(bWantsToZoom == true)
+	{
+		CLog::Log("True ");
+	}
+	else
+	{
+		CLog::Log("false");
+	}
+
 
 	//'ZoomedFOV' if zoom promotion is required, otherwise 'DefaultFOV' is retained.
 	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
@@ -113,11 +126,6 @@ void AC_PlayerCharacter::Tick(float DeltaTime)
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 
 	PlayerCamera->SetFieldOfView(NewFOV);
-	
-	if(bWantsToZoom == true)
-	{
-		//this->SetActorRelativeRotation(FRotator(DefaultFOV));
-	}
 
 }
 

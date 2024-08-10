@@ -29,7 +29,7 @@ void UC_PlayerMovementComponent::BeginSprint()
 void UC_PlayerMovementComponent::EndSprint()
 {
 	bIsSprinting = false;
-	SetSpeed(PlayerSpeed[1]);
+	OnWalk();
 }
 
 void UC_PlayerMovementComponent::OnWalk()
