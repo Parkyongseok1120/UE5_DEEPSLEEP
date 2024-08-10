@@ -16,6 +16,10 @@ public:
 	// Sets default values for this component's properties
 	UC_PlayerMovementComponent();
 
+public:
+	UPROPERTY(VisibleAnywhere,Category= "Speed")
+	float currentSpeed;
+	
 protected:
 	virtual void BeginPlay() override;		
 
@@ -29,7 +33,7 @@ private:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Speed")
-	float PlayerSpeed[3] = { 200, 350, 700 };
+	float PlayerSpeed[3] = { 0, 350, 700 };
 
 public:
 	FORCEINLINE bool CanMove() { return bCanMove; }
@@ -64,19 +68,6 @@ public:
 private:
 	bool bIsSprinting;
 
-
-
-public:
-	bool GetbIsSprinting();
-	float GetPlayerSpeed();
-//---------Movment----------------
-
-
-//---------CameraZoom-------------
-
-
-
-	
 private:
 	class ACharacter* OwnerCharacter;
 

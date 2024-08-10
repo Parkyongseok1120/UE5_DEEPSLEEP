@@ -10,27 +10,24 @@
 
 AC_PlayerCharacter::AC_PlayerCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	
 	//CreateComponent : Use to CHelpers.hpp
-	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
+	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm",GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent<UC_PlayerMovementComponent>(this, &Movement, "Movement");
-
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 	SpringArm->SetRelativeRotation(FRotator(-10 ,90,0));
 	SpringArm->SetRelativeLocation(FVector(-19,0,+130));
-
-	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
-
+	
 	SpringArm->TargetArmLength = 200;
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->bEnableCameraLag = true;
+	PlayerCamera->bUsePawnControlRotation = false;
 
-	bIsPlayerSprinting = Movement->GetbIsSprinting();
+	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+	
 	bWantsToZoom = false;
 }
 
@@ -72,6 +69,7 @@ void AC_PlayerCharacter::BeginPlay()
 	Movement->EndSprint();
 	Movement->DisableControlRotation();
 	
+	
 }
 
 // Called to bind functionality to input
@@ -105,20 +103,7 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 void AC_PlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	int32 i = 0;
-	float CurrentSpeed = this->Movement->GetPlayerSpeed();
-
-	if(bWantsToZoom == true)
-	{
-		CLog::Log("True ");
-	}
-	else
-	{
-		CLog::Log("false");
-	}
-
-
+	
 	//'ZoomedFOV' if zoom promotion is required, otherwise 'DefaultFOV' is retained.
 	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
 

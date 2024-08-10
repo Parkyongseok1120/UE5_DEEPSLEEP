@@ -60,7 +60,6 @@ void UC_PlayerMovementComponent::OnMoveRight(float InAxis)
 {
 	CheckFalse(bCanMove);
 
-
 	FRotator rotator = FRotator(0, OwnerCharacter->GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(rotator).GetRightVector();
 
@@ -101,17 +100,4 @@ void UC_PlayerMovementComponent::Move()
 void UC_PlayerMovementComponent::Stop()
 {
 	bCanMove = false;
-}
-
-bool UC_PlayerMovementComponent::GetbIsSprinting()
-{
-	bool getbisSprintState;
-	getbisSprintState = bIsSprinting;
-	return getbisSprintState;
-}
-
-float UC_PlayerMovementComponent::GetPlayerSpeed()
-{
-	float currentSpeed = OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed;
-	return currentSpeed;
 }

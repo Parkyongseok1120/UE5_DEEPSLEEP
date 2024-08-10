@@ -21,11 +21,11 @@ class DEEPSLEEP_API AC_PlayerCharacter : public ACharacter
 public:
  	AC_PlayerCharacter();
 
+
+public:
+	
+
 private:
-
-	//MovementComponent
-
-	bool PlayerSprinting;
 	
 	//Camera 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -60,7 +60,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UC_PlayerMovementComponent* Movement;
 
-	
+public:
+	UPROPERTY(BlueprintReadOnly, Category="Speed")
+	float NowSpeed;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -69,6 +71,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
-protected:
+public:
+	UPROPERTY(BlueprintReadOnly)
 	bool bIsPlayerSprinting;
 };
