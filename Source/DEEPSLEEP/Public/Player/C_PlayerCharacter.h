@@ -38,7 +38,7 @@ private:
 	bool bWantsToZoom;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
-	float ZoomedFOV = 65.0f;
+	float ZoomedFOV = 40.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
 	float ZoomInterpSpeed = 20.0f;
