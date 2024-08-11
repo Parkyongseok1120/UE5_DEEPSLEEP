@@ -10,6 +10,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class UC_DashComponent;
 struct FInputActionValue;
 
 
@@ -92,6 +93,10 @@ private:
 	void BeginSprint();
 	void EndSprint();
 	void OnWalk();
-	
-	
+	//-----------------Movement----------------------------
+
+
+
+	//-----------------Dash--------------------------------
+	UC_DashComponent* DashComponent;
 };
