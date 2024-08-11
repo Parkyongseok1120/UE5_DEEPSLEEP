@@ -20,14 +20,25 @@ class DEEPSLEEP_API AC_PlayerCharacter : public ACharacter
 
 public:
  	AC_PlayerCharacter();
-
-
-public:
 	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	virtual FVector GetPawnViewLocation() const override;
+	
+
+
+	
+	//-----------------Camera------------------------------
 
 private:
-	
-	//Camera 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArm;
 	
@@ -45,33 +56,42 @@ private:
 
 	//Default camera status value at game startup
 	float DefaultFOV;
-	
+
+public:
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	float BaseTurnRate;
+
+	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	float BaseLookUpRate;
+
+public:
 	void BeginZoom();
 	void EndZoom();
+	//-----------------Camera------------------------------
 
-private:
-	FVector GetPawnViewLocation() const override;
 
+
+	
+	//-----------------Movement----------------------------
+	
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MovementSpeed")
+	float SprintingSpeed = 650.0f;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MovementSpeed")
+	float WalkingSpeed = 250.0f;
 
 private:
-	UPROPERTY(VisibleAnywhere)
-	class UC_PlayerMovementComponent* Movement;
+	bool bisSprint;
 
-public:
-	UPROPERTY(BlueprintReadOnly, Category="Speed")
-	float NowSpeed;
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
-public:
-	UPROPERTY(BlueprintReadOnly)
-	bool bIsPlayerSprinting;
+private:
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void BeginSprint();
+	void EndSprint();
+	void OnWalk();
+	
+	
 };
