@@ -50,8 +50,6 @@ void UC_DashComponent::BeginDash()
 void UC_DashComponent::EndDash()
 {
 	bCanDash = false;
-	FVector Result = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetActorLocation();
-	CLog::Print(Result);
 }
 
 void UC_DashComponent::DashPoint()

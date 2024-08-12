@@ -35,7 +35,7 @@ private:
 	bool bCanDash;
 
 	UPROPERTY()
-	float DashDistance = 10000.0f;
+	float DashDistance = 8000.0f;
 
 public:
 	UPROPERTY()
