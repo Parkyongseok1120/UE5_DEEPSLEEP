@@ -24,6 +24,7 @@ void UC_DashComponent::BeginPlay()
 // Called every frame
 void UC_DashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	Cooltime += DeltaTime;
