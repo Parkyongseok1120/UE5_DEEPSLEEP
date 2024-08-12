@@ -10,6 +10,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class UC_DashComponent;
 struct FInputActionValue;
 
 
@@ -83,6 +84,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MovementSpeed")
 	float WalkingSpeed = 250.0f;
 
+public:
+	
+
 private:
 	bool bisSprint;
 
@@ -92,6 +96,10 @@ private:
 	void BeginSprint();
 	void EndSprint();
 	void OnWalk();
-	
-	
+	//-----------------Movement----------------------------
+
+
+
+	//-----------------Dash--------------------------------
+	UC_DashComponent* DashComponent;
 };
