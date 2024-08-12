@@ -24,11 +24,10 @@ void UC_DashComponent::BeginPlay()
 // Called every frame
 void UC_DashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	Cooltime += DeltaTime;
-	if(Cooltime > 5.0f)
+	CoolTime += DeltaTime;
+	if(CoolTime > 5.0f)
 	{
 		bCanDash = true;
 	}
@@ -38,13 +37,12 @@ void UC_DashComponent::BeginDash()
 {
 	CheckNull(OwnerCharacter)
 	
-	
 	if(bCanDash == false)
 		CLog::Log("CanDash : False");
 	if(bCanDash != false)
 	{
 		DashPoint();
-		Cooltime = 0.0f;
+		CoolTime = 0.0f;
 	}
 }
 

@@ -33,8 +33,6 @@ void AC_PlayerCharacter::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 	
-	//Movement->EndSprint();
-	//Movement->DisableControlRotation();
 }
 
 void AC_PlayerCharacter::Tick(float DeltaTime)

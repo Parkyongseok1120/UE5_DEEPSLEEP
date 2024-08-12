@@ -38,8 +38,8 @@ private:
 	float DashDistance = 8000.0f;
 
 public:
-	UPROPERTY()
-	float Cooltime;
+	UPROPERTY(BlueprintReadOnly, Category="Dash CoolTime")
+	float CoolTime;
 public:
 	void BeginDash();
 private:
