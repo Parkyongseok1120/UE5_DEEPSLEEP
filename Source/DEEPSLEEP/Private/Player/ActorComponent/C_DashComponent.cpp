@@ -30,8 +30,6 @@ void UC_DashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	Cooltime += DeltaTime;
-	CLog::Log(Cooltime);
-
 	if(Cooltime > 5.0f)
 	{
 		bCanDash = true;
@@ -41,12 +39,14 @@ void UC_DashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UC_DashComponent::BeginDash()
 {
 	CheckNull(OwnerCharacter)
-
+	FVector playerCurrentLocation = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetActorLocation();
+	CLog::Print(playerCurrentLocation);
+	
 	if(bCanDash == false)
 		CLog::Log("CanDash : False");
 	if(bCanDash != false)
 	{
-		DashPoint();
+		DashPoint(playerCurrentLocation);
 		Cooltime = 0.0f;
 	}
 }
@@ -56,13 +56,12 @@ void UC_DashComponent::EndDash()
 	bCanDash = false;
 }
 
-void UC_DashComponent::DashPoint()
+void UC_DashComponent::DashPoint(FVector CurrentLocation)
 {
-	FVector PlayerLocation = OwnerCharacter->GetActorLocation();
-	PlayerLocation = PlayerLocation + FVector(DashDistance,DashDistance,DashDistance);
-	//FRotator PlayerRotation = OwnerCharacter->GetActorRotation();
+	FVector DashLocation = CurrentLocation + OwnerCharacter->GetActorForwardVector() * DashDistance;
+	OwnerCharacter->SetActorRelativeLocation(DashLocation);
 
-	OwnerCharacter->SetActorRelativeLocation(PlayerLocation);
 	EndDash();
 }
+
 

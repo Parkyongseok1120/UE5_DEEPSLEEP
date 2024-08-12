@@ -35,7 +35,7 @@ private:
 	bool bCanDash;
 
 	UPROPERTY()
-	float DashDistance = 2000.0f;
+	float DashDistance = 1000.0f;
 
 public:
 	UPROPERTY()
@@ -44,7 +44,8 @@ public:
 	void BeginDash();
 private:
 	void EndDash();
-	void DashPoint();
+	void DashPoint(FVector CurrentLocation);
+	
 	
 	
 };

@@ -84,6 +84,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MovementSpeed")
 	float WalkingSpeed = 250.0f;
 
+public:
+	
+
 private:
 	bool bisSprint;
 
