@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "ActorComponent/C_DashComponent.h"
+#include "ActorComponent/C_StateComponent.h"
 #include "C_PlayerCharacter.generated.h"
 
 class USpringArmComponent;
@@ -11,6 +13,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class UC_DashComponent;
+class UC_StateComponent;
 struct FInputActionValue;
 
 
@@ -41,11 +44,11 @@ protected:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		USpringArmComponent* SpringArm;
+	USpringArmComponent* SpringArm;
 
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		UCameraComponent* PlayerCamera;
+	UCameraComponent* PlayerCamera;
 
 	UPROPERTY()
 	bool bWantsToZoom;
@@ -71,8 +74,7 @@ public:
 public:
 	void BeginZoom();
 	void EndZoom();
-	//-----------------Camera------------------------------
-
+	
 
 
 	
@@ -85,22 +87,41 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MovementSpeed")
 	float WalkingSpeed = 250.0f;
 
-public:
-	
-
 private:
+	UPROPERTY(VisibleAnywhere)
 	bool bisSprint;
 
+	UPROPERTY(VisibleAnywhere)
+	UC_DashComponent* DashComponent;
+	
 private:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void BeginSprint();
 	void EndSprint();
 	void OnWalk();
-	//-----------------Movement----------------------------
 
 
+	
+	
+	//-----------------PlayerState----------------------------
 
-	//-----------------Dash--------------------------------
-	UC_DashComponent* DashComponent;
+private:
+	UPROPERTY(VisibleAnywhere)
+	UC_StateComponent* PlayerState;
+
+	UFUNCTION()
+	void OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType);
+	
+	UFUNCTION()
+	void OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
+
+	UFUNCTION()
+	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
+
+	UFUNCTION()
+	void OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
+
+
+	
 };

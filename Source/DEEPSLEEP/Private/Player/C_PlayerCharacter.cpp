@@ -5,7 +5,6 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Player/ActorComponent/C_DashComponent.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -13,6 +12,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent<UC_DashComponent>(this, &DashComponent, "Dash");
+	CHelpers::CreateActorComponent<UC_StateComponent>(this, &PlayerState, "PlayerState");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -32,6 +32,13 @@ void AC_PlayerCharacter::BeginPlay()
 	DefaultFOV = PlayerCamera->FieldOfView;
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+
+
+	//Player State
+	PlayerState->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnMovementTypeChanged);
+	PlayerState->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnSelfStateTypeChanged);
+	PlayerState->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnWeaponTypeChanged);
+	PlayerState->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnBattleTypeChanged);
 	
 }
 
@@ -101,7 +108,7 @@ void AC_PlayerCharacter::EndZoom()
 	bWantsToZoom = false;
 	SpringArm->bEnableCameraLag = true;
 }
-//-----------------Camera------------------------------
+
 
 
 
@@ -118,7 +125,6 @@ void AC_PlayerCharacter::MoveForward(float Value)
 		AddMovementInput(GetActorForwardVector() * Value);
 	}
 }
-
 
 void AC_PlayerCharacter::MoveRight(float Value)
 {
@@ -149,5 +155,33 @@ void AC_PlayerCharacter::OnWalk()
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 }
 
-//-----------------Movement----------------------------
+
+
+
+
+//-----------------Player State----------------------------
+
+void AC_PlayerCharacter::OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
+{
+	//switch (InNewType)
+	//{
+	//	case EMovementState::Idle :
+		 
+	//	break;
+	//}
+}
+
+void AC_PlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
+{
+}
+
+void AC_PlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+{
+}
+
+void AC_PlayerCharacter::OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
+{
+}
+
+
 
