@@ -108,19 +108,19 @@ private:
 
 private:
 	UPROPERTY(VisibleAnywhere)
-	UC_StateComponent* PlayerState;
+	UC_StateComponent* State;
 
 	UFUNCTION()
-	void OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType);
+	void P_OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType);
 	
 	UFUNCTION()
-	void OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
+	void P_OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
 
 	UFUNCTION()
-	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
+	void P_OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 
 	UFUNCTION()
-	void OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
+	void P_OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
 
 
 	

@@ -12,7 +12,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent<UC_DashComponent>(this, &DashComponent, "Dash");
-	CHelpers::CreateActorComponent<UC_StateComponent>(this, &PlayerState, "PlayerState");
+	CHelpers::CreateActorComponent<UC_StateComponent>(this, &State, "State");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -35,10 +35,10 @@ void AC_PlayerCharacter::BeginPlay()
 
 
 	//Player State
-	PlayerState->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnMovementTypeChanged);
-	PlayerState->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnSelfStateTypeChanged);
-	PlayerState->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnWeaponTypeChanged);
-	PlayerState->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnBattleTypeChanged);
+	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnMovementTypeChanged);
+	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnSelfStateTypeChanged);
+	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnWeaponTypeChanged);
+	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnBattleTypeChanged);
 	
 }
 
@@ -60,8 +60,8 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//--------------------------------KeyBoard----------------------------------------
 	
 	// Bind jump events
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	
 	PlayerInputComponent->BindAxis("MoveForward", this, &AC_PlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AC_PlayerCharacter::MoveRight);
@@ -161,7 +161,7 @@ void AC_PlayerCharacter::OnWalk()
 
 //-----------------Player State----------------------------
 
-void AC_PlayerCharacter::OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
+void AC_PlayerCharacter::P_OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
 {
 	//switch (InNewType)
 	//{
@@ -171,15 +171,15 @@ void AC_PlayerCharacter::OnMovementTypeChanged(EMovementState InPrevType, EMovem
 	//}
 }
 
-void AC_PlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
+void AC_PlayerCharacter::P_OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
 {
 }
 
-void AC_PlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+void AC_PlayerCharacter::P_OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
 {
 }
 
-void AC_PlayerCharacter::OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
+void AC_PlayerCharacter::P_OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
 {
 }
 
