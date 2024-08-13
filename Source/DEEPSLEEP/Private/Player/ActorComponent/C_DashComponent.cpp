@@ -41,6 +41,7 @@ void UC_DashComponent::BeginDash()
 		CLog::Log("CanDash : False");
 	if(bCanDash != false)
 	{
+		
 		DashPoint();
 		CoolTime = 0.0f;
 	}
@@ -57,6 +58,12 @@ void UC_DashComponent::DashPoint()
 	OwnerCharacter->LaunchCharacter(DashDirection * DashDistance, true, true);
 
 	EndDash();
+}
+
+void UC_DashComponent::AttackDashPoint()
+{
+
+	
 }
 
 

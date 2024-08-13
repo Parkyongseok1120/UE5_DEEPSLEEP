@@ -45,6 +45,7 @@ public:
 private:
 	void EndDash();
 	void DashPoint();
+	void AttackDashPoint();
 	
 	
 	
