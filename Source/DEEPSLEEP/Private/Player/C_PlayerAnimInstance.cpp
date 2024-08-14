@@ -23,7 +23,7 @@ void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	
 	Speed = OwnerCharacter->GetVelocity().Size2D();
 	FRotator yawDirection = UKismetMathLibrary::MakeRotator(0,0,OwnerCharacter->GetControlRotation().Yaw);
-	Direction = CalculateDirection(OwnerCharacter->GetVelocity(), yawDirection);
+	Direction = UKismetAnimationLibrary::CalculateDirection(OwnerCharacter->GetVelocity(), yawDirection);
 	bFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
 }
 

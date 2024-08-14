@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "ActorComponent/C_DashComponent.h"
 #include "ActorComponent/C_StateComponent.h"
 #include "C_PlayerCharacter.generated.h"
 
@@ -14,6 +13,7 @@ class UInputMappingContext;
 class UInputAction;
 class UC_DashComponent;
 class UC_StateComponent;
+class AC_DashGhost;
 struct FInputActionValue;
 
 
@@ -93,6 +93,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UC_DashComponent* DashComponent;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AC_DashGhost> DashGhostClass;
+	
+	AC_DashGhost* DashGhost;
 	
 private:
 	void MoveForward(float Value);
@@ -101,6 +106,10 @@ private:
 	void EndSprint();
 	void OnWalk();
 
+public:
+	void StartDashGhost();
+	void EndDashGhost();
+	
 
 	
 	

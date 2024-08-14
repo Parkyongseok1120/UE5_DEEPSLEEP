@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Player/C_DashGhost.h"
 #include "C_DashComponent.generated.h"
 
 
@@ -28,25 +29,32 @@ private:
 	UPROPERTY()
 	class ACharacter* OwnerCharacter;
 	
+	//UPROPERTY()
+	//class AC_PlayerCharacter *PlayerCharacter 
+	
 	UPROPERTY()
 	class UAnimMontage* Anim;
 
 	UPROPERTY()
 	bool bCanDash;
+	UPROPERTY()
+	bool bDashOn;
 
 	UPROPERTY()
 	float DashDistance = 8000.0f;
+	
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category="Dash CoolTime")
 	float CoolTime;
 public:
 	void BeginDash();
+	void End();
 private:
-	void EndDash();
 	void DashPoint();
 	void AttackDashPoint();
-	
-	
+
+public:
+
 	
 };

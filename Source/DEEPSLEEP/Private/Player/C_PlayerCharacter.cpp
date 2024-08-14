@@ -2,9 +2,12 @@
 
 
 #include "Player/C_PlayerCharacter.h"
+#include "Player/C_DashGhost.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/ActorComponent/C_DashComponent.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -101,6 +104,7 @@ void AC_PlayerCharacter::BeginZoom()
 	
 	bWantsToZoom = true;
 	SpringArm->bEnableCameraLag = false;
+	
 }
 
 void AC_PlayerCharacter::EndZoom()
@@ -155,8 +159,31 @@ void AC_PlayerCharacter::OnWalk()
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 }
 
+void AC_PlayerCharacter::StartDashGhost()
+{
+	if(!!DashGhostClass)
+	{
+		FVector location = this->GetActorLocation();
+		location.Z -= this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 
+		FActorSpawnParameters params;
+		params.Owner = this;
+		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
+		FTransform transform;
+		transform.SetTranslation(location);
+
+		DashGhost = this->GetWorld()->SpawnActor<AC_DashGhost>(DashGhostClass, transform,params);
+	}
+}
+
+void AC_PlayerCharacter::EndDashGhost()
+{
+//	if(!!DashGhost)
+	//{
+	//	DashGhost->Destroy();
+	//}
+}
 
 
 //-----------------Player State----------------------------

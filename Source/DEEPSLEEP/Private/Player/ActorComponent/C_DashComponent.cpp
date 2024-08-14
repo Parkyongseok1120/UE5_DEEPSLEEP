@@ -3,6 +3,8 @@
 
 #include "Player/ActorComponent/C_DashComponent.h"
 #include "GameFramework/Character.h"
+#include "Player/C_PlayerCharacter.h"
+#include "Player/C_DashGhost.h"
 #include "Util/Global.h"
 
 UC_DashComponent::UC_DashComponent()
@@ -18,6 +20,7 @@ void UC_DashComponent::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	bCanDash = true;
+	bDashOn = false;
 }
 
 
@@ -25,7 +28,7 @@ void UC_DashComponent::BeginPlay()
 void UC_DashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
 	CoolTime += DeltaTime;
 	if(CoolTime > 5.0f)
 	{
@@ -37,27 +40,32 @@ void UC_DashComponent::BeginDash()
 {
 	CheckNull(OwnerCharacter)
 	
-	if(bCanDash == false)
+	if(bCanDash == false && bDashOn == false)
 		CLog::Log("CanDash : False");
 	if(bCanDash != false)
 	{
-		
+		//PlayerCharacter->StartDashGhost();
 		DashPoint();
 		CoolTime = 0.0f;
+	
 	}
 }
 
-void UC_DashComponent::EndDash()
+
+
+void UC_DashComponent::End()
 {
 	bCanDash = false;
+	bDashOn = false;
+	//PlayerCharacter->EndDashGhost();
 }
 
 void UC_DashComponent::DashPoint()
 {
 	FVector DashDirection = OwnerCharacter->GetLastMovementInputVector().GetSafeNormal();
 	OwnerCharacter->LaunchCharacter(DashDirection * DashDistance, true, true);
-
-	EndDash();
+	
+	End();
 }
 
 void UC_DashComponent::AttackDashPoint()
