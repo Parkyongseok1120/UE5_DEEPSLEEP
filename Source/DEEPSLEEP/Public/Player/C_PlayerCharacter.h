@@ -16,6 +16,8 @@ class UC_StateComponent;
 class AC_DashGhost;
 struct FInputActionValue;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDelegate);
+
 
 UCLASS()
 class DEEPSLEEP_API AC_PlayerCharacter : public ACharacter
@@ -107,8 +109,13 @@ private:
 	void OnWalk();
 
 public:
+	UFUNCTION()
 	void StartDashGhost();
+	
+	UFUNCTION()
 	void EndDashGhost();
+	
+	FPlayerDelegate OnDashGhostEvent;
 	
 
 	

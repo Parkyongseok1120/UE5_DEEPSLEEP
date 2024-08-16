@@ -41,11 +41,14 @@ private:
 
 	UPROPERTY()
 	bool bCanDash;
+	
 	UPROPERTY()
 	bool bDashOn;
 
 	UPROPERTY()
 	float DashDistance = 8000.0f;
+
+	int32 DashCount;
 	
 
 public:

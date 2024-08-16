@@ -19,6 +19,14 @@ void UC_DashComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	if(OwnerCharacter)
+	{
+		PlayerCharacter = Cast<AC_PlayerCharacter>(OwnerCharacter);
+		if(PlayerCharacter)
+		{
+			//PlayerCharacter->OnDashGhostEvent.AddDynamic(this, &UC_DashComponent::BeginDash);
+		}
+	}
 	
 	bCanDash = true;
 	bDashOn = false;
@@ -40,16 +48,20 @@ void UC_DashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UC_DashComponent::BeginDash()
 {
 	CheckNull(OwnerCharacter)
-	
-	if(bCanDash == false && bDashOn == false)
-		CLog::Log("CanDash : False");
+
 	if(bCanDash != false)
 	{
-		//PlayerCharacter->StartDashGhost();
 		DashPoint();
+		if(OwnerCharacter)
+		{
+			if(PlayerCharacter)
+			{
+				//PlayerCharacter->StartDashGhost();
+			}
+		}
 		CoolTime = 0.0f;
-	
 	}
+	
 }
 
 

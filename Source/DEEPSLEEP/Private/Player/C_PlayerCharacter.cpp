@@ -161,6 +161,8 @@ void AC_PlayerCharacter::OnWalk()
 
 void AC_PlayerCharacter::StartDashGhost()
 {
+	//OnDashGhostEvent.Broadcast();
+	
 	if(!!DashGhostClass)
 	{
 		FVector location = this->GetActorLocation();
