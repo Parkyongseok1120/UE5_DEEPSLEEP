@@ -23,6 +23,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
+	SpringArm->bEnableCameraLag = true;
 	bWantsToZoom = false;
 	bisSprint = false;
 }
