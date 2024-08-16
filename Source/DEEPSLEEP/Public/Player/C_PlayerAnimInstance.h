@@ -24,11 +24,16 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 	bool bFalling;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+	bool bisBackward = false;
+
+	FRotator PrevRotation; // 이전 회전값.
+
 public:
 	void NativeBeginPlay() override;
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
 private:
 	class ACharacter* OwnerCharacter;
-	
+
 };

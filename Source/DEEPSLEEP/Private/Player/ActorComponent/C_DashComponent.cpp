@@ -19,6 +19,7 @@ void UC_DashComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	
 	bCanDash = true;
 	bDashOn = false;
 }

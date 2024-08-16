@@ -22,11 +22,22 @@ void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	CheckNull(OwnerCharacter);
 	
 	Speed = OwnerCharacter->GetVelocity().Size2D();
-	FRotator yawDirection = UKismetMathLibrary::MakeRotator(0,0,OwnerCharacter->GetControlRotation().Yaw);
-	Direction = UKismetAnimationLibrary::CalculateDirection(OwnerCharacter->GetVelocity(), yawDirection);
+	FRotator rotator = OwnerCharacter->GetVelocity().ToOrientationRotator(); //현재 가는 벡터위치의 회전값을 구함.
+	FRotator rotator2 = OwnerCharacter->GetControlRotation(); // 카메라의 회전방향
+	FRotator delta = UKismetMathLibrary::NormalizedDeltaRotator(rotator, rotator2); // 두 회전값의 평균을 구함
+
+	//// 이전 회전값.
+	PrevRotation = UKismetMathLibrary::RInterpTo(PrevRotation, delta, DeltaSeconds, 100);
+	Direction = PrevRotation.Yaw;
+	
+	if(Direction>= 170 && Direction<= -170) //Direction의 값이 170이상이거나 -170이하일 경우,
+	{
+		float NewDirection = FMath::Abs(Direction); //Direction을 절댓값으로 바꾸고 
+		Direction = FMath::Lerp(Direction, NewDirection, DeltaSeconds * 4.0f);
+		//Lerp 함수로 이전프레임의 Direction값과 현재 프레임의 Direction을 선형보간함.
+	}
+	
 	bFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
 }
-
-
 
 

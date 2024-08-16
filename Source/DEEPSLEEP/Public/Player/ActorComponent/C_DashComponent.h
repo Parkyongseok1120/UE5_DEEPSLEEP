@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Player/C_DashGhost.h"
+#include "Player/C_PlayerCharacter.h"
 #include "C_DashComponent.generated.h"
 
 
@@ -28,9 +29,12 @@ public:
 private:
 	UPROPERTY()
 	class ACharacter* OwnerCharacter;
+
+	UPROPERTY()
+	TSubclassOf<class AC_PlayerCharacter> PlayerClass;
 	
-	//UPROPERTY()
-	//class AC_PlayerCharacter *PlayerCharacter 
+	UPROPERTY()
+	class AC_PlayerCharacter *PlayerCharacter ;
 	
 	UPROPERTY()
 	class UAnimMontage* Anim;

@@ -37,6 +37,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category= "Capture")
 	FVector ScaleAmount = FVector::ZeroVector;
 
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UPoseableMeshComponent* Mesh;
