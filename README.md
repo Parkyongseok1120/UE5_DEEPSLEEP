@@ -21,12 +21,21 @@
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.4
 
-### Mac
+### Mac(애플실리콘)
 1. OS : macOS 14 Sonoma
 2. Processor : Apple M2(need to Nanite & Lumen)
 3. RAM : 16g
 4. IDE 1 : Xcode 15
 5. IDE 2 : Rider 2024.1.4
+
+### Mac(인텔)
+1. OS : macOS 14 Sonoma
+2. Model : Macbook 2017 15 inch
+3. CPU : i7 7820HQ - 4Core (2.4Ghz)
+4. RAM : 16g
+5. GPU : Radeon Pro 560
+6. IDE 1 : Xcode 15
+7. IDE 2 : Rider 2024.1.4
 
 -----------------------------------------------------------
 
@@ -42,12 +51,21 @@
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.4
 
-### Mac
+### Mac(애플실리콘)
 1. OS : macOS 14 Sonoma
 2. Processor : Apple M3 pro (need to Nanite & Lumen - Hardware RTcore)
 3. RAM : 32g
 4. IDE 1 : Xcode 15
 5. IDE 2 : Rider 2024.1.4
+
+### Mac(인텔) - 현재 개발에 사용중인 워크스테이션 노트북입니다.
+1. OS : macOS 14 Sonoma
+2. Model : Macbook 2019 16 inch
+3. CPU : i9 9880H - 8Core (2.3Ghz)
+4. RAM : 32g
+5. GPU : Radeon Pro 5500m 4G
+6. IDE 1 : Xcode 15
+7. IDE 2 : Rider 2024.1.4
 
 -----------------------------------------------------------
 
