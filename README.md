@@ -11,6 +11,7 @@
 
 # 프로젝트 PC 최소사양
 - 컴파일이 시간이 상당히 소요될 수 있습니다.
+- 참고 : Mac Unreal Editor에서는 한글이 깨집니다. 영어로 진행해야 합니다.
 
 ### Windows
 1. OS : Windows 10 22H2 Build
@@ -41,6 +42,7 @@
 
 # 프로젝트 PC 권장사양
 - 스트레스 없이 개발이 가능한 PC 환경입니다.
+- 참고 : Mac Unreal Editor에서는 한글이 깨집니다. 영어로 진행해야 합니다.
 
 ### Windows
 1. OS : Windows 11 23H2 Build
