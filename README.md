@@ -88,8 +88,10 @@ Content(에셋 폴더) 다운로드는 SVN 서버를 사용하며,
 
 예) GoodPerson, MyKakaoCake, IAmDeveloper
 
+
+
 - snake_case (스네이크 케이스) : cpp파일에서 멤버 함수내의 멤버 변수 정의 시 사용.
-- 
+  
 모든 단어를 소문자로 표기하고, 단어를 언더바(_) 로 연결하는 방법
 
 예) good_person, my_kakao_cake, i_am_developer
