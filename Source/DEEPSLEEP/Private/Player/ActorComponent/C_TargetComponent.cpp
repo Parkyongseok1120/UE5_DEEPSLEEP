@@ -29,13 +29,13 @@ void UC_TargetComponent::BeginPlay()
 void UC_TargetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	CheckNull(Target);
 
+	//몬스터가 죽은 상태가 아니라면.
 	UC_StateComponent* state = CHelpers::GetComponent<UC_StateComponent>(Target);
 	CheckNull(state);
 	CheckTrue(state->IsDeadMode());
-
+	
 	float distance = OwnerCharacter->GetDistanceTo(Target);
 	if(distance > TraceDistance)
 	{
@@ -70,6 +70,8 @@ void UC_TargetComponent::Toggle()
 	{
 		TargetingStart();
 		
+		CheckNull(Target);
+		CLog::Log(Target->GetName());
 
 		return;
 	}

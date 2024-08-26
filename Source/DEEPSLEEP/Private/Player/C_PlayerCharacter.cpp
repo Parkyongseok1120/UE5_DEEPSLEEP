@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ActorComponent/C_DashComponent.h"
+#include "Player/ActorComponent/C_TargetComponent.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -16,6 +17,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent<UC_DashComponent>(this, &DashComponent, "Dash");
 	CHelpers::CreateActorComponent<UC_StateComponent>(this, &State, "State");
+	CHelpers::CreateActorComponent<UC_TargetComponent>(this, &TargetComponent, "Target");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -81,6 +83,7 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("CameraZoom", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
 	PlayerInputComponent->BindAction("Dash",IE_Pressed, DashComponent, &UC_DashComponent::BeginDash);
+	PlayerInputComponent->BindAction("Target",IE_Pressed, TargetComponent, &UC_TargetComponent::Toggle);
 
 	//--------------------------------KeyBoard----------------------------------------
 }

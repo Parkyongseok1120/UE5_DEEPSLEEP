@@ -13,6 +13,7 @@ class UInputMappingContext;
 class UInputAction;
 class UC_DashComponent;
 class UC_StateComponent;
+class UC_TargetComponent;
 class AC_DashGhost;
 struct FInputActionValue;
 
@@ -139,5 +140,9 @@ private:
 	void P_OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
 
 
+	//-----------------Target----------------------------
+private:
+	UPROPERTY(VisibleAnywhere)
+	UC_TargetComponent* TargetComponent;
 	
 };
