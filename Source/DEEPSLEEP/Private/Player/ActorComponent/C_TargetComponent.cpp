@@ -30,6 +30,15 @@ void UC_TargetComponent::BeginPlay()
 
 void UC_TargetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	if(bisTargeting == true)
+	{
+		TargetingTime += DeltaTime;
+		if(TargetingTime > 2.0f)
+		{
+			TargetingEnd();
+			TargetingTime = 0.0f;
+		}
+	}
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	CheckNull(Target);
 
@@ -79,6 +88,7 @@ void UC_TargetComponent::Toggle()
 	TargetingEnd();
 }
 
+
 ACharacter* UC_TargetComponent::GetNearlyFrontAngle(const TArray<FHitResult>& InHitResults)
 {
 	//백터 내적(플레이어 카메라 각도 cos)
@@ -127,13 +137,16 @@ void UC_TargetComponent::TargetingStart()
 				//타겟팅 파티클 생성
 				FVector hitActorLocation = HitActor->GetActorLocation();
 				FVector particleLocation = hitActorLocation + FVector(0,0,100);
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleAsset, particleLocation);
-
+				if(!!Particle)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleAsset, particleLocation);
+				}
 				bisTargeting = true;
+				TargetActor = HitActor;
 			}
 		}
 	}
-	return;
+	
 
 }
 
@@ -147,6 +160,9 @@ void UC_TargetComponent::TargetingEnd()
 	bisTargeting = false;
 }
 
-
+void UC_TargetComponent::TargetingDash()
+{
+	OwnerCharacter->SetActorRelativeLocation(TargetActor->GetActorLocation());
+}
 
 

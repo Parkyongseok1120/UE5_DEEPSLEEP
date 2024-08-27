@@ -8,6 +8,9 @@
 #include "Player/C_PlayerCharacter.h"
 #include "C_DashComponent.generated.h"
 
+class ACharacter;
+class AC_PlayerCharacter;
+class UAnimMontage;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEP_API UC_DashComponent : public UActorComponent
@@ -28,16 +31,16 @@ public:
 
 private:
 	UPROPERTY()
-	class ACharacter* OwnerCharacter;
+	 ACharacter* OwnerCharacter;
 
 	UPROPERTY()
-	TSubclassOf<class AC_PlayerCharacter> PlayerClass;
+	TSubclassOf< AC_PlayerCharacter> PlayerClass;
 	
 	UPROPERTY()
-	class AC_PlayerCharacter *PlayerCharacter ;
+	AC_PlayerCharacter *PlayerCharacter ;
 	
 	UPROPERTY()
-	class UAnimMontage* Anim;
+	UAnimMontage* Anim;
 
 	UPROPERTY()
 	bool bCanDash;
@@ -49,6 +52,7 @@ private:
 	float DashDistance = 8000.0f;
 
 	int32 DashCount;
+
 	
 
 public:
