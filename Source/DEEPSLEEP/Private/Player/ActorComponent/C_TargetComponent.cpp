@@ -75,7 +75,6 @@ void UC_TargetComponent::Toggle()
 		CheckNull(Target);
 		return;
 	}
-
 	TargetingEnd();
 }
 
