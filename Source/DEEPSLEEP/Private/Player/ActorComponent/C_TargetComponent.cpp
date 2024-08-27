@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Player/ActorComponent/C_StateComponent.h"
+#include "Traster/C_TrasterBase.h"
 
 
 // Sets default values for this component's properties
@@ -45,9 +46,10 @@ void UC_TargetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	}
 
 	FRotator controlRotation = OwnerCharacter->GetControlRotation();
+	//두 지점사이의 방향 계산으로 회전 값을 반환
 	FRotator ownertoTarget = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), Target->GetActorLocation());
-	ownertoTarget = controlRotation;
-
+	CLog::Print(ownertoTarget);
+	
 	APlayerController* controller = OwnerCharacter->GetController<APlayerController>();
 
 	if(controlRotation.Equals(ownertoTarget, FinishAngle))
@@ -71,8 +73,6 @@ void UC_TargetComponent::Toggle()
 		TargetingStart();
 		
 		CheckNull(Target);
-		CLog::Log(Target->GetName());
-
 		return;
 	}
 
@@ -81,6 +81,7 @@ void UC_TargetComponent::Toggle()
 
 ACharacter* UC_TargetComponent::GetNearlyFrontAngle(const TArray<FHitResult>& InHitResults)
 {
+	//백터 내적(플레이어 카메라 각도 cos)
 	float angle = -2.0f;
 	ACharacter* candidate = nullptr;
 
@@ -114,7 +115,23 @@ void UC_TargetComponent::TargetingStart()
 	ignores.Add(OwnerCharacter);
 
 	TArray<FHitResult> hitResults;
-	UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), location, location, TraceDistance, "Targeting", false, ignores, DrawDebug, hitResults, true);
+	bool bTargetHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), location, location, TraceDistance, "Targeting", false, ignores, DrawDebug, hitResults, true);
+
+	if(bTargetHit)
+	{
+		for(const FHitResult& Hit : hitResults)
+		{
+			//Hit된 Actor가 AC_TrasterBase거나, 그 자손일 경우
+			AActor* HitActor = Hit.GetActor();
+			if(HitActor && HitActor->IsA(AC_TrasterBase::StaticClass()))
+			{
+				//사후 처리
+				CLog::Print(HitActor->GetName());
+			}
+		}
+	}
+	return;
+
 }
 
 void UC_TargetComponent::TargetingEnd()
