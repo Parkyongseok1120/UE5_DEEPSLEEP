@@ -46,6 +46,10 @@ private:
 private:
 	class UParticleSystemComponent* Particle;
 	bool bMovingFocus;
+	bool bisTargeting;
+
+	FORCEINLINE bool GetbisTargeting() { return bisTargeting; }
+	
 	class ACharacter* GetNearlyFrontAngle(const TArray<FHitResult>& InHitResults);
 	
 public:

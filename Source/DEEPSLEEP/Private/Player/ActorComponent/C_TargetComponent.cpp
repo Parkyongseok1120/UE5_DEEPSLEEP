@@ -14,7 +14,7 @@ UC_TargetComponent::UC_TargetComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	
-	//CHelpers::GetAsset<UParticleSystem>(&ParticleAsset, "");
+	CHelpers::GetAsset<UParticleSystem>(&ParticleAsset,"/Script/Engine.ParticleSystem'/Game/StarterContent/Particles/P_Fire.P_Fire'");
 }
 
 
@@ -22,7 +22,8 @@ UC_TargetComponent::UC_TargetComponent()
 void UC_TargetComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	bisTargeting = false;
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 }
 
@@ -102,7 +103,6 @@ ACharacter* UC_TargetComponent::GetNearlyFrontAngle(const TArray<FHitResult>& In
 			candidate = Cast<ACharacter>(InHitResults[i].GetActor());
 		}
 	}
-
 	return candidate;
 }
 
@@ -124,8 +124,12 @@ void UC_TargetComponent::TargetingStart()
 			AActor* HitActor = Hit.GetActor();
 			if(HitActor && HitActor->IsA(AC_TrasterBase::StaticClass()))
 			{
-				//사후 처리
-				CLog::Print(HitActor->GetName());
+				//타겟팅 파티클 생성
+				FVector hitActorLocation = HitActor->GetActorLocation();
+				FVector particleLocation = hitActorLocation + FVector(0,0,100);
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleAsset, particleLocation);
+
+				bisTargeting = true;
 			}
 		}
 	}
@@ -139,6 +143,8 @@ void UC_TargetComponent::TargetingEnd()
 
 	if(!!Particle)
 		Particle->DestroyComponent();
+
+	bisTargeting = false;
 }
 
 
