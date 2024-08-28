@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "C_BaseWeapon.generated.h"
+#include "C_Projectile.generated.h"
 
 class ACharacter;
 class USphereComponent;
@@ -14,12 +14,12 @@ class UDamageType;
 class UC_ReloadComponent;
 
 UCLASS()
-class DEEPSLEEP_API AC_BaseWeapon : public AActor
+class DEEPSLEEP_API AC_Projectile : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	AC_BaseWeapon();
+	AC_Projectile();
 
 protected:
 	virtual void BeginPlay() override;

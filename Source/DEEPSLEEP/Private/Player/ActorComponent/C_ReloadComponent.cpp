@@ -31,11 +31,12 @@ void UC_ReloadComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	
 }
 
 void UC_ReloadComponent::Reload()
 {
+	CheckNull(OwnerCharacter);
 	if(bCanReload != false)
 	{
 		if (ReloadingSound != nullptr)
