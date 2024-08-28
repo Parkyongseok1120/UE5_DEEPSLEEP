@@ -2,7 +2,6 @@
 
 
 #include "Player/ActorComponent/C_ReloadComponent.h"
-
 #include "Player/C_PlayerCharacter.h"
 #include "Util/Global.h"
 
@@ -13,6 +12,7 @@ UC_ReloadComponent::UC_ReloadComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 	//CHelpers::GetAsset(&ReloadingSound, " ");
 
+	
 	
 }
 
