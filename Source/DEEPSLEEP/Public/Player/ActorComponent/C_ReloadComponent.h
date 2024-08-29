@@ -6,13 +6,17 @@
 #include "Components/ActorComponent.h"
 #include "C_ReloadComponent.generated.h"
 
+class ACharacter;
+class AC_BaseWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEP_API UC_ReloadComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
+	
+public:
 	FORCEINLINE bool GetbCanReload() {return bCanReload;}
+	FORCEINLINE int GetRemainAmmoCount() {return RemainAmmoCount;}
 
 public:	
 	UC_ReloadComponent();
@@ -24,8 +28,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
+
 	UPROPERTY()
-	ACharacter* OwnerCharacter;
+	AC_BaseWeapon* OwnerWeapon;
 	
 	UPROPERTY()
 	int32 AmmoCount;
@@ -44,6 +49,6 @@ protected:
 	USoundBase* ReloadingSound;
 
 public:
-	void Reload();
+	void Reloading();
 		
 };

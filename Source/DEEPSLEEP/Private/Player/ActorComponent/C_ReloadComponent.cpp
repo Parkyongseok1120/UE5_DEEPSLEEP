@@ -2,7 +2,7 @@
 
 
 #include "Player/ActorComponent/C_ReloadComponent.h"
-#include "Player/C_PlayerCharacter.h"
+#include "Player/Weapons/C_BaseWeapon.h"
 #include "Util/Global.h"
 
 
@@ -21,8 +21,8 @@ UC_ReloadComponent::UC_ReloadComponent()
 void UC_ReloadComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	
+	OwnerWeapon = Cast<AC_BaseWeapon>(GetOwner());
 }
 
 
@@ -34,14 +34,14 @@ void UC_ReloadComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	
 }
 
-void UC_ReloadComponent::Reload()
+void UC_ReloadComponent::Reloading()
 {
-	CheckNull(OwnerCharacter);
+	CheckNull(OwnerWeapon);
 	if(bCanReload != false)
 	{
 		if (ReloadingSound != nullptr)
 		{
-			UGameplayStatics::PlaySoundAtLocation(this, ReloadingSound, OwnerCharacter->GetActorLocation());
+			UGameplayStatics::PlaySoundAtLocation(this, ReloadingSound, OwnerWeapon->GetActorLocation());
 		}
 		bisStopShooting = true;
 		FTimerHandle ReloadingTimerHandle;
