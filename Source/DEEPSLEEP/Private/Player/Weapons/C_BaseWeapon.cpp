@@ -35,7 +35,6 @@ void AC_BaseWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-
 }
 
 void AC_BaseWeapon::OnFire()
