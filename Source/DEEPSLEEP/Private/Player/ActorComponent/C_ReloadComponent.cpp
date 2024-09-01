@@ -30,8 +30,6 @@ void UC_ReloadComponent::BeginPlay()
 void UC_ReloadComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	
 }
 
 void UC_ReloadComponent::Reloading()

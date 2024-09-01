@@ -2,6 +2,8 @@
 
 
 #include "Player/Weapons/C_BaseWeapon.h"
+
+#include "Projects.h"
 #include "Util/Global.h"
 #include "Components/StaticMeshComponent.h"
 #include "Player/ActorComponent/C_ReloadComponent.h"
@@ -45,7 +47,17 @@ void AC_BaseWeapon::OnFire()
 	{
 		if(ProjectileClass != nullptr)
 		{
-			
+			const FRotator SpawnRotation = OwnerCharacter->GetControlRotation();
+			const FVector SpawnLocation = OwnerCharacter->GetActorLocation();
+
+			FActorSpawnParameters ActorSpawnParameters;
+			ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			Projectile = GetWorld()->SpawnActor<AC_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParameters);
+			if(Projectile)
+			{
+				Projectile->SetOwner(this);
+			}
 		}
 		
 	}
