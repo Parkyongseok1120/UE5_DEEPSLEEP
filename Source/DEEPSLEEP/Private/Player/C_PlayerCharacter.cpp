@@ -91,14 +91,14 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("CameraZoom", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
 	PlayerInputComponent->BindAction("CameraZoom", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
-	PlayerInputComponent->BindAction("Target",IE_Pressed, TargetComponent, &UC_TargetComponent::Toggle);
+	PlayerInputComponent->BindAction("T_Key",IE_Pressed, TargetComponent, &UC_TargetComponent::Toggle);
 	if(TargetComponent->GetbisTargeting())
 	{
-		PlayerInputComponent->BindAction("Target",IE_Pressed, TargetComponent, &UC_TargetComponent::TargetingDash);
+		PlayerInputComponent->BindAction("T_Key",IE_Pressed, TargetComponent, &UC_TargetComponent::TargetingDash);
 	}
 	else
 	{
-		PlayerInputComponent->BindAction("Dash",IE_Pressed, DashComponent, &UC_DashComponent::BeginDash);
+		PlayerInputComponent->BindAction("C_Key",IE_Pressed, DashComponent, &UC_DashComponent::BeginDash);
 	}
 
 
