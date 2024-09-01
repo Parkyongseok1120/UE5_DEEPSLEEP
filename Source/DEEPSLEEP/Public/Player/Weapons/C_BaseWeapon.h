@@ -7,7 +7,7 @@
 #include "C_BaseWeapon.generated.h"
 
 class ACharacter;
-class UStaticMeshComponent;
+class USkeletalMesh;
 class AC_Projectile;
 class UC_ReloadComponent;
 
@@ -33,13 +33,13 @@ private:
 	ACharacter* OwnerCharacter;
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Mesh")
-	UStaticMeshComponent* Mesh;
+	UPROPERTY(VisibleAnywhere, Category = "Mesh")
+	USkeletalMeshComponent* Mesh;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Projectile")
 	AC_Projectile* Projectile;
 	
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Projectile")
 	TSubclassOf<AC_Projectile> ProjectileClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Reload")

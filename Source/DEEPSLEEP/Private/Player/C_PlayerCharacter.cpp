@@ -9,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ActorComponent/C_DashComponent.h"
 #include "Player/ActorComponent/C_TargetComponent.h"
+#include "Player/ActorComponent/C_InputComponent.h"
+#include "Player/Weapons/C_BaseWeapon.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -18,6 +20,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateActorComponent<UC_DashComponent>(this, &DashComponent, "Dash");
 	CHelpers::CreateActorComponent<UC_StateComponent>(this, &State, "State");
 	CHelpers::CreateActorComponent<UC_TargetComponent>(this, &TargetComponent, "Target");
+	CHelpers::CreateActorComponent<UC_InputComponent>(this, &Input, "Input");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -88,18 +91,14 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AC_PlayerCharacter::EndSprint);
 	
 	
-	PlayerInputComponent->BindAction("CameraZoom", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
-	PlayerInputComponent->BindAction("CameraZoom", IE_Released, this, &AC_PlayerCharacter::EndZoom);
+	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
+	PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
-	PlayerInputComponent->BindAction("T_Key",IE_Pressed, TargetComponent, &UC_TargetComponent::Toggle);
-	if(TargetComponent->GetbisTargeting())
-	{
-		PlayerInputComponent->BindAction("T_Key",IE_Pressed, TargetComponent, &UC_TargetComponent::TargetingDash);
-	}
-	else
-	{
-		PlayerInputComponent->BindAction("C_Key",IE_Pressed, DashComponent, &UC_DashComponent::BeginDash);
-	}
+	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, BaseWeapon, &AC_BaseWeapon::OnFire);
+	PlayerInputComponent->BindAction("T_Key",IE_Pressed, Input, &UC_InputComponent::T_key);
+	PlayerInputComponent->BindAction("C_Key",IE_Pressed, Input, &UC_InputComponent::C_key);
+
+	PlayerInputComponent->BindAction("key_1",IE_Pressed, Input, &UC_InputComponent::key_1);
 
 
 	//--------------------------------KeyBoard----------------------------------------
@@ -116,6 +115,20 @@ FVector AC_PlayerCharacter::GetPawnViewLocation() const
 	}
 
 	return Super::GetPawnViewLocation();
+}
+
+void AC_PlayerCharacter::SpawnWeapon1()
+{
+	if  (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
+	{
+		BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+		if(BaseWeapon)
+		{
+			BaseWeapon->SetOwner(this);
+			BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
+		}
+	}
+	
 }
 
 void AC_PlayerCharacter::BeginZoom()

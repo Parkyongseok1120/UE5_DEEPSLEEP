@@ -18,6 +18,7 @@ AC_Projectile::AC_Projectile()
 	CHelpers::CreateActorComponent<UProjectileMovementComponent>(this, &ProjectileMovement, "Projectile");
 	CHelpers::CreateComponent<USphereComponent>(this, &CollisionComp, "SphereComp");
 	RootComponent = CollisionComp;
+	CHelpers::CreateComponent<UStaticMeshComponent>(this, &Mesh, "Mesh", CollisionComp);
 	
 	CollisionComp->InitSphereRadius(5.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");

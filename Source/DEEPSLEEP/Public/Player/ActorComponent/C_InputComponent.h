@@ -6,6 +6,12 @@
 #include "Components/ActorComponent.h"
 #include "C_InputComponent.generated.h"
 
+class UC_DashComponent;
+class UC_TargetComponent;
+class UC_ReloadComponent;
+class AC_BaseWeapon;
+class ACharacter;
+class AC_PlayerCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEP_API UC_InputComponent : public UActorComponent
@@ -21,11 +27,46 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+private:
+	UPROPERTY()
+	ACharacter* OwnerCharacter;
+
+	UPROPERTY()
+	AC_PlayerCharacter* PlayerCharacter;
+
+	UPROPERTY()
+	TSubclassOf<AC_PlayerCharacter> Player_Class;
+	
+private:
+	UPROPERTY()
+	UC_DashComponent* Dash;
+
+	UPROPERTY()
+	UC_TargetComponent* Target;
+
+	UPROPERTY()
+	UC_ReloadComponent* Reload;
+
+	UPROPERTY()
+	AC_BaseWeapon* BaseWeapon;
+	
 public:
+	//---------Keyboard Eng------------
 	void R_key();
 	void C_key();
 	void Q_key();
 	void E_key();
-	void F_Key();
-		
+	void T_key();
+
+	//--------Keyboard Num--------------
+	void key_1();
+	void key_2();
+	void key_3();
+	
+
+
+public:
+	void MouseRight();
+	void MouseLeft();
+	
 };

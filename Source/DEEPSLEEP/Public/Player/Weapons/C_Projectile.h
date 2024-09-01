@@ -12,6 +12,7 @@ class UProjectileMovementComponent;
 class UParticleSystem;
 class UDamageType;
 class UC_ReloadComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class DEEPSLEEP_API AC_Projectile : public AActor
@@ -36,6 +37,9 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, Category=Projectile)
 	USphereComponent* CollisionComp;
+
+	UPROPERTY(VisibleAnywhere, Category=Projectile)
+	UStaticMeshComponent* Mesh;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;

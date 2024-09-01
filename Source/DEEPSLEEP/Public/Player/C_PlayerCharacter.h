@@ -16,6 +16,8 @@ class UC_StateComponent;
 class UC_TargetComponent;
 class AC_DashGhost;
 struct FInputActionValue;
+class UC_InputComponent;
+class AC_BaseWeapon;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDelegate);
 
@@ -39,6 +41,24 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual FVector GetPawnViewLocation() const override;
+
+
+	//---------------Input---------------------------
+private:
+	UPROPERTY(VisibleAnywhere, Category = "input")
+	UC_InputComponent* Input;
+
+	//----------------Weapon-------------------------
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	AC_BaseWeapon* BaseWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<AC_BaseWeapon> BaseWeaponClass;
+	
+public:
+	UFUNCTION()
+	void SpawnWeapon1();
 	
 
 

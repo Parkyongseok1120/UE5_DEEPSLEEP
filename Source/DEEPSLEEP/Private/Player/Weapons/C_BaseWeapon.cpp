@@ -2,10 +2,9 @@
 
 
 #include "Player/Weapons/C_BaseWeapon.h"
-
-#include "Projects.h"
 #include "Util/Global.h"
-#include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+
 #include "Player/ActorComponent/C_ReloadComponent.h"
 #include "Player/Weapons/C_Projectile.h"
 #include "GameFramework/Character.h"
@@ -16,11 +15,15 @@ AC_BaseWeapon::AC_BaseWeapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CHelpers::CreateComponent<UStaticMeshComponent>(this, &Mesh, "Mesh");
+	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	CHelpers::CreateActorComponent<UC_ReloadComponent>(this, &Reload, "Reload");
 
 	MaxAmmo = Reload->GetRemainAmmoCount();
-	
+
+	USkeletalMesh* mesh;
+	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Pistol.Darkness_Pistol'");
+	Mesh->SetSkeletalMesh(mesh);
+	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 }
 
@@ -30,6 +33,7 @@ void AC_BaseWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	
 }
 
 // Called every frame
@@ -43,8 +47,8 @@ void AC_BaseWeapon::OnFire()
 {
 	CheckNull(OwnerCharacter)
 
-	if(MaxAmmo > 0)
-	{
+	//if(MaxAmmo > 0)
+	//{
 		if(ProjectileClass != nullptr)
 		{
 			const FRotator SpawnRotation = OwnerCharacter->GetControlRotation();
@@ -60,10 +64,10 @@ void AC_BaseWeapon::OnFire()
 			}
 		}
 		
-	}
-	else
-	{
-		Reload->Reloading();
-	}
+	//}
+	//else
+	//{
+		//Reload->Reloading();
+    	//}
 }
 
