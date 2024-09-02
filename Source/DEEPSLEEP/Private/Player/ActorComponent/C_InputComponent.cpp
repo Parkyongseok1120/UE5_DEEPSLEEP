@@ -84,6 +84,6 @@ void UC_InputComponent::MouseRight()
 
 void UC_InputComponent::MouseLeft()
 {
-	//BaseWeapon = Cast<AC_BaseWeapon>()
+	
 }
 

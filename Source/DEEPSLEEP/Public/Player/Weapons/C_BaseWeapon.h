@@ -39,7 +39,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Projectile")
 	AC_Projectile* Projectile;
 	
-	UPROPERTY(EditAnywhere, Category = "Projectile")
+	UPROPERTY(VisibleAnywhere, Category = "Projectile")
 	TSubclassOf<AC_Projectile> ProjectileClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Reload")
@@ -47,11 +47,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 MaxAmmo;
-	
-
 
 public:
+	UFUNCTION()
 	void OnFire();
+	UFUNCTION()
+	void ChecktoWepaonSpawn();
 	
 	
 

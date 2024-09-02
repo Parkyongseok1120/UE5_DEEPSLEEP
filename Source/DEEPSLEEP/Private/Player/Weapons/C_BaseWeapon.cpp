@@ -33,7 +33,7 @@ void AC_BaseWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-	
+	ProjectileClass = AC_Projectile::StaticClass();
 }
 
 // Called every frame
@@ -45,15 +45,15 @@ void AC_BaseWeapon::Tick(float DeltaTime)
 
 void AC_BaseWeapon::OnFire()
 {
-	CheckNull(OwnerCharacter)
-
-	//if(MaxAmmo > 0)
-	//{
-		if(ProjectileClass != nullptr)
+	if (ProjectileClass != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
 		{
-			const FRotator SpawnRotation = OwnerCharacter->GetControlRotation();
-			const FVector SpawnLocation = OwnerCharacter->GetActorLocation();
-
+			CLog::Print("Load");
+			const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,-90, 0);
+			const FVector SpawnLocation = this->GetActorLocation();
+	
 			FActorSpawnParameters ActorSpawnParameters;
 			ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
@@ -63,11 +63,12 @@ void AC_BaseWeapon::OnFire()
 				Projectile->SetOwner(this);
 			}
 		}
-		
-	//}
-	//else
-	//{
-		//Reload->Reloading();
-    	//}
+	}
+
+}
+
+void AC_BaseWeapon::ChecktoWepaonSpawn()
+{
+	
 }
 

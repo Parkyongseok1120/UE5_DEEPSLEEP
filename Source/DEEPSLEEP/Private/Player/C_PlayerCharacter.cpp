@@ -11,6 +11,7 @@
 #include "Player/ActorComponent/C_TargetComponent.h"
 #include "Player/ActorComponent/C_InputComponent.h"
 #include "Player/Weapons/C_BaseWeapon.h"
+#include "Player/Weapons/C_Projectile.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -48,6 +49,8 @@ void AC_PlayerCharacter::BeginPlay()
 	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnSelfStateTypeChanged);
 	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnWeaponTypeChanged);
 	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnBattleTypeChanged);
+
+	BaseWeapon = Cast<AC_BaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_BaseWeapon::StaticClass()));
 	
 }
 
@@ -94,7 +97,7 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
 	PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
-	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, BaseWeapon, &AC_BaseWeapon::OnFire);
+	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &AC_PlayerCharacter::CallOnFire);
 	PlayerInputComponent->BindAction("T_Key",IE_Pressed, Input, &UC_InputComponent::T_key);
 	PlayerInputComponent->BindAction("C_Key",IE_Pressed, Input, &UC_InputComponent::C_key);
 
@@ -117,9 +120,16 @@ FVector AC_PlayerCharacter::GetPawnViewLocation() const
 	return Super::GetPawnViewLocation();
 }
 
+void AC_PlayerCharacter::CallOnFire()
+{
+	if (BaseWeapon)
+	{
+		BaseWeapon->OnFire(); // OtherActor의 함수 호출
+	}
+}
 void AC_PlayerCharacter::SpawnWeapon1()
 {
-	if  (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
+	if (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
 	{
 		BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
 		if(BaseWeapon)
@@ -128,7 +138,6 @@ void AC_PlayerCharacter::SpawnWeapon1()
 			BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
 		}
 	}
-	
 }
 
 void AC_PlayerCharacter::BeginZoom()

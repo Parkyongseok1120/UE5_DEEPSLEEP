@@ -60,6 +60,9 @@ public:
 	UFUNCTION()
 	void SpawnWeapon1();
 	
+	UFUNCTION()
+	void CallOnFire();
+	
 
 
 	

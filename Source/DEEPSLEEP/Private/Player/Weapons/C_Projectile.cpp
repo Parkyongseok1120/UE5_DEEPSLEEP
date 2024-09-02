@@ -7,7 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Player/ActorComponent/C_ReloadComponent.h"
 #include "GameFramework/Character.h"
-
+#include "Player/Weapons/C_BaseWeapon.h"
 
 
 AC_Projectile::AC_Projectile()
@@ -19,14 +19,18 @@ AC_Projectile::AC_Projectile()
 	CHelpers::CreateComponent<USphereComponent>(this, &CollisionComp, "SphereComp");
 	RootComponent = CollisionComp;
 	CHelpers::CreateComponent<UStaticMeshComponent>(this, &Mesh, "Mesh", CollisionComp);
+	UStaticMesh* mesh;
+	CHelpers::GetAsset<UStaticMesh>(&mesh, "/Script/Engine.StaticMesh'/Engine/EditorMeshes/ArcadeEditorSphere1.ArcadeEditorSphere1'");
+	Mesh->SetStaticMesh(mesh);
+	Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
 	
 	CollisionComp->InitSphereRadius(5.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &AC_Projectile::OnHit);
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 20000.f;
-	ProjectileMovement->MaxSpeed = 20000.f;
+	ProjectileMovement->InitialSpeed = 50.f;
+	ProjectileMovement->MaxSpeed = 50.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
 
