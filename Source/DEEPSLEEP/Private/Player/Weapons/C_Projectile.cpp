@@ -20,9 +20,9 @@ AC_Projectile::AC_Projectile()
 	RootComponent = CollisionComp;
 	CHelpers::CreateComponent<UStaticMeshComponent>(this, &Mesh, "Mesh", CollisionComp);
 	UStaticMesh* mesh;
-	CHelpers::GetAsset<UStaticMesh>(&mesh, "/Script/Engine.StaticMesh'/Engine/EditorMeshes/ArcadeEditorSphere1.ArcadeEditorSphere1'");
+	CHelpers::GetAsset<UStaticMesh>(&mesh, "/Script/Engine.StaticMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_RocketLauncher_Ammo.Darkness_RocketLauncher_Ammo'");
 	Mesh->SetStaticMesh(mesh);
-	Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
+	//Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
 	
 	CollisionComp->InitSphereRadius(5.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");

@@ -25,6 +25,9 @@ AC_BaseWeapon::AC_BaseWeapon()
 	Mesh->SetSkeletalMesh(mesh);
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 
+	MaxAmmo = 30;
+	UsingAmmo = 0;
+
 }
 
 // Called when the game starts or when spawned
@@ -34,6 +37,8 @@ void AC_BaseWeapon::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	ProjectileClass = AC_Projectile::StaticClass();
+
+	bisReloading = false;
 }
 
 // Called every frame
@@ -43,24 +48,33 @@ void AC_BaseWeapon::Tick(float DeltaTime)
 	
 }
 
+void AC_BaseWeapon::AmmoCount()
+{
+	RemainAmmo = MaxAmmo - UsingAmmo;
+}
+
 void AC_BaseWeapon::OnFire()
 {
-	if (ProjectileClass != nullptr)
+	if(RemainAmmo > 0 && bisReloading != true)
 	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
+		if (ProjectileClass != nullptr)
 		{
-			CLog::Print("Load");
-			const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,-90, 0);
-			const FVector SpawnLocation = this->GetActorLocation();
-	
-			FActorSpawnParameters ActorSpawnParameters;
-			ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			Projectile = GetWorld()->SpawnActor<AC_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParameters);
-			if(Projectile)
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
 			{
-				Projectile->SetOwner(this);
+				CLog::Print("Load");
+				const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,-90, 0);
+				const FVector SpawnLocation = this->GetActorLocation();
+	
+				FActorSpawnParameters ActorSpawnParameters;
+				ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+				Projectile = GetWorld()->SpawnActor<AC_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParameters);
+				if(Projectile)
+				{
+					Projectile->SetOwner(this);
+				}
+				UsingAmmo++;
 			}
 		}
 	}

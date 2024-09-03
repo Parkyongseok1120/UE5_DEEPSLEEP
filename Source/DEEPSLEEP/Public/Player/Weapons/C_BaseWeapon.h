@@ -48,6 +48,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 MaxAmmo;
 
+	UPROPERTY()
+	int32 RemainAmmo;
+
+	UPROPERTY()
+	int32 UsingAmmo;
+
+	bool bisReloading;
+
+	void AmmoCount();
+	
 public:
 	UFUNCTION()
 	void OnFire();
