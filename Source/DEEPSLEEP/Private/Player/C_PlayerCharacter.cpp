@@ -100,8 +100,8 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &AC_PlayerCharacter::CallOnFire);
 	PlayerInputComponent->BindAction("T_Key",IE_Pressed, Input, &UC_InputComponent::T_key);
 	PlayerInputComponent->BindAction("C_Key",IE_Pressed, Input, &UC_InputComponent::C_key);
-
-	PlayerInputComponent->BindAction("key_1",IE_Pressed, Input, &UC_InputComponent::key_1);
+	PlayerInputComponent->BindAction("R_Key",IE_Pressed, Input, &UC_InputComponent::R_key);
+	PlayerInputComponent->BindAction("Key_1",IE_Pressed, Input, &UC_InputComponent::key_1);
 
 
 	//--------------------------------KeyBoard----------------------------------------

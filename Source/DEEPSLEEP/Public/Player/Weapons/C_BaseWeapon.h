@@ -16,16 +16,13 @@ class DEEPSLEEP_API AC_BaseWeapon : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
+public:
 	AC_BaseWeapon();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 private:
@@ -44,25 +41,10 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Reload")
 	UC_ReloadComponent* Reload;
-	
-	UPROPERTY(EditAnywhere, Category = "Ammo")
-	int32 MaxAmmo;
 
-	UPROPERTY()
-	int32 RemainAmmo;
-
-	UPROPERTY()
-	int32 UsingAmmo;
-
-	bool bisReloading;
-
-	void AmmoCount();
-	
 public:
 	UFUNCTION()
 	void OnFire();
-	UFUNCTION()
-	void ChecktoWepaonSpawn();
 	
 	
 

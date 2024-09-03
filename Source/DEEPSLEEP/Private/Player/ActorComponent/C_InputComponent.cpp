@@ -34,6 +34,12 @@ void UC_InputComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 void UC_InputComponent::R_key()
 {
+	BaseWeapon = Cast<AC_BaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_BaseWeapon::StaticClass()));
+	Reload = BaseWeapon->GetComponentByClass<UC_ReloadComponent>();
+	if(Reload != nullptr)
+	{
+		Reload->Reloading();
+	}
 }
 
 void UC_InputComponent::C_key()

@@ -15,7 +15,7 @@ class DEEPSLEEP_API UC_ReloadComponent : public UActorComponent
 	GENERATED_BODY()
 	
 public:
-	FORCEINLINE bool GetbCanReload() {return bCanReload;}
+	FORCEINLINE bool GetbReloading() {return bReloading;}
 	FORCEINLINE int GetRemainAmmoCount() {return RemainAmmoCount;}
 
 public:	
@@ -31,15 +31,18 @@ private:
 
 	UPROPERTY()
 	AC_BaseWeapon* OwnerWeapon;
+
+	UPROPERTY()
+	int32 MaxAmmo;
 	
 	UPROPERTY()
-	int32 AmmoCount;
+	int32 UsingAmmoCount;
 	
 	UPROPERTY()
 	int32 RemainAmmoCount;
 
 	UPROPERTY()
-	bool bCanReload;
+	bool bReloading;
 
 	UPROPERTY()
 	bool bisStopShooting;
@@ -50,5 +53,6 @@ protected:
 
 public:
 	void Reloading();
+	void AmmoCounting();
 		
 };

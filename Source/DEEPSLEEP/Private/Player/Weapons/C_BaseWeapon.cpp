@@ -12,25 +12,18 @@
 // Sets default values
 AC_BaseWeapon::AC_BaseWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	CHelpers::CreateActorComponent<UC_ReloadComponent>(this, &Reload, "Reload");
-
-	MaxAmmo = Reload->GetRemainAmmoCount();
 
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Pistol.Darkness_Pistol'");
 	Mesh->SetSkeletalMesh(mesh);
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 
-	MaxAmmo = 30;
-	UsingAmmo = 0;
-
 }
 
-// Called when the game starts or when spawned
 void AC_BaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,24 +31,17 @@ void AC_BaseWeapon::BeginPlay()
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	ProjectileClass = AC_Projectile::StaticClass();
 
-	bisReloading = false;
-}
-
-// Called every frame
-void AC_BaseWeapon::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 	
 }
 
-void AC_BaseWeapon::AmmoCount()
+void AC_BaseWeapon::Tick(float DeltaTime)
 {
-	RemainAmmo = MaxAmmo - UsingAmmo;
+	Super::Tick(DeltaTime);
 }
 
 void AC_BaseWeapon::OnFire()
 {
-	if(RemainAmmo > 0 && bisReloading != true)
+	if(Reload->GetRemainAmmoCount() > 0 && Reload->GetbReloading() != true)
 	{
 		if (ProjectileClass != nullptr)
 		{
@@ -63,7 +49,7 @@ void AC_BaseWeapon::OnFire()
 			if (World != nullptr)
 			{
 				CLog::Print("Load");
-				const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,-90, 0);
+				const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,+90, 0);
 				const FVector SpawnLocation = this->GetActorLocation();
 	
 				FActorSpawnParameters ActorSpawnParameters;
@@ -74,15 +60,13 @@ void AC_BaseWeapon::OnFire()
 				{
 					Projectile->SetOwner(this);
 				}
-				UsingAmmo++;
+				Reload->AmmoCounting();
 			}
 		}
 	}
-
-}
-
-void AC_BaseWeapon::ChecktoWepaonSpawn()
-{
-	
+	else if(Reload->GetRemainAmmoCount() <= 0)
+	{
+		Reload->Reloading();
+	}
 }
 
