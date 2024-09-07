@@ -21,12 +21,17 @@ void UC_PlayerAnimInstance::NativeBeginPlay()
 
 void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	
+	bool bEquipFucCall = false;
 	if(PlayerCharacter)
-		bisEqiupWepaon = PlayerCharacter->GetbEquipWeapon();
+	{
+		if(!bEquipFucCall && bisEqiupWepaon != true)
+		{
+			EquipWeapon(bisEqiupWepaon);
+			bEquipFucCall = true;
+		}
+	}
 	
-	if(bisEqiupWepaon == true)
-		CLog::Print("Equip true");
+	
 	
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	CheckNull(PlayerCharacter);
@@ -50,15 +55,7 @@ void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	bFalling = PlayerCharacter->GetCharacterMovement()->IsFalling();
 }
 
-bool UC_PlayerAnimInstance::EquipWeapon(bool B_EW)
+void UC_PlayerAnimInstance::EquipWeapon(bool B_EW)
 {
 	B_EW = PlayerCharacter->GetbEquipWeapon();
-	if(B_EW == false)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
 }

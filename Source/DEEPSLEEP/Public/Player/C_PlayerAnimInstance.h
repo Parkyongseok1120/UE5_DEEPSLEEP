@@ -35,7 +35,7 @@ protected:
 public:
 	void NativeBeginPlay() override;
 	void NativeUpdateAnimation(float DeltaSeconds) override;
-	bool EquipWeapon(bool B_EW);
+	void EquipWeapon(bool B_EW);
 
 private:
 	class ACharacter* OwnerCharacter;
