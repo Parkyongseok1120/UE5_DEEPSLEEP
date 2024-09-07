@@ -27,13 +27,18 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 	bool bisBackward = false;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+	bool bisEqiupWepaon;
+	
 	FRotator PrevRotation; // 이전 회전값.
 
 public:
 	void NativeBeginPlay() override;
 	void NativeUpdateAnimation(float DeltaSeconds) override;
+	bool EquipWeapon(bool B_EW);
 
 private:
 	class ACharacter* OwnerCharacter;
+	class AC_PlayerCharacter* PlayerCharacter;
 
 };

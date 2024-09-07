@@ -32,6 +32,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	SpringArm->bEnableCameraLag = true;
 	bWantsToZoom = false;
 	bisSprint = false;
+	bEquipWeapon = false;
 }
 
 // Called when the game starts or when spawned
@@ -51,7 +52,6 @@ void AC_PlayerCharacter::BeginPlay()
 	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnBattleTypeChanged);
 
 	BaseWeapon = Cast<AC_BaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_BaseWeapon::StaticClass()));
-	
 }
 
 void AC_PlayerCharacter::Tick(float DeltaTime)
@@ -136,6 +136,7 @@ void AC_PlayerCharacter::SpawnWeapon1()
 		{
 			BaseWeapon->SetOwner(this);
 			BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
+			bEquipWeapon = true;
 		}
 	}
 }

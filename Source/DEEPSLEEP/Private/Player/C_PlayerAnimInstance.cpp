@@ -2,6 +2,8 @@
 
 
 #include "Player/C_PlayerAnimInstance.h"
+
+#include "AudioMixerDevice.h"
 #include "Util/Global.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -14,10 +16,18 @@ void UC_PlayerAnimInstance::NativeBeginPlay()
 	OwnerCharacter = Cast<ACharacter>(TryGetPawnOwner());
 	CheckNull(OwnerCharacter);
 	
+	PlayerCharacter = Cast<AC_PlayerCharacter>(this->TryGetPawnOwner());
+	
 }
 
 void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
+	EquipWeapon(bisEqiupWepaon);
+	if(PlayerCharacter->GetbEquipWeapon() == true)
+	{
+		CLog::Print("true");
+	}
+	
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	CheckNull(OwnerCharacter);
 	
@@ -38,6 +48,19 @@ void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 	
 	bFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
+}
+
+bool UC_PlayerAnimInstance::EquipWeapon(bool B_EW)
+{
+	B_EW = PlayerCharacter->GetbEquipWeapon();
+	if(B_EW == false)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 
