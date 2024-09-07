@@ -32,7 +32,6 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	SpringArm->bEnableCameraLag = true;
 	bWantsToZoom = false;
 	bisSprint = false;
-	bEquipWeapon = false;
 }
 
 // Called when the game starts or when spawned
@@ -131,12 +130,12 @@ void AC_PlayerCharacter::SpawnWeapon1()
 {
 	if (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
 	{
+		bEquipWeapon = true;
 		BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
 		if(BaseWeapon)
 		{
 			BaseWeapon->SetOwner(this);
 			BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
-			bEquipWeapon = true;
 		}
 	}
 }

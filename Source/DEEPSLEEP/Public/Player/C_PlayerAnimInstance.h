@@ -27,8 +27,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 	bool bisBackward = false;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
-	bool bisEqiupWepaon;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Animation")
+	bool bisEqiupWepaon = false;
 	
 	FRotator PrevRotation; // 이전 회전값.
 
