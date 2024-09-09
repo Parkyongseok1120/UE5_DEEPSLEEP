@@ -4,6 +4,7 @@
 #include "Player/Weapons/C_BaseWeapon.h"
 #include "Util/Global.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 
 #include "Player/ActorComponent/C_ReloadComponent.h"
 #include "Player/Weapons/C_Projectile.h"
@@ -49,13 +50,13 @@ void AC_BaseWeapon::OnFire()
 			if (World != nullptr)
 			{
 				CLog::Print("Load");
-				const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,+90, 0);
+				const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,+90,0);
 				const FVector SpawnLocation = this->GetActorLocation();
 	
 				FActorSpawnParameters ActorSpawnParameters;
-				ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
+				ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 				Projectile = GetWorld()->SpawnActor<AC_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParameters);
+				Projectile->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetIncludingScale, "Muzzle");
 				if(Projectile)
 				{
 					Projectile->SetOwner(this);
