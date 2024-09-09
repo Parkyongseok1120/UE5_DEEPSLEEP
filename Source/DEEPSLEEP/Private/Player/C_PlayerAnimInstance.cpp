@@ -2,8 +2,6 @@
 
 
 #include "Player/C_PlayerAnimInstance.h"
-
-#include "AudioMixerDevice.h"
 #include "Util/Global.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -21,12 +19,12 @@ void UC_PlayerAnimInstance::NativeBeginPlay()
 
 void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	bool bEquipFucCall = false;
 	if(PlayerCharacter)
 	{
-		if(!bEquipFucCall && bisEqiupWepaon != true)
+		if(bEquipFucCall == false && bisEqiupWepaon != true)
 		{
 			EquipWeapon(bisEqiupWepaon);
+			CLog::Print("true");
 			bEquipFucCall = true;
 		}
 	}

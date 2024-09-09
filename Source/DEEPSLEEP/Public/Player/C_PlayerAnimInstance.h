@@ -29,6 +29,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Animation")
 	bool bisEqiupWepaon = false;
+
+	bool bEquipFucCall = false;
 	
 	FRotator PrevRotation; // 이전 회전값.
 
