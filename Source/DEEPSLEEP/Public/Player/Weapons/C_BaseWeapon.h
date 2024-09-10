@@ -42,6 +42,12 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Reload")
 	UC_ReloadComponent* Reload;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	USceneComponent* MuzzleLocation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	FVector GunOffset;
+
 public:
 	UFUNCTION()
 	void OnFire();

@@ -23,6 +23,12 @@ AC_BaseWeapon::AC_BaseWeapon()
 	Mesh->SetSkeletalMesh(mesh);
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 
+	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+	MuzzleLocation->SetupAttachment(Mesh);
+	MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
+
+	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+
 }
 
 void AC_BaseWeapon::BeginPlay()
@@ -31,8 +37,8 @@ void AC_BaseWeapon::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	ProjectileClass = AC_Projectile::StaticClass();
-
 	
+	Projectile->AttachToComponent(Mesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Muzzle"));
 }
 
 void AC_BaseWeapon::Tick(float DeltaTime)
@@ -50,13 +56,13 @@ void AC_BaseWeapon::OnFire()
 			if (World != nullptr)
 			{
 				CLog::Print("Load");
-				const FRotator SpawnRotation = this->GetActorRotation() + FRotator(0,+90,0);
-				const FVector SpawnLocation = this->GetActorLocation();
+				const FRotator SpawnRotation =  OwnerCharacter->GetControlRotation();
+				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 	
 				FActorSpawnParameters ActorSpawnParameters;
 				ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
 				Projectile = GetWorld()->SpawnActor<AC_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParameters);
-				Projectile->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetIncludingScale, "Muzzle");
 				if(Projectile)
 				{
 					Projectile->SetOwner(this);
