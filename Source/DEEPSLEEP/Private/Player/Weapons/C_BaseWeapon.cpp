@@ -9,6 +9,7 @@
 #include "Player/ActorComponent/C_ReloadComponent.h"
 #include "Player/Weapons/C_Projectile.h"
 #include "GameFramework/Character.h"
+#include "Player/C_PlayerCharacter.h"
 
 // Sets default values
 AC_BaseWeapon::AC_BaseWeapon()
@@ -34,11 +35,11 @@ AC_BaseWeapon::AC_BaseWeapon()
 void AC_BaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
-	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	ProjectileClass = AC_Projectile::StaticClass();
-	
-	Projectile->AttachToComponent(Mesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Muzzle"));
+	if(Projectile)
+	{
+		Projectile->AttachToComponent(Mesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Muzzle"));
+	}
 }
 
 void AC_BaseWeapon::Tick(float DeltaTime)
@@ -46,28 +47,64 @@ void AC_BaseWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AC_BaseWeapon::SetupOwnerCharacter()
+{
+	AActor* OwnerActor = GetOwner();
+	if (OwnerActor)
+	{
+		OwnerCharacter = Cast<AC_PlayerCharacter>(OwnerActor);
+		if (OwnerCharacter)
+		{
+			UE_LOG(LogTemp, Log, TEXT("OwnerCharacter set successfully to %s"), *OwnerCharacter->GetName());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to cast Owner to AC_PlayerCharacter. Owner class: %s"), *OwnerActor->GetClass()->GetName());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GetOwner() returned nullptr"));
+	}
+}
+
 void AC_BaseWeapon::OnFire()
 {
+	if (!OwnerCharacter)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OnFire() called but OwnerCharacter is null. Attempting to set it up."));
+		SetupOwnerCharacter();
+		if (!OwnerCharacter)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to set up OwnerCharacter. Cannot fire."));
+			return;
+		}
+	}
 	if(Reload->GetRemainAmmoCount() > 0 && Reload->GetbReloading() != true)
 	{
-		if (ProjectileClass != nullptr)
+		if (OwnerCharacter == nullptr)
 		{
-			UWorld* const World = GetWorld();
-			if (World != nullptr)
+			UE_LOG(LogTemp, Warning, TEXT("AC_BaseWeapon::OnFire: OwnerCharacter is NULL"));
+		}
+		else
+		{
+			if (ProjectileClass != nullptr)
 			{
 				CLog::Print("Load");
 				const FRotator SpawnRotation =  OwnerCharacter->GetControlRotation();
 				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 	
-				FActorSpawnParameters ActorSpawnParameters;
-				ActorSpawnParameters.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-				Projectile = GetWorld()->SpawnActor<AC_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParameters);
-				if(Projectile)
+				UWorld* const World = GetWorld();
+				if (World != nullptr)
 				{
-					Projectile->SetOwner(this);
+					FActorSpawnParameters ActorSpawnParams;
+					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+					ActorSpawnParams.Owner = OwnerCharacter;
+
+					World->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 				}
 				Reload->AmmoCounting();
+			
 			}
 		}
 	}

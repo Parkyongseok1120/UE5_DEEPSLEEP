@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "C_BaseWeapon.generated.h"
 
-class ACharacter;
+class AC_PlayerCharacter;
 class USkeletalMesh;
 class AC_Projectile;
 class UC_ReloadComponent;
@@ -27,7 +27,7 @@ public:
 
 private:
 	UPROPERTY()
-	ACharacter* OwnerCharacter;
+	AC_PlayerCharacter* OwnerCharacter;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
@@ -51,6 +51,7 @@ protected:
 public:
 	UFUNCTION()
 	void OnFire();
+	void SetupOwnerCharacter();
 	
 	
 
