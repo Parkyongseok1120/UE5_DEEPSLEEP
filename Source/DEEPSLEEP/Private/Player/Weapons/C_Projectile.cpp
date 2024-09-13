@@ -71,9 +71,11 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 		float HalfRad = FMath::DegreesToRadians(BulletSpread);
 		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
 
+		//데미지 가함.
 		UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
-
 		FVector TracerEnd = EyeLocation +(ShotDirection * 90000);
+		CLog::Print("HitActor : "+ HitActor->GetName());
+
 		FVector TracerEndPoint = TracerEnd;
 		PlayImpactEffects(Hit.ImpactPoint);
 		TracerEndPoint = Hit.ImpactPoint;

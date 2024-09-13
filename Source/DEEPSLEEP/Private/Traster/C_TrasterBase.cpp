@@ -11,7 +11,7 @@ AC_TrasterBase::AC_TrasterBase()
 	PrimaryActorTick.bCanEverTick = true;
 	GetMesh()->SetRelativeLocation(FVector(0,0,-90));
 	GetMesh()->SetRelativeRotation(FRotator(0,-90,0));
-
+	HP = 100;
 }
 
 // Called when the game starts or when spawned
