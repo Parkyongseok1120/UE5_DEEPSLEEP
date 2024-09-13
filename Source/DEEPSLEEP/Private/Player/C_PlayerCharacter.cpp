@@ -45,10 +45,10 @@ void AC_PlayerCharacter::BeginPlay()
 
 
 	//Player State
-	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnMovementTypeChanged);
-	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnSelfStateTypeChanged);
-	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnWeaponTypeChanged);
-	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnBattleTypeChanged);
+	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnMovementTypeChanged);
+	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnSelfStateTypeChanged);
+	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnWeaponTypeChanged);
+	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnBattleTypeChanged);
 
 	BaseWeapon = Cast<AC_BaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_BaseWeapon::StaticClass()));
 }
@@ -130,12 +130,17 @@ void AC_PlayerCharacter::SpawnWeapon1()
 {
 	if (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
 	{
-		bEquipWeapon = true;
-		BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
-		if(BaseWeapon)
+		if(State!=nullptr)
 		{
-			BaseWeapon->SetOwner(this);
-			BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
+			//UC_StateComponent 클래스의 SetWeaponState를 호출하여 Enum 값 변경.
+			State->SetWeaponState();
+			bEquipWeapon = true;
+			BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+			if(BaseWeapon)
+			{
+				BaseWeapon->SetOwner(this);
+				BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
+			}
 		}
 	}
 }
@@ -224,34 +229,59 @@ void AC_PlayerCharacter::StartDashGhost()
 
 void AC_PlayerCharacter::EndDashGhost()
 {
-//	if(!!DashGhost)
-	//{
-	//	DashGhost->Destroy();
-	//}
+   if(!!DashGhost)
+   		DashGhost->Destroy();
+	
 }
+
+
+
+
 
 
 //-----------------Player State----------------------------
 
-void AC_PlayerCharacter::P_OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
-{
-	//switch (InNewType)
-	//{
-	//	case EMovementState::Idle :
-		 
-	//	break;
-	//}
-}
-
-void AC_PlayerCharacter::P_OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
+void AC_PlayerCharacter::OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
 {
 }
 
-void AC_PlayerCharacter::P_OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+void AC_PlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
 {
 }
 
-void AC_PlayerCharacter::P_OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
+void AC_PlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+{
+	/*switch (InNewType)
+	{
+	case EWeaponState::Hands:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::HealthCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::OblivionCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::UtilCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::Max:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	}*/
+}
+
+void AC_PlayerCharacter::OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
 {
 }
 

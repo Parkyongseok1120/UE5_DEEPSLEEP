@@ -6,39 +6,28 @@
 #include "Components/ActorComponent.h"
 #include "C_StateComponent.generated.h"
 
-UENUM()
-enum EMovementState : uint8
+UENUM(BlueprintType)
+enum class EMovementState : uint8
 {
-	Idle = 0,
-	Walk,
-	Sprint,
-	Jump,
-	Dash
+	Idle = 0, Walk, Sprint, Jump, Dash, Max
 };
 
-UENUM()
-enum ESelfState : uint8
+UENUM(BlueprintType)
+enum class ESelfState : uint8
 {
-	Alive = 0,
-	Dead,
-	Faint
+	Alive = 0, Dead, Faint, Max
 };
 
-UENUM()
-enum EWeaponState : uint8
+UENUM(BlueprintType)
+enum class EWeaponState : uint8
 {
-	Hands = 0,
-	HealthCore,
-	OblivionCore,
-	UtilCore
+	Hands = 0, HealthCore, OblivionCore, UtilCore, Max
 };
 
-UENUM()
-enum EBattleState : uint8
+UENUM(BlueprintType)
+enum class EBattleState : uint8
 {
-	NoBattle = 0,
-	Battle,
-	TakeTargeting
+	NoBattle = 0, Battle, TakeTargeting, Max
 };
 
 
@@ -62,29 +51,23 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	
+public:	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 
 public: //--------------Movmemnt State--------
-	void SetIdleMode();
-	void SetWalkMode();
-	void SetSprintMode();
-	void SetJumpMode();
-	void SetDashMode();
+	void SetMovementState();
 
 public: //--------------Self State--------
-	void SetAliveMode();
-	void SetDeadMode();
-	void SetFaintMode();
+	void SetSelfState();
 
 public: //--------------Weapon State--------
-	void SetHandsMode();
-	void SetHealthCoreMode();
-	void SetOblivionCoreMode();
-	void SetUtilCoreMode();
+	void SetWeaponState();
+	
 
 public: //--------------Battle State--------
-	void SetNoBattleMode();
-	void SetBattleMode();
-	void SetTakeTargetingMode();
+	void SetBattleState();
 
 
 	
@@ -103,6 +86,10 @@ public: //Delegate
 private: //Enums
 	EMovementState MovementType;
 	ESelfState SelfStateType;
-	EWeaponState WeaponType;
 	EBattleState BattleType;
+	EWeaponState WeaponType;
+
+private:
+	class AC_PlayerCharacter* OwnerCharacter;
+	
 };

@@ -5,6 +5,7 @@
 #include "Util/Global.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/ActorComponent/C_StateComponent.h"
 #include "Player/C_PlayerCharacter.h"
 
 void UC_PlayerAnimInstance::NativeBeginPlay()
@@ -13,23 +14,13 @@ void UC_PlayerAnimInstance::NativeBeginPlay()
 
 	PlayerCharacter = Cast<AC_PlayerCharacter>(TryGetPawnOwner());
 	CheckNull(PlayerCharacter)
-	
-	
+	State = CHelpers::GetComponent<UC_StateComponent>(PlayerCharacter);
+	if (!!State)
+		State->OnWeaponTypeChanged.AddDynamic(this, &UC_PlayerAnimInstance::OnWeaponTypeChanged);
 }
 
 void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	if(PlayerCharacter)
-	{
-		if(bEquipFucCall == false && bisEqiupWepaon != true)
-		{
-			bisEqiupWepaon = PlayerCharacter->GetbEquipWeapon();
-			CLog::Print("true");
-			bEquipFucCall = true;
-		}
-	}
-	
-	
 	
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	CheckNull(PlayerCharacter);
@@ -54,3 +45,7 @@ void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 }
 
 
+void UC_PlayerAnimInstance::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+{
+	WeaponType = InNewType;
+}

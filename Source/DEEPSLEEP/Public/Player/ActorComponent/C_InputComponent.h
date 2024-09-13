@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Player/ActorComponent/C_StateComponent.h"
 #include "C_InputComponent.generated.h"
+
 
 class UC_DashComponent;
 class UC_TargetComponent;
@@ -49,7 +51,13 @@ private:
 
 	UPROPERTY()
 	AC_BaseWeapon* BaseWeapon;
-	
+
+	UPROPERTY()
+	UC_StateComponent* StateComponent;
+
+protected:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+	EWeaponState WeaponTypeState = EWeaponState::Max;
 public:
 	//---------Keyboard Eng------------
 	void R_key();

@@ -35,3 +35,8 @@ void AC_TrasterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void AC_TrasterBase::TakedDamage()
+{
+	
+}
+

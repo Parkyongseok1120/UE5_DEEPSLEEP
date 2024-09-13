@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Player/ActorComponent/C_StateComponent.h"
 #include "C_PlayerAnimInstance.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class DEEPSLEEP_API UC_PlayerAnimInstance : public UAnimInstance
 {
@@ -39,8 +38,18 @@ public:
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 	void EquipWeapon(bool B_EW);
 
-private:
-	class ACharacter* OwnerCharacter;
-	class AC_PlayerCharacter* PlayerCharacter;
+protected:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+	EWeaponState WeaponType = EWeaponState::Max;
 
+private:
+	UFUNCTION()
+	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
+	
+	class AC_PlayerCharacter* PlayerCharacter;
+	class UC_StateComponent* State;
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "WeaponState")
+	EWeaponState WeaponStateEnum;
+	
 };

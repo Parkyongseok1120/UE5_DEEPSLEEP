@@ -155,17 +155,17 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UC_StateComponent* State;
 
-	UFUNCTION()
-	void P_OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType);
 	
-	UFUNCTION()
-	void P_OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
 
-	UFUNCTION()
-	void P_OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 
-	UFUNCTION()
-	void P_OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
 
 
 	//-----------------Target----------------------------

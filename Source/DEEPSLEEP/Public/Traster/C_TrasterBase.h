@@ -29,8 +29,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category="Health")
 	float HP;
-	float 
 
 public:
+	void TakedDamage();
 	
 };
