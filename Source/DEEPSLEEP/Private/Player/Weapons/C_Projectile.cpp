@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Player/ActorComponent/C_ReloadComponent.h"
+#include "Traster/C_TrasterBase.h"
 #include "GameFramework/Character.h"
 #include "Player/Weapons/C_BaseWeapon.h"
 
@@ -29,8 +30,8 @@ AC_Projectile::AC_Projectile()
 	CollisionComp->OnComponentHit.AddDynamic(this, &AC_Projectile::OnHit);
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
+	ProjectileMovement->InitialSpeed = 5000.f;
+	ProjectileMovement->MaxSpeed = 5000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
 
@@ -59,7 +60,6 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 	if(MyOwner)
 	{
 		MakeNoise(1.0f, MyOwner->GetInstigator());
-		AActor* HitActor = Hit.GetActor();
 		float ActualDamage = BaseDamage;
 		ActualDamage *= 1.0f;
 
@@ -70,24 +70,30 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 		FVector ShotDirection = EyeRotation.Vector();
 		float HalfRad = FMath::DegreesToRadians(BulletSpread);
 		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
-
-		//데미지 가함.
-		UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
 		FVector TracerEnd = EyeLocation +(ShotDirection * 90000);
-		CLog::Print("HitActor : "+ HitActor->GetName());
-
 		FVector TracerEndPoint = TracerEnd;
-		PlayImpactEffects(Hit.ImpactPoint);
-		TracerEndPoint = Hit.ImpactPoint;
+
+		TrasterBase = Cast<AC_TrasterBase>(OtherActor);
+		if(TrasterBase)
+		{
+			AActor* HitActor = Hit.GetActor();
+			UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
+			
+			CLog::Print("HitActor : "+ HitActor->GetName());
+			
+			PlayImpactEffects(Hit.ImpactPoint);
+			TracerEndPoint = Hit.ImpactPoint;
+			//피직스 객체에 충돌시에만 충격을 가하고, Projectile을 파괴한다.
+			if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+			{
+				OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+				Destroy();
+			}
+		}
 	}
 	Destroy();
-	//피직스 객체에 충돌시에만 충격을 가하고, Projectile을 파괴한다.
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
-	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
-		Destroy();
-	}
+	
 }
 
 void AC_Projectile::PlayImpactEffects(FVector ImpactPoint)

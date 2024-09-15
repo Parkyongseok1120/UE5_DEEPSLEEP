@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "C_TrasterBase.generated.h"
 
+class UPawnSensingComponent;
+
 UCLASS()
 class DEEPSLEEP_API AC_TrasterBase : public ACharacter
 {
@@ -29,6 +31,23 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category="Health")
 	float HP;
+
+	UPROPERTY()
+	UClass* MonsterAIController;
+
+	
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPawnSensingComponent* PawnSensingComp;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sensing")
+	bool bIsPlayerSeen;
+	
+	
+	UFUNCTION()
+	void OnPawnSeen(APawn* SeenPawn);
+	
+	UFUNCTION()
+	void OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume);
 
 public:
 	void TakedDamage();

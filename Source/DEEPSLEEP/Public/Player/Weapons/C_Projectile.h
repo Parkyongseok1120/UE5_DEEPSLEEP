@@ -7,6 +7,7 @@
 #include "C_Projectile.generated.h"
 
 class ACharacter;
+class AC_TrasterBase;
 class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystem;
@@ -32,6 +33,9 @@ private:
 	UPROPERTY()
 	ACharacter* OwnerCharacter;
 
+	UPROPERTY()
+	AC_TrasterBase* TrasterBase;
+
 	UPROPERTY(VisibleDefaultsOnly)
 	UC_ReloadComponent* ReloadComponent;
 
@@ -46,7 +50,7 @@ private:
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
+	
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 

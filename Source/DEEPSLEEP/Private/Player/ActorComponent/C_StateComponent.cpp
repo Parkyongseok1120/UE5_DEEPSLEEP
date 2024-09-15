@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Player/C_PlayerCharacter.h"
 #include "Player/ActorComponent/C_StateComponent.h"
+#include "Player/C_PlayerCharacter.h"
 #include "Util/Global.h"
 
 UC_StateComponent::UC_StateComponent()
