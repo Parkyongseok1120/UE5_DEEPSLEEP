@@ -60,6 +60,7 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 	if(MyOwner)
 	{
 		MakeNoise(1.0f, MyOwner->GetInstigator());
+		AActor* HitActor = Hit.GetActor();
 		float ActualDamage = BaseDamage;
 		ActualDamage *= 1.0f;
 
@@ -70,29 +71,23 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 		FVector ShotDirection = EyeRotation.Vector();
 		float HalfRad = FMath::DegreesToRadians(BulletSpread);
 		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
+
+		UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
+
 		FVector TracerEnd = EyeLocation +(ShotDirection * 90000);
 		FVector TracerEndPoint = TracerEnd;
-
-		TrasterBase = Cast<AC_TrasterBase>(OtherActor);
-		if(TrasterBase)
-		{
-			AActor* HitActor = Hit.GetActor();
-			UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
-			
-			CLog::Print("HitActor : "+ HitActor->GetName());
-			
-			PlayImpactEffects(Hit.ImpactPoint);
-			TracerEndPoint = Hit.ImpactPoint;
-			//피직스 객체에 충돌시에만 충격을 가하고, Projectile을 파괴한다.
-			if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
-			{
-				OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
-				Destroy();
-			}
-		}
+		PlayImpactEffects(Hit.ImpactPoint);
+		TracerEndPoint = Hit.ImpactPoint;
 	}
 	Destroy();
+
+	// Only add impulse and destroy projectile if we hit a physics
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	{
+		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+		Destroy();
+	}
 	
 }
 

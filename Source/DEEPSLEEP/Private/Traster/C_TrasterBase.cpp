@@ -3,6 +3,7 @@
 
 #include "Traster/C_TrasterBase.h"
 #include "Perception/PawnSensingComponent.h"
+#include "Util/Global.h"
 
 
 // Sets default values
@@ -65,8 +66,12 @@ void AC_TrasterBase::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Locatio
 	SetActorRotation(LookAt);
 }
 
-void AC_TrasterBase::TakedDamage()
+void AC_TrasterBase::ReceiveDamage(float Damage, const FDamageEvent& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
 {
-	
+	HP -= Damage;
+	CLog::Print(HP);
 }
+
+
 

@@ -50,6 +50,9 @@ protected:
 	void OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume);
 
 public:
-	void TakedDamage();
+	UFUNCTION(BlueprintCallable, Category = "Damage")
+	void ReceiveDamage(float Damage, const FDamageEvent& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+
+
 	
 };
