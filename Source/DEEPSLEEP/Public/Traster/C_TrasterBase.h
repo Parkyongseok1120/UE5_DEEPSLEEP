@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "C_TrasterBase.generated.h"
 
+
+
 class UPawnSensingComponent;
 
 UCLASS()
@@ -30,7 +32,13 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category="Health")
-	float HP;
+	float MaxHP;
+
+	UPROPERTY(VisibleAnywhere, Category="Health")
+	float CurrentHP;
+
+	UPROPERTY(VisibleAnywhere, Category="HitCount")
+	int32 HitCount = 0;
 
 	UPROPERTY()
 	UClass* MonsterAIController;
@@ -50,9 +58,7 @@ protected:
 	void OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume);
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Damage")
-	void ReceiveDamage(float Damage, const FDamageEvent& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
-
-
-	
+	UFUNCTION()
+	void AttackCheck();
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;	
 };

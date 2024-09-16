@@ -59,14 +59,11 @@ void UC_ReloadComponent::Reloading()
 		GetWorld()->GetTimerManager().ClearTimer(ReloadingTimerHandle);
 		
 	}), ReloadingTime, false); //반복도 여기서 추가 변수를 선언해 설정가능
-
 	
-
 }
 
 void UC_ReloadComponent::AmmoCounting()
 {
 	UsingAmmoCount++;
 	RemainAmmoCount = MaxAmmo - UsingAmmoCount;
-	CLog::Print(RemainAmmoCount);
 }

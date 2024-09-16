@@ -4,6 +4,7 @@
 #include "Player/Weapons/C_Projectile.h"
 #include "Util/Global.h"
 #include "Components/SphereComponent.h"
+#include "Engine/DamageEvents.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Player/ActorComponent/C_ReloadComponent.h"
 #include "Traster/C_TrasterBase.h"
@@ -26,7 +27,7 @@ AC_Projectile::AC_Projectile()
 	//Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
 	
 	CollisionComp->InitSphereRadius(5.0f);
-	CollisionComp->BodyInstance.SetCollisionProfileName("Pawn");
+	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &AC_Projectile::OnHit);
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
@@ -34,6 +35,8 @@ AC_Projectile::AC_Projectile()
 	ProjectileMovement->MaxSpeed = 5000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
+
+	BaseDamage = 10;
 
 	//탄이 3초동안 살아있음.
 	InitialLifeSpan = 3.0f;
@@ -62,7 +65,6 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 		MakeNoise(1.0f, MyOwner->GetInstigator());
 		AActor* HitActor = Hit.GetActor();
 		float ActualDamage = BaseDamage;
-		ActualDamage *= 1.0f;
 
 		FVector EyeLocation;
 		FRotator EyeRotation;
@@ -72,13 +74,17 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 		float HalfRad = FMath::DegreesToRadians(BulletSpread);
 		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
 
-		UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
-
+		TrasterBase = Cast<AC_TrasterBase>(OtherActor);
+		if(HitActor == TrasterBase)
+		{
+			FDamageEvent Event;
+			float Damage = UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
+			CLog::Print(HitActor->GetName());
+		}
 		FVector TracerEnd = EyeLocation +(ShotDirection * 90000);
 		FVector TracerEndPoint = TracerEnd;
 		PlayImpactEffects(Hit.ImpactPoint);
 		TracerEndPoint = Hit.ImpactPoint;
-		CLog::Print(HitActor->GetName());
 	}
 	Destroy();
 

@@ -2,8 +2,11 @@
 
 
 #include "Traster/C_TrasterBase.h"
+
+#include "Elements/Columns/TypedElementAlertColumns.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Util/Global.h"
+#include "Engine/DamageEvents.h"
 
 
 // Sets default values
@@ -18,14 +21,14 @@ AC_TrasterBase::AC_TrasterBase()
 	GetMesh()->SetRelativeLocation(FVector(0,0,-90));
 	GetMesh()->SetRelativeRotation(FRotator(0,-90,0));
 	
-	HP = 100;
+	MaxHP = 1000;
 }
 
 // Called when the game starts or when spawned
 void AC_TrasterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	CurrentHP = MaxHP;
 }
 
 // Called every frame
@@ -39,7 +42,7 @@ void AC_TrasterBase::Tick(float DeltaTime)
 void AC_TrasterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
 }
 
 void AC_TrasterBase::OnPawnSeen(APawn* SeenPawn)
@@ -66,11 +69,28 @@ void AC_TrasterBase::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Locatio
 	SetActorRotation(LookAt);
 }
 
-void AC_TrasterBase::ReceiveDamage(float Damage, const FDamageEvent& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+void AC_TrasterBase::AttackCheck()
 {
-	HP -= Damage;
-	CLog::Print(HP);
+	
+}
+
+float AC_TrasterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	// 데미지 처리 로직
+	CurrentHP -= DamageAmount;
+
+	// 피격 횟수 증가
+	HitCount++;
+	CLog::Print(HitCount);
+	CLog::Print(CurrentHP);
+
+	if (CurrentHP <= 0)
+	{
+		// 사망 처리
+		//Die();
+	}
+
+	return CurrentHP;
 }
 
 
