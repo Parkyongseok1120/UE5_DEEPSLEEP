@@ -26,7 +26,7 @@ AC_Projectile::AC_Projectile()
 	//Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
 	
 	CollisionComp->InitSphereRadius(5.0f);
-	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
+	CollisionComp->BodyInstance.SetCollisionProfileName("Pawn");
 	CollisionComp->OnComponentHit.AddDynamic(this, &AC_Projectile::OnHit);
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
@@ -78,6 +78,7 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 		FVector TracerEndPoint = TracerEnd;
 		PlayImpactEffects(Hit.ImpactPoint);
 		TracerEndPoint = Hit.ImpactPoint;
+		CLog::Print(HitActor->GetName());
 	}
 	Destroy();
 
