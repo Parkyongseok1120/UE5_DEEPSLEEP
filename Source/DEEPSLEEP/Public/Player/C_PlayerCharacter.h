@@ -13,8 +13,11 @@ class UInputMappingContext;
 class UInputAction;
 class UC_DashComponent;
 class UC_StateComponent;
+class UC_TargetComponent;
 class AC_DashGhost;
 struct FInputActionValue;
+class UC_InputComponent;
+class AC_BaseWeapon;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDelegate);
 
@@ -33,11 +36,37 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE bool GetbEquipWeapon(){return bEquipWeapon;}
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual FVector GetPawnViewLocation() const override;
+
+
+	//---------------Input---------------------------
+private:
+	UPROPERTY(VisibleAnywhere, Category = "input")
+	UC_InputComponent* Input;
+
+	//----------------Weapon-------------------------
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	AC_BaseWeapon* BaseWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<AC_BaseWeapon> BaseWeaponClass;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	bool bEquipWeapon;
+	
+public:
+	UFUNCTION()
+	void SpawnWeapon1();
+	
+	UFUNCTION()
+	void CallOnFire();
 	
 
 
@@ -126,18 +155,22 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UC_StateComponent* State;
 
-	UFUNCTION()
-	void P_OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType);
 	
-	UFUNCTION()
-	void P_OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
 
-	UFUNCTION()
-	void P_OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 
-	UFUNCTION()
-	void P_OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
 
 
+	//-----------------Target----------------------------
+private:
+	UPROPERTY(VisibleAnywhere)
+	UC_TargetComponent* TargetComponent;
 	
 };

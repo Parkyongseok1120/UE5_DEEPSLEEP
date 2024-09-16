@@ -6,8 +6,13 @@
 #include "Components/ActorComponent.h"
 #include "Player/C_DashGhost.h"
 #include "Player/C_PlayerCharacter.h"
+#include "Traster/C_TrasterBase.h"
 #include "C_DashComponent.generated.h"
 
+class ACharacter;
+class AC_PlayerCharacter;
+class UAnimMontage;
+class AC_TrasterBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEP_API UC_DashComponent : public UActorComponent
@@ -28,16 +33,19 @@ public:
 
 private:
 	UPROPERTY()
-	class ACharacter* OwnerCharacter;
+	 ACharacter* OwnerCharacter;
 
 	UPROPERTY()
-	TSubclassOf<class AC_PlayerCharacter> PlayerClass;
+	AC_TrasterBase* Traster;
+
+	UPROPERTY()
+	TSubclassOf< AC_PlayerCharacter> PlayerClass;
 	
 	UPROPERTY()
-	class AC_PlayerCharacter *PlayerCharacter ;
+	AC_PlayerCharacter *PlayerCharacter ;
 	
 	UPROPERTY()
-	class UAnimMontage* Anim;
+	UAnimMontage* Anim;
 
 	UPROPERTY()
 	bool bCanDash;
@@ -46,15 +54,20 @@ private:
 	bool bDashOn;
 
 	UPROPERTY()
+	bool bTargeting;
+
+	UPROPERTY()
 	float DashDistance = 8000.0f;
 
 	int32 DashCount;
+
 	
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category="Dash CoolTime")
 	float CoolTime;
 public:
+	void TargetingDash();
 	void BeginDash();
 	void End();
 private:

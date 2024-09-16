@@ -8,6 +8,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ActorComponent/C_DashComponent.h"
+#include "Player/ActorComponent/C_TargetComponent.h"
+#include "Player/ActorComponent/C_InputComponent.h"
+#include "Player/Weapons/C_BaseWeapon.h"
+#include "Player/Weapons/C_Projectile.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -16,6 +20,8 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent<UC_DashComponent>(this, &DashComponent, "Dash");
 	CHelpers::CreateActorComponent<UC_StateComponent>(this, &State, "State");
+	CHelpers::CreateActorComponent<UC_TargetComponent>(this, &TargetComponent, "Target");
+	CHelpers::CreateActorComponent<UC_InputComponent>(this, &Input, "Input");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -39,11 +45,12 @@ void AC_PlayerCharacter::BeginPlay()
 
 
 	//Player State
-	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnMovementTypeChanged);
-	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnSelfStateTypeChanged);
-	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnWeaponTypeChanged);
-	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::P_OnBattleTypeChanged);
-	
+	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnMovementTypeChanged);
+	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnSelfStateTypeChanged);
+	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnWeaponTypeChanged);
+	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnBattleTypeChanged);
+
+	BaseWeapon = Cast<AC_BaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_BaseWeapon::StaticClass()));
 }
 
 void AC_PlayerCharacter::Tick(float DeltaTime)
@@ -56,6 +63,15 @@ void AC_PlayerCharacter::Tick(float DeltaTime)
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 
 	PlayerCamera->SetFieldOfView(NewFOV);
+
+	if(TargetComponent->GetbisTargeting())
+	{
+		CLog::Print("true",9999);
+	}
+	else
+	{
+		CLog::Print("false",9999);
+	}
 
 }
 
@@ -77,10 +93,15 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AC_PlayerCharacter::EndSprint);
 	
 	
-	PlayerInputComponent->BindAction("CameraZoom", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
-	PlayerInputComponent->BindAction("CameraZoom", IE_Released, this, &AC_PlayerCharacter::EndZoom);
+	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
+	PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
-	PlayerInputComponent->BindAction("Dash",IE_Pressed, DashComponent, &UC_DashComponent::BeginDash);
+	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &AC_PlayerCharacter::CallOnFire);
+	PlayerInputComponent->BindAction("T_Key",IE_Pressed, Input, &UC_InputComponent::T_key);
+	PlayerInputComponent->BindAction("C_Key",IE_Pressed, Input, &UC_InputComponent::C_key);
+	PlayerInputComponent->BindAction("R_Key",IE_Pressed, Input, &UC_InputComponent::R_key);
+	PlayerInputComponent->BindAction("Key_1",IE_Pressed, Input, &UC_InputComponent::key_1);
+
 
 	//--------------------------------KeyBoard----------------------------------------
 }
@@ -96,6 +117,32 @@ FVector AC_PlayerCharacter::GetPawnViewLocation() const
 	}
 
 	return Super::GetPawnViewLocation();
+}
+
+void AC_PlayerCharacter::CallOnFire()
+{
+	if (BaseWeapon)
+	{
+		BaseWeapon->OnFire(); // OtherActor의 함수 호출
+	}
+}
+void AC_PlayerCharacter::SpawnWeapon1()
+{
+	if (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
+	{
+		if(State!=nullptr)
+		{
+			//UC_StateComponent 클래스의 SetWeaponState를 호출하여 Enum 값 변경.
+			State->SetWeaponState();
+			bEquipWeapon = true;
+			BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+			if(BaseWeapon)
+			{
+				BaseWeapon->SetOwner(this);
+				BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
+			}
+		}
+	}
 }
 
 void AC_PlayerCharacter::BeginZoom()
@@ -182,34 +229,59 @@ void AC_PlayerCharacter::StartDashGhost()
 
 void AC_PlayerCharacter::EndDashGhost()
 {
-//	if(!!DashGhost)
-	//{
-	//	DashGhost->Destroy();
-	//}
+   if(!!DashGhost)
+   		DashGhost->Destroy();
+	
 }
+
+
+
+
 
 
 //-----------------Player State----------------------------
 
-void AC_PlayerCharacter::P_OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
-{
-	//switch (InNewType)
-	//{
-	//	case EMovementState::Idle :
-		 
-	//	break;
-	//}
-}
-
-void AC_PlayerCharacter::P_OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
+void AC_PlayerCharacter::OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
 {
 }
 
-void AC_PlayerCharacter::P_OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+void AC_PlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
 {
 }
 
-void AC_PlayerCharacter::P_OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
+void AC_PlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+{
+	/*switch (InNewType)
+	{
+	case EWeaponState::Hands:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::HealthCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::OblivionCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::UtilCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::Max:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	}*/
+}
+
+void AC_PlayerCharacter::OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
 {
 }
 

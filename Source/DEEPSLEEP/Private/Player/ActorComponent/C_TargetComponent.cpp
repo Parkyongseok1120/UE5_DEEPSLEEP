@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Player/ActorComponent/C_StateComponent.h"
+#include "Traster/C_TrasterBase.h"
 
 
 // Sets default values for this component's properties
@@ -13,7 +14,7 @@ UC_TargetComponent::UC_TargetComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	
-	//CHelpers::GetAsset<UParticleSystem>(&ParticleAsset, "");
+	CHelpers::GetAsset<UParticleSystem>(&ParticleAsset,"/Script/Engine.ParticleSystem'/Game/StarterContent/Particles/P_Fire.P_Fire'");
 }
 
 
@@ -21,21 +22,31 @@ UC_TargetComponent::UC_TargetComponent()
 void UC_TargetComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	bisTargeting = false;
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 }
 
 
 void UC_TargetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	if(bisTargeting == true)
+	{
+		TargetingTime += DeltaTime;
+		if(TargetingTime > 2.0f)
+		{
+			TargetingEnd();
+			TargetingTime = 0.0f;
+		}
+	}
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	CheckNull(Target);
 
+	//몬스터가 죽은 상태가 아니라면.
 	UC_StateComponent* state = CHelpers::GetComponent<UC_StateComponent>(Target);
 	CheckNull(state);
 	CheckTrue(state->IsDeadMode());
-
+	
 	float distance = OwnerCharacter->GetDistanceTo(Target);
 	if(distance > TraceDistance)
 	{
@@ -45,9 +56,10 @@ void UC_TargetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	}
 
 	FRotator controlRotation = OwnerCharacter->GetControlRotation();
+	//두 지점사이의 방향 계산으로 회전 값을 반환
 	FRotator ownertoTarget = UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), Target->GetActorLocation());
-	ownertoTarget = controlRotation;
-
+	CLog::Print(ownertoTarget);
+	
 	APlayerController* controller = OwnerCharacter->GetController<APlayerController>();
 
 	if(controlRotation.Equals(ownertoTarget, FinishAngle))
@@ -70,15 +82,16 @@ void UC_TargetComponent::Toggle()
 	{
 		TargetingStart();
 		
-
+		CheckNull(Target);
 		return;
 	}
-
 	TargetingEnd();
 }
 
+
 ACharacter* UC_TargetComponent::GetNearlyFrontAngle(const TArray<FHitResult>& InHitResults)
 {
+	//백터 내적(플레이어 카메라 각도 cos)
 	float angle = -2.0f;
 	ACharacter* candidate = nullptr;
 
@@ -100,7 +113,6 @@ ACharacter* UC_TargetComponent::GetNearlyFrontAngle(const TArray<FHitResult>& In
 			candidate = Cast<ACharacter>(InHitResults[i].GetActor());
 		}
 	}
-
 	return candidate;
 }
 
@@ -112,7 +124,30 @@ void UC_TargetComponent::TargetingStart()
 	ignores.Add(OwnerCharacter);
 
 	TArray<FHitResult> hitResults;
-	UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), location, location, TraceDistance, "Targeting", false, ignores, DrawDebug, hitResults, true);
+	bool bTargetHit = UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), location, location, TraceDistance, "Targeting", false, ignores, DrawDebug, hitResults, true);
+
+	if(bTargetHit)
+	{
+		for(const FHitResult& Hit : hitResults)
+		{
+			//Hit된 Actor가 AC_TrasterBase거나, 그 자손일 경우
+			AActor* HitActor = Hit.GetActor();
+			if(HitActor && HitActor->IsA(AC_TrasterBase::StaticClass()))
+			{
+				//타겟팅 파티클 생성
+				FVector hitActorLocation = HitActor->GetActorLocation();
+				FVector particleLocation = hitActorLocation + FVector(0,0,100);
+				if(!!Particle)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleAsset, particleLocation);
+				}
+				bisTargeting = true;
+				TargetActor = HitActor;
+			}
+		}
+	}
+	
+
 }
 
 void UC_TargetComponent::TargetingEnd()
@@ -121,8 +156,13 @@ void UC_TargetComponent::TargetingEnd()
 
 	if(!!Particle)
 		Particle->DestroyComponent();
+
+	bisTargeting = false;
 }
 
-
+void UC_TargetComponent::TargetingDash()
+{
+	OwnerCharacter->SetActorRelativeLocation(TargetActor->GetActorLocation());
+}
 
 

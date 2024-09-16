@@ -5,25 +5,29 @@
 #include "Util/Global.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/ActorComponent/C_StateComponent.h"
 #include "Player/C_PlayerCharacter.h"
 
 void UC_PlayerAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
-	OwnerCharacter = Cast<ACharacter>(TryGetPawnOwner());
-	CheckNull(OwnerCharacter);
-	
+	PlayerCharacter = Cast<AC_PlayerCharacter>(TryGetPawnOwner());
+	CheckNull(PlayerCharacter)
+	State = CHelpers::GetComponent<UC_StateComponent>(PlayerCharacter);
+	if (!!State)
+		State->OnWeaponTypeChanged.AddDynamic(this, &UC_PlayerAnimInstance::OnWeaponTypeChanged);
 }
 
 void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	Super::NativeUpdateAnimation(DeltaSeconds);
-	CheckNull(OwnerCharacter);
 	
-	Speed = OwnerCharacter->GetVelocity().Size2D();
-	FRotator rotator = OwnerCharacter->GetVelocity().ToOrientationRotator(); //현재 가는 벡터위치의 회전값을 구함.
-	FRotator rotator2 = OwnerCharacter->GetControlRotation(); // 카메라의 회전방향
+	Super::NativeUpdateAnimation(DeltaSeconds);
+	CheckNull(PlayerCharacter);
+	
+	Speed = PlayerCharacter->GetVelocity().Size2D();
+	FRotator rotator = PlayerCharacter->GetVelocity().ToOrientationRotator(); //현재 가는 벡터위치의 회전값을 구함.
+	FRotator rotator2 = PlayerCharacter->GetControlRotation(); // 카메라의 회전방향
 	FRotator delta = UKismetMathLibrary::NormalizedDeltaRotator(rotator, rotator2); // 두 회전값의 평균을 구함
 
 	//// 이전 회전값.
@@ -37,7 +41,11 @@ void UC_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		//Lerp 함수로 이전프레임의 Direction값과 현재 프레임의 Direction을 선형보간함.
 	}
 	
-	bFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
+	bFalling = PlayerCharacter->GetCharacterMovement()->IsFalling();
 }
 
 
+void UC_PlayerAnimInstance::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+{
+	WeaponType = InNewType;
+}

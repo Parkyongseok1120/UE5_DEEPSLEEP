@@ -21,12 +21,16 @@ protected:
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+public:
+	FORCEINLINE bool GetbisTargeting() { return bisTargeting; }
 	
 private:
 	class ACharacter* OwnerCharacter;
 	class ACharacter* Target;
 
 private:
+	float TargetingTime;
 	
 	UPROPERTY(EditAnywhere, Category = "Debug")
 	TEnumAsByte<EDrawDebugTrace::Type> DrawDebug;
@@ -46,14 +50,19 @@ private:
 private:
 	class UParticleSystemComponent* Particle;
 	bool bMovingFocus;
+	bool bisTargeting;
+	AActor* TargetActor;
+	
 	class ACharacter* GetNearlyFrontAngle(const TArray<FHitResult>& InHitResults);
 	
 public:
 	void Toggle();
+	void TargetingDash();
 	
 private:
 	void TargetingStart();
 	void TargetingEnd();
+	
 
 
 

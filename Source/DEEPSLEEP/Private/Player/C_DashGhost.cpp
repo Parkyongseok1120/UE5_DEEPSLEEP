@@ -12,7 +12,6 @@
 AC_DashGhost::AC_DashGhost()
 {
 	CHelpers::CreateComponent<UPoseableMeshComponent>(this, &Mesh, "Mesh");
-
 }
 
 void AC_DashGhost::BeginPlay()

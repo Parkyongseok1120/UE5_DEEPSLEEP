@@ -6,10 +6,17 @@
 #include "GameFramework/Character.h"
 #include "C_TrasterBase.generated.h"
 
+
+
+class UPawnSensingComponent;
+
 UCLASS()
 class DEEPSLEEP_API AC_TrasterBase : public ACharacter
 {
 	GENERATED_BODY()
+
+public:
+	FORCEINLINE bool GetBisTargeting() {return bisTargeting;}
 
 public:
 	// Sets default values for this character's properties
@@ -26,6 +33,39 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+protected:
+	UPROPERTY(EditAnywhere, Category="Health")
+	float MaxHP;
+
+	UPROPERTY(VisibleAnywhere, Category="Health")
+	float CurrentHP;
+
+	bool bisTargeting;
+
+	UPROPERTY(VisibleAnywhere, Category="HitCount")
+	int32 HitCount = 0;
+
+	UPROPERTY()
+	UClass* MonsterAIController;
+
+	
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPawnSensingComponent* PawnSensingComp;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sensing")
+	bool bIsPlayerSeen;
 	
 	
+	UFUNCTION()
+	void OnPawnSeen(APawn* SeenPawn);
+	
+	UFUNCTION()
+	void OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume);
+
+public:
+	UFUNCTION()
+	void SetTargetingNull();
+	
+	UFUNCTION()
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;	
 };
