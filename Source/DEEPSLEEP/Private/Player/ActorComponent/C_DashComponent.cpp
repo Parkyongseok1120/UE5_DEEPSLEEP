@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Player/C_PlayerCharacter.h"
 #include "Player/C_DashGhost.h"
+#include "Traster/C_TrasterBase.h"
 #include "Util/Global.h"
 
 UC_DashComponent::UC_DashComponent()
@@ -27,7 +28,6 @@ void UC_DashComponent::BeginPlay()
 			//PlayerCharacter->OnDashGhostEvent.AddDynamic(this, &UC_DashComponent::BeginDash);
 		}
 	}
-	
 	bCanDash = true;
 	bDashOn = false;
 }
@@ -42,6 +42,28 @@ void UC_DashComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	if(CoolTime > 5.0f)
 	{
 		bCanDash = true;
+	}
+
+	if(Traster)
+		bTargeting = Traster->GetBisTargeting();
+}
+
+void UC_DashComponent::TargetingDash()
+{
+	CheckNull(OwnerCharacter)
+	if(bCanDash != false)
+	{
+		Traster = Cast<AC_TrasterBase>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_TrasterBase::StaticClass()));
+		if(Traster)
+		{
+			FVector TrasterLocation = Traster->GetActorLocation() + FVector(10,0,0);
+			FRotator TrasterRotation = Traster->GetActorRotation();
+
+			OwnerCharacter->SetActorRelativeLocation(TrasterLocation);
+			Traster->SetTargetingNull();
+		}
+		CoolTime = 0.0f;
+		End();
 	}
 }
 

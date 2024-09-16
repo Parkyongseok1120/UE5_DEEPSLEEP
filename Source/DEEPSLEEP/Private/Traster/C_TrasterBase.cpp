@@ -29,6 +29,7 @@ void AC_TrasterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHP = MaxHP;
+	bisTargeting = false;
 }
 
 // Called every frame
@@ -69,10 +70,12 @@ void AC_TrasterBase::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Locatio
 	SetActorRotation(LookAt);
 }
 
-void AC_TrasterBase::AttackCheck()
+void AC_TrasterBase::SetTargetingNull()
 {
-	
+	bisTargeting = false;
+	HitCount = 0;
 }
+
 
 float AC_TrasterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -83,6 +86,10 @@ float AC_TrasterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	HitCount++;
 	CLog::Print(HitCount);
 	CLog::Print(CurrentHP);
+	if(HitCount >=4)
+	{
+		bisTargeting = true;
+	}
 
 	if (CurrentHP <= 0)
 	{

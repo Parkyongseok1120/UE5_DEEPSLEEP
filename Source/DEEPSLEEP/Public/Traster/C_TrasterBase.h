@@ -16,6 +16,9 @@ class DEEPSLEEP_API AC_TrasterBase : public ACharacter
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE bool GetBisTargeting() {return bisTargeting;}
+
+public:
 	// Sets default values for this character's properties
 	AC_TrasterBase();
 
@@ -36,6 +39,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category="Health")
 	float CurrentHP;
+
+	bool bisTargeting;
 
 	UPROPERTY(VisibleAnywhere, Category="HitCount")
 	int32 HitCount = 0;
@@ -59,6 +64,8 @@ protected:
 
 public:
 	UFUNCTION()
-	void AttackCheck();
+	void SetTargetingNull();
+	
+	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;	
 };

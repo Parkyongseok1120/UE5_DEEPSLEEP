@@ -38,6 +38,9 @@ private:
 
 	UPROPERTY()
 	TSubclassOf<AC_PlayerCharacter> Player_Class;
+
+	UPROPERTY()
+	AC_TrasterBase* Traster;
 	
 private:
 	UPROPERTY()
@@ -54,6 +57,10 @@ private:
 
 	UPROPERTY()
 	UC_StateComponent* StateComponent;
+
+private:
+	UPROPERTY()
+	bool bTargeting;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")

@@ -72,11 +72,11 @@ void AC_BaseWeapon::OnFire()
 {
 	if (!OwnerCharacter)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OnFire() called but OwnerCharacter is null. Attempting to set it up."));
+		CLog::Log("OnFire() called but OwnerCharacter is null. Attempting to set it up.");
 		SetupOwnerCharacter();
 		if (!OwnerCharacter)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Failed to set up OwnerCharacter. Cannot fire."));
+			CLog::Log("Failed to set up OwnerCharacter. Cannot fire.");
 			return;
 		}
 	}
@@ -84,13 +84,12 @@ void AC_BaseWeapon::OnFire()
 	{
 		if (OwnerCharacter == nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AC_BaseWeapon::OnFire: OwnerCharacter is NULL"));
+			CLog::Log("AC_BaseWeapon::OnFire: OwnerCharacter is NULL");
 		}
 		else
 		{
 			if (ProjectileClass != nullptr)
 			{
-				CLog::Print("Load");
 				const FRotator SpawnRotation =  OwnerCharacter->GetControlRotation();
 				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 	

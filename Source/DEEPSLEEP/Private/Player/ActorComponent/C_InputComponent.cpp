@@ -47,8 +47,19 @@ void UC_InputComponent::C_key()
 	Dash = GetOwner()->GetComponentByClass<UC_DashComponent>();
 	if(Dash != nullptr)
 	{
-		Dash->BeginDash();
+		Traster = Cast<AC_TrasterBase>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_TrasterBase::StaticClass()));
+		bTargeting = Traster->GetBisTargeting();
+		if(bTargeting == true)
+		{
+			Dash->TargetingDash();
+		}
+		
+		else
+		{
+			Dash->BeginDash();
+		}
 	}
+	
 }
 
 void UC_InputComponent::Q_key()

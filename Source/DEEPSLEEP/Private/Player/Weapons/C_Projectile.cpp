@@ -31,8 +31,8 @@ AC_Projectile::AC_Projectile()
 	CollisionComp->OnComponentHit.AddDynamic(this, &AC_Projectile::OnHit);
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 5000.f;
-	ProjectileMovement->MaxSpeed = 5000.f;
+	ProjectileMovement->InitialSpeed = 10000.f;
+	ProjectileMovement->MaxSpeed = 10000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
 
@@ -75,9 +75,8 @@ void AC_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
 
 		TrasterBase = Cast<AC_TrasterBase>(OtherActor);
-		if(HitActor == TrasterBase)
+		if(HitActor && HitActor->IsA(AC_TrasterBase::StaticClass())) //Hit된 Actor가 AC_TrasterBase거나, 그 자손일 경우
 		{
-			FDamageEvent Event;
 			float Damage = UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),MyOwner, DamageType);
 			CLog::Print(HitActor->GetName());
 		}
