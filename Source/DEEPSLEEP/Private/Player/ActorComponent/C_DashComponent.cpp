@@ -59,7 +59,7 @@ void UC_DashComponent::TargetingDash()
 			FVector TrasterLocation = Traster->GetActorLocation() + FVector(10,0,0);
 			FRotator TrasterRotation = Traster->GetActorRotation();
 
-			OwnerCharacter->SetActorRelativeLocation(TrasterLocation);
+			OwnerCharacter->AddActorWorldOffset(TrasterLocation, true);
 			Traster->SetTargetingNull();
 		}
 		CoolTime = 0.0f;
@@ -98,7 +98,8 @@ void UC_DashComponent::End()
 void UC_DashComponent::DashPoint()
 {
 	FVector DashDirection = OwnerCharacter->GetLastMovementInputVector().GetSafeNormal();
-	OwnerCharacter->LaunchCharacter(DashDirection * DashDistance, true, true);
+	FVector DashOffset = DashDirection * DashDistance;
+	OwnerCharacter->AddActorWorldOffset(DashOffset, true);
 	
 	End();
 }

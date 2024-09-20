@@ -57,7 +57,7 @@ private:
 	bool bTargeting;
 
 	UPROPERTY()
-	float DashDistance = 8000.0f;
+	float DashDistance = 1000.0f;
 
 	int32 DashCount;
 
