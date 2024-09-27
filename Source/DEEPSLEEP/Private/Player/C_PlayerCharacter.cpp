@@ -11,7 +11,6 @@
 #include "Player/ActorComponent/C_TargetComponent.h"
 #include "Player/ActorComponent/C_InputComponent.h"
 #include "Player/Weapons/C_BaseWeapon.h"
-#include "Player/Weapons/C_Projectile.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -22,6 +21,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateActorComponent<UC_StateComponent>(this, &State, "State");
 	CHelpers::CreateActorComponent<UC_TargetComponent>(this, &TargetComponent, "Target");
 	CHelpers::CreateActorComponent<UC_InputComponent>(this, &Input, "Input");
+	CHelpers::CreateActorComponent<UC_HealthComponent>(this, &HealthComponent, "Health");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -48,7 +48,6 @@ void AC_PlayerCharacter::BeginPlay()
 	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnMovementTypeChanged);
 	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnSelfStateTypeChanged);
 	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnWeaponTypeChanged);
-	State->OnBattleTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnBattleTypeChanged);
 
 	BaseWeapon = Cast<AC_BaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_BaseWeapon::StaticClass()));
 }
@@ -63,16 +62,7 @@ void AC_PlayerCharacter::Tick(float DeltaTime)
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 
 	PlayerCamera->SetFieldOfView(NewFOV);
-
-	if(TargetComponent->GetbisTargeting())
-	{
-		CLog::Print("true",9999);
-	}
-	else
-	{
-		CLog::Print("false",9999);
-	}
-
+	
 }
 
 void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -133,7 +123,7 @@ void AC_PlayerCharacter::SpawnWeapon1()
 		if(State!=nullptr)
 		{
 			//UC_StateComponent 클래스의 SetWeaponState를 호출하여 Enum 값 변경.
-			State->SetWeaponState();
+			State->SetHealthCoreState();
 			bEquipWeapon = true;
 			BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
 			if(BaseWeapon)
@@ -279,10 +269,6 @@ void AC_PlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 			break;
 		}
 	}*/
-}
-
-void AC_PlayerCharacter::OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType)
-{
 }
 
 

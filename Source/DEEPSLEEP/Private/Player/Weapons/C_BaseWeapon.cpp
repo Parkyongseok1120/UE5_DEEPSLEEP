@@ -15,10 +15,11 @@
 AC_BaseWeapon::AC_BaseWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	
 
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	CHelpers::CreateActorComponent<UC_ReloadComponent>(this, &Reload, "Reload");
-
+	CHelpers::GetAsset<UAnimMontage>(&FireAnimMontage, "/Script/Engine.AnimMontage'/Game/Characters/Dummy/Anim/Pistol/Shooting_Montage.Shooting_Montage'");
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Pistol.Darkness_Pistol'");
 	Mesh->SetSkeletalMesh(mesh);
@@ -35,6 +36,8 @@ AC_BaseWeapon::AC_BaseWeapon()
 void AC_BaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	
 	ProjectileClass = AC_Projectile::StaticClass();
 	if(Projectile)
 	{
@@ -49,31 +52,23 @@ void AC_BaseWeapon::Tick(float DeltaTime)
 
 void AC_BaseWeapon::SetupOwnerCharacter()
 {
-	AActor* OwnerActor = GetOwner();
-	if (OwnerActor)
+	if (OwnerCharacter)
 	{
-		OwnerCharacter = Cast<AC_PlayerCharacter>(OwnerActor);
-		if (OwnerCharacter)
-		{
-			UE_LOG(LogTemp, Log, TEXT("OwnerCharacter set successfully to %s"), *OwnerCharacter->GetName());
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Failed to cast Owner to AC_PlayerCharacter. Owner class: %s"), *OwnerActor->GetClass()->GetName());
-		}
+		UE_LOG(LogTemp, Log, TEXT("OwnerCharacter set successfully to %s"), *OwnerCharacter->GetName());
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetOwner() returned nullptr"));
+		UE_LOG(LogTemp, Warning, TEXT("Failed to cast Owner to AC_PlayerCharacter. Owner class: %s"), *OwnerActor->GetClass()->GetName());
+	
 	}
 }
 
 void AC_BaseWeapon::OnFire()
 {
+	OwnerCharacter = Cast<AC_PlayerCharacter>(GetOwner());
 	if (!OwnerCharacter)
 	{
 		CLog::Log("OnFire() called but OwnerCharacter is null. Attempting to set it up.");
-		SetupOwnerCharacter();
 		if (!OwnerCharacter)
 		{
 			CLog::Log("Failed to set up OwnerCharacter. Cannot fire.");
@@ -90,6 +85,7 @@ void AC_BaseWeapon::OnFire()
 		{
 			if (ProjectileClass != nullptr)
 			{
+				PlayFireAnimMontage(FireAnimMontage);
 				const FRotator SpawnRotation =  OwnerCharacter->GetControlRotation();
 				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 	
@@ -112,4 +108,30 @@ void AC_BaseWeapon::OnFire()
 		Reload->Reloading();
 	}
 }
+void AC_BaseWeapon::PlayFireAnimMontage(UAnimMontage* MontageToPlay)
+{
+	if(OwnerCharacter)
+	{
+		OwnerMesh = OwnerCharacter->GetMesh();
+		if (!MontageToPlay)
+		{
+			UE_LOG(LogTemp, Error, TEXT("YourActorComponent: MontageToPlay is null"));
+		
+		}
+		if (!OwnerMesh)
+		{
+			UE_LOG(LogTemp, Error, TEXT("YourActorComponent: OwnerMesh is null when trying to play montage"));
+	
+		}
+		else
+		{
+			OwnerMesh->GetAnimInstance()->Montage_Play(MontageToPlay);
+
+		}
+	}
+	
+
+
+}
+
 

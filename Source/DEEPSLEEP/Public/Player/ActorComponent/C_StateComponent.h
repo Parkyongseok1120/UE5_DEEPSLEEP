@@ -9,7 +9,7 @@
 UENUM(BlueprintType)
 enum class EMovementState : uint8
 {
-	Idle = 0, Walk, Sprint, Jump, Dash, Max
+	Default = 0, Jump, Dash, Max
 };
 
 UENUM(BlueprintType)
@@ -24,17 +24,10 @@ enum class EWeaponState : uint8
 	Hands = 0, HealthCore, OblivionCore, UtilCore, Max
 };
 
-UENUM(BlueprintType)
-enum class EBattleState : uint8
-{
-	NoBattle = 0, Battle, TakeTargeting, Max
-};
-
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMovementTypeChanged, EMovementState, InPrevType, EMovementState, InNewType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSelfStateTypeChanged, ESelfState, InPrevType, ESelfState, InNewType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponTypeChanged, EWeaponState, InPrevType, EWeaponState, InNewType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBattleTypeChanged, EBattleState, InPrevType, EBattleState, InNewType);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -43,7 +36,7 @@ class DEEPSLEEP_API UC_StateComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE bool IsIdleMode() { return MovementType == EMovementState::Idle; }
+	FORCEINLINE bool IsDefaultMode() { return MovementType == EMovementState::Default; }
 	FORCEINLINE bool IsDeadMode() { return SelfStateType == ESelfState::Dead; }
 	
 public:	
@@ -57,17 +50,21 @@ public:
 
 
 public: //--------------Movmemnt State--------
-	void SetMovementState();
+	void SetDefalutState();
+	void SetJumpState();
+	void DashState();
 
 public: //--------------Self State--------
-	void SetSelfState();
-
-public: //--------------Weapon State--------
-	void SetWeaponState();
+	void SetAliveState();
+	void SetDeadState();
+	void SetFaintState();
 	
 
-public: //--------------Battle State--------
-	void SetBattleState();
+public: //--------------Weapon State--------
+	void Hands();
+	void SetHealthCoreState();
+	void SetOblivionCoreState();
+	void SetUtilCoreState();
 
 
 	
@@ -75,18 +72,16 @@ private://--------------Change Type----------
 	void ChangeMovementType(EMovementState InType);
 	void ChangeSelfStateType(ESelfState InType);
 	void ChangeWeaponType(EWeaponState InType);
-	void ChangeBattleType(EBattleState InType);
+	
 
 public: //Delegate
 	FMovementTypeChanged OnMovementTypeChanged;
 	FSelfStateTypeChanged OnSelfStateTypeChanged;
 	FWeaponTypeChanged OnWeaponTypeChanged;
-	FBattleTypeChanged OnBattleTypeChanged;
-
+	 
 private: //Enums
 	EMovementState MovementType;
 	ESelfState SelfStateType;
-	EBattleState BattleType;
 	EWeaponState WeaponType;
 
 private:

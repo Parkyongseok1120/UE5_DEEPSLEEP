@@ -21,31 +21,88 @@ void UC_StateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UC_StateComponent::SetMovementState()
+
+
+
+//-------------Movement-----------------
+void UC_StateComponent::SetDefalutState()
 {
+	ChangeMovementType(EMovementState::Default);
 }
 
-void UC_StateComponent::SetSelfState()
+void UC_StateComponent::SetJumpState()
 {
+	ChangeMovementType(EMovementState::Jump);
 }
 
-void UC_StateComponent::SetWeaponState()
+void UC_StateComponent::DashState()
+{
+	ChangeMovementType(EMovementState::Dash);
+}
+
+
+
+
+//-------------SelfState-----------------
+void UC_StateComponent::SetAliveState()
+{
+	ChangeSelfStateType(ESelfState::Alive);
+}
+
+void UC_StateComponent::SetDeadState()
+{
+	ChangeSelfStateType(ESelfState::Dead);
+}
+
+void UC_StateComponent::SetFaintState()
+{
+	ChangeSelfStateType(ESelfState::Faint);
+}
+
+
+
+
+
+//-------------Weapons-----------------
+void UC_StateComponent::Hands()
+{
+	ChangeWeaponType(EWeaponState::Hands);
+}
+
+void UC_StateComponent::SetHealthCoreState()
 {
 	ChangeWeaponType(EWeaponState::HealthCore);
 }
 
-void UC_StateComponent::SetBattleState()
+void UC_StateComponent::SetOblivionCoreState()
 {
-	
+	ChangeWeaponType(EWeaponState::OblivionCore);
 }
+
+void UC_StateComponent::SetUtilCoreState()
+{
+	ChangeWeaponType(EWeaponState::UtilCore);
+
+}
+
+
 
 void UC_StateComponent::ChangeMovementType(EMovementState InType)
 {
-	
+	EMovementState prevType = MovementType;
+	MovementType = InType;
+
+	if (OnMovementTypeChanged.IsBound())
+		OnMovementTypeChanged.Broadcast(prevType, InType);
 }
 
 void UC_StateComponent::ChangeSelfStateType(ESelfState InType)
 {
+	ESelfState prevType = SelfStateType;
+	SelfStateType = InType;
+
+	if (OnSelfStateTypeChanged.IsBound())
+		OnSelfStateTypeChanged.Broadcast(prevType, InType);
 }
 
 void UC_StateComponent::ChangeWeaponType(EWeaponState InType)
@@ -55,10 +112,6 @@ void UC_StateComponent::ChangeWeaponType(EWeaponState InType)
 
 	if (OnWeaponTypeChanged.IsBound())
 		OnWeaponTypeChanged.Broadcast(prevType, InType);
-}
-
-void UC_StateComponent::ChangeBattleType(EBattleState InType)
-{
 }
 
 

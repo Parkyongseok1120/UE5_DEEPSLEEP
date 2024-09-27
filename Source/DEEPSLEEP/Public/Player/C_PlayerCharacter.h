@@ -18,8 +18,7 @@ class AC_DashGhost;
 struct FInputActionValue;
 class UC_InputComponent;
 class AC_BaseWeapon;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDelegate);
+class UC_HealthComponent;
 
 
 UCLASS()
@@ -60,6 +59,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool bEquipWeapon;
+
 	
 public:
 	UFUNCTION()
@@ -144,10 +144,6 @@ public:
 	UFUNCTION()
 	void EndDashGhost();
 	
-	FPlayerDelegate OnDashGhostEvent;
-	
-
-	
 	
 	//-----------------PlayerState----------------------------
 
@@ -163,14 +159,15 @@ private:
 
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
-
-	UFUNCTION(BlueprintCallable, Category = "State")
-	void OnBattleTypeChanged(EBattleState InPrevType, EBattleState InNewType);
-
+	
 
 	//-----------------Target----------------------------
 private:
 	UPROPERTY(VisibleAnywhere)
 	UC_TargetComponent* TargetComponent;
-	
+
+	//-----------------Health--------------------------
+private:
+	UPROPERTY(VisibleAnywhere)
+	UC_HealthComponent* HealthComponent;
 };

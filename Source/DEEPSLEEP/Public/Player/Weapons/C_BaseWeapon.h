@@ -10,6 +10,7 @@ class AC_PlayerCharacter;
 class USkeletalMesh;
 class AC_Projectile;
 class UC_ReloadComponent;
+class UAnimMontage;
 
 UCLASS()
 class DEEPSLEEP_API AC_BaseWeapon : public AActor
@@ -26,10 +27,20 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+
+
+	
+protected:
+	UPROPERTY()
+	AActor* OwnerActor;
+	
 	UPROPERTY()
 	AC_PlayerCharacter* OwnerCharacter;
+	
+	UPROPERTY()
+	USkeletalMeshComponent* OwnerMesh;
 
-protected:
+	
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
 	USkeletalMeshComponent* Mesh;
 
@@ -47,6 +58,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector GunOffset;
+	
+	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	UAnimMontage* FireAnimMontage;
+
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void PlayFireAnimMontage(UAnimMontage* MontageToPlay);
 
 public:
 	UFUNCTION()
