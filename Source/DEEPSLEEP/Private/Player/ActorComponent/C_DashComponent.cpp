@@ -57,10 +57,10 @@ void UC_DashComponent::TargetingDash()
 		if(Traster)
 		{
 			FVector TrasterLocation = Traster->GetActorLocation() + FVector(10,0,0);
-			FRotator TrasterRotation = Traster->GetActorRotation();
+			//FRotator TrasterRotation = Traster->GetActorRotation();
 
 			OwnerCharacter->AddActorWorldOffset(TrasterLocation, true);
-			Traster->SetTargetingNull();
+			//Traster->SetTargetingNull();
 		}
 		CoolTime = 0.0f;
 		End();

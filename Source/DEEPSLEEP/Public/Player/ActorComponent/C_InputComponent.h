@@ -14,6 +14,7 @@ class UC_ReloadComponent;
 class AC_BaseWeapon;
 class ACharacter;
 class AC_PlayerCharacter;
+class AC_TrasterBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEP_API UC_InputComponent : public UActorComponent

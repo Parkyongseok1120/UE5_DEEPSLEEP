@@ -54,7 +54,6 @@ void UC_InputComponent::C_key()
 		{
 			Dash->TargetingDash();
 		}
-		
 		else
 		{
 			Dash->BeginDash();

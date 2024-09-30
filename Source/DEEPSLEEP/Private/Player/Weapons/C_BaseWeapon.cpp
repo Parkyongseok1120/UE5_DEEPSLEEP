@@ -126,7 +126,7 @@ void AC_BaseWeapon::PlayFireAnimMontage(UAnimMontage* MontageToPlay)
 		else
 		{
 			OwnerMesh->GetAnimInstance()->Montage_Play(MontageToPlay);
-
+			CLog::Print("Montage_Play");
 		}
 	}
 	
