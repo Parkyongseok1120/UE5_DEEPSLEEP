@@ -91,6 +91,7 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("C_Key",IE_Pressed, Input, &UC_InputComponent::C_key);
 	PlayerInputComponent->BindAction("R_Key",IE_Pressed, Input, &UC_InputComponent::R_key);
 	PlayerInputComponent->BindAction("Key_1",IE_Pressed, Input, &UC_InputComponent::key_1);
+	PlayerInputComponent->BindAction("Key_2",IE_Pressed, Input, &UC_InputComponent::key_2);
 
 
 	//--------------------------------KeyBoard----------------------------------------
@@ -118,13 +119,21 @@ void AC_PlayerCharacter::CallOnFire()
 }
 void AC_PlayerCharacter::SpawnWeapon1()
 {
-	if (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
+	if(bSpawnWeapon == true)
+	{
+		State->SetHealthCoreState();
+		BaseWeapon->SetActorHiddenInGame(false);
+		BaseWeapon->SetActorEnableCollision(true);
+		BaseWeapon->SetActorTickEnabled(true);
+	}
+	else if (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
 	{
 		if(State!=nullptr)
 		{
 			//UC_StateComponent 클래스의 SetWeaponState를 호출하여 Enum 값 변경.
 			State->SetHealthCoreState();
 			bEquipWeapon = true;
+			bSpawnWeapon = true;
 			BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
 			if(BaseWeapon)
 			{
@@ -134,6 +143,29 @@ void AC_PlayerCharacter::SpawnWeapon1()
 		}
 	}
 }
+
+void AC_PlayerCharacter::HideWeapon1()
+{
+	if(BaseWeapon != nullptr)
+		if(State!=nullptr)
+		{
+			State->SetHandsState();
+			bEquipWeapon = false;
+			BaseWeapon -> SetActorHiddenInGame(true);
+			BaseWeapon -> SetActorEnableCollision(false);
+			BaseWeapon -> SetActorTickEnabled(false);
+		}
+}
+
+void AC_PlayerCharacter::SwitchToWeapon()
+{
+	// 현재 무기 숨기기
+	HideWeapon1();
+    
+	// 새 무기가 이미 생성되어 있는지 확인
+	
+}
+
 
 void AC_PlayerCharacter::BeginZoom()
 {

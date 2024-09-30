@@ -61,7 +61,7 @@ public: //--------------Self State--------
 	
 
 public: //--------------Weapon State--------
-	void Hands();
+	void SetHandsState();
 	void SetHealthCoreState();
 	void SetOblivionCoreState();
 	void SetUtilCoreState();

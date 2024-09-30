@@ -60,10 +60,19 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool bEquipWeapon;
 
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	bool bSpawnWeapon;
+
 	
 public:
 	UFUNCTION()
 	void SpawnWeapon1();
+
+	UFUNCTION()
+	void HideWeapon1();
+
+	UFUNCTION()
+	void SwitchToWeapon();
 	
 	UFUNCTION()
 	void CallOnFire();

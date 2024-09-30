@@ -84,12 +84,15 @@ void UC_InputComponent::key_1()
 {
 	PlayerCharacter = Cast<AC_PlayerCharacter>(GetOwner());
 	if(PlayerCharacter != nullptr)
-		PlayerCharacter->SpawnWeapon1();
+		PlayerCharacter->HideWeapon1();
 	
 }
 
 void UC_InputComponent::key_2()
 {
+	PlayerCharacter = Cast<AC_PlayerCharacter>(GetOwner());
+	if(PlayerCharacter != nullptr)
+		PlayerCharacter->SpawnWeapon1();
 }
 
 void UC_InputComponent::key_3()

@@ -64,7 +64,7 @@ void UC_StateComponent::SetFaintState()
 
 
 //-------------Weapons-----------------
-void UC_StateComponent::Hands()
+void UC_StateComponent::SetHandsState()
 {
 	ChangeWeaponType(EWeaponState::Hands);
 }
