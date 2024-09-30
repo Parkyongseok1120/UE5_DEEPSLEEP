@@ -40,9 +40,7 @@ void AC_PlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	DefaultFOV = PlayerCamera->FieldOfView;
-
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-
 
 	//Player State
 	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnMovementTypeChanged);
