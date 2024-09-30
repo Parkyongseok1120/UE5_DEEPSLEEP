@@ -70,8 +70,8 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//--------------------------------KeyBoard----------------------------------------
 	
 	// Bind jump events
-	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jumping", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jumping", IE_Released, this, &ACharacter::StopJumping);
 	
 	PlayerInputComponent->BindAxis("MoveForward", this, &AC_PlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AC_PlayerCharacter::MoveRight);

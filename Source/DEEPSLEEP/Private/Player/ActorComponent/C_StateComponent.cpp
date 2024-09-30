@@ -82,7 +82,6 @@ void UC_StateComponent::SetOblivionCoreState()
 void UC_StateComponent::SetUtilCoreState()
 {
 	ChangeWeaponType(EWeaponState::UtilCore);
-
 }
 
 
