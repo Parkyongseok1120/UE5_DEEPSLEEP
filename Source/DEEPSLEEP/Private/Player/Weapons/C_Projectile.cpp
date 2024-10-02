@@ -6,7 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Engine/DamageEvents.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Player/ActorComponent/C_ReloadComponent.h"
+#include "Player/Weapons/C_ReloadComponent.h"
 #include "Traster/C_TrasterBase.h"
 #include "GameFramework/Character.h"
 #include "Player/Weapons/C_BaseWeapon.h"

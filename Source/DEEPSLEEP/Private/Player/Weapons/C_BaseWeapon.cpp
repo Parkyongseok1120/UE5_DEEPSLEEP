@@ -6,7 +6,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 
-#include "Player/ActorComponent/C_ReloadComponent.h"
+#include "Player/Weapons/C_ReloadComponent.h"
 #include "Player/Weapons/C_Projectile.h"
 #include "GameFramework/Character.h"
 #include "Player/C_PlayerCharacter.h"

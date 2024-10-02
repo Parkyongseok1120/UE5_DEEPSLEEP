@@ -4,7 +4,7 @@
 #include "Player/ActorComponent/C_InputComponent.h"
 #include "Util/Global.h"
 #include "Player/ActorComponent/C_DashComponent.h"
-#include "Player/ActorComponent/C_ReloadComponent.h"
+#include "Player/Weapons//C_ReloadComponent.h"
 #include "Player/ActorComponent/C_StateComponent.h"
 #include "Player/ActorComponent/C_TargetComponent.h"
 #include "GameFramework/Character.h"
@@ -109,6 +109,7 @@ void UC_InputComponent::key_3()
 
 void UC_InputComponent::SpaceBar()
 {
+	//더블 점프 구현
 	PlayerCharacter = Cast<AC_PlayerCharacter>(GetOwner());
 	if (OwnerCharacter && CurrentJumpCount < MaxJumpCount)
 	{

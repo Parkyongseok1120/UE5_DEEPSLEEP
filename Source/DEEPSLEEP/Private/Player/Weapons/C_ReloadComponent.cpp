@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Player/ActorComponent/C_ReloadComponent.h"
+#include "Player/Weapons/C_ReloadComponent.h"
 #include "Player/Weapons/C_BaseWeapon.h"
 #include "Serialization/AsyncPackageLoader.h"
 #include "Util/Global.h"
