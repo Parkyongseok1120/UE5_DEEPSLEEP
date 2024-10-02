@@ -9,6 +9,8 @@
 #include "Player/ActorComponent/C_TargetComponent.h"
 #include "GameFramework/Character.h"
 #include "Player/Weapons/C_BaseWeapon.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values for this component's properties
 UC_InputComponent::UC_InputComponent()
@@ -30,6 +32,11 @@ void UC_InputComponent::BeginPlay()
 void UC_InputComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (OwnerCharacter && OwnerCharacter->GetCharacterMovement()->IsMovingOnGround())
+	{
+		CurrentJumpCount = 0;
+	}
 }
 
 void UC_InputComponent::R_key()
@@ -45,6 +52,8 @@ void UC_InputComponent::R_key()
 void UC_InputComponent::C_key()
 {
 	Dash = GetOwner()->GetComponentByClass<UC_DashComponent>();
+	
+	
 	if(Dash != nullptr)
 	{
 		Traster = Cast<AC_TrasterBase>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_TrasterBase::StaticClass()));
@@ -96,6 +105,22 @@ void UC_InputComponent::key_2()
 
 void UC_InputComponent::key_3()
 {
+}
+
+void UC_InputComponent::SpaceBar()
+{
+	PlayerCharacter = Cast<AC_PlayerCharacter>(GetOwner());
+	if (OwnerCharacter && CurrentJumpCount < MaxJumpCount)
+	{
+		if (CurrentJumpCount == 0 && !OwnerCharacter->GetCharacterMovement()->IsMovingOnGround())
+		{
+			// 첫 번째 점프가 이미 진행 중인 경우 무시
+			return;
+		}
+
+		OwnerCharacter->LaunchCharacter(FVector(0, 0, JumpForce), false, true);
+		CurrentJumpCount++;
+	}
 }
 
 void UC_InputComponent::MouseRight()

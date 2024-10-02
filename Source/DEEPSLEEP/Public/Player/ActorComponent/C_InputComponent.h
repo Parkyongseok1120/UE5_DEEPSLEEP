@@ -63,6 +63,16 @@ private:
 	UPROPERTY()
 	bool bTargeting;
 
+private:
+	UPROPERTY(EditAnywhere, Category = "Jump")
+	float JumpForce = 500.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Jump")
+	int32 MaxJumpCount = 2;
+
+	int32 CurrentJumpCount = 0;
+
+
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 	EWeaponState WeaponTypeState = EWeaponState::Max;
@@ -78,7 +88,7 @@ public:
 	void key_1();
 	void key_2();
 	void key_3();
-	
+	void SpaceBar();
 
 
 public:

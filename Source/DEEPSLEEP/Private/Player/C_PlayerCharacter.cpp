@@ -10,6 +10,7 @@
 #include "Player/ActorComponent/C_DashComponent.h"
 #include "Player/ActorComponent/C_TargetComponent.h"
 #include "Player/ActorComponent/C_InputComponent.h"
+#include "Player/ActorComponent/C_HealthComponent.h"
 #include "Player/Weapons/C_BaseWeapon.h"
 #include "Util/Global.h"
 
@@ -68,9 +69,7 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//--------------------------------KeyBoard----------------------------------------
 	
 	// Bind jump events
-	PlayerInputComponent->BindAction("Jumping", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jumping", IE_Released, this, &ACharacter::StopJumping);
-	
+	PlayerInputComponent->BindAction("Jumping", IE_Pressed, Input, &UC_InputComponent::SpaceBar);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AC_PlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AC_PlayerCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AC_PlayerCharacter::AddControllerPitchInput);
