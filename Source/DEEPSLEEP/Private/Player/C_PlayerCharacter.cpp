@@ -11,7 +11,9 @@
 #include "Player/ActorComponent/C_TargetComponent.h"
 #include "Player/ActorComponent/C_InputComponent.h"
 #include "Player/ActorComponent/C_HealthComponent.h"
+#include "Player/ActorComponent/C_InventoryComponent.h"
 #include "Player/Weapons/C_BaseWeapon.h"
+#include "Item/C_ItemBase.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -23,6 +25,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateActorComponent<UC_TargetComponent>(this, &TargetComponent, "Target");
 	CHelpers::CreateActorComponent<UC_InputComponent>(this, &Input, "Input");
 	CHelpers::CreateActorComponent<UC_HealthComponent>(this, &HealthComponent, "Health");
+	CHelpers::CreateActorComponent<UC_InventoryComponent>(this, &InventoryComponent, "Inventory");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -84,6 +87,7 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
 	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &AC_PlayerCharacter::CallOnFire);
+	PlayerInputComponent->BindAction("I_Key", IE_Pressed, this, &AC_PlayerCharacter::TryPickupItem);
 	PlayerInputComponent->BindAction("T_Key",IE_Pressed, Input, &UC_InputComponent::T_key);
 	PlayerInputComponent->BindAction("C_Key",IE_Pressed, Input, &UC_InputComponent::C_key);
 	PlayerInputComponent->BindAction("R_Key",IE_Pressed, Input, &UC_InputComponent::R_key);
@@ -299,6 +303,41 @@ void AC_PlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 		}
 	}*/
 }
+
+void AC_PlayerCharacter::InteractWithItem(AC_ItemBase* Item)
+{
+	if (Item || AC_ItemBase::StaticClass())
+	{
+		// 아이템의 정보를 가져와 인벤토리에 추가
+		InventoryComponent->AddItem(Item->GetItemInfo());
+
+		// 아이템을 주운 후 액터에서 처리 (예: 파괴)
+		Item->OnPickedUp();
+	}}
+
+void AC_PlayerCharacter::TryPickupItem()
+{
+	// 레이캐스트를 통해 플레이어 앞의 아이템을 찾음
+	FHitResult HitResult;
+	FVector Start = GetActorLocation();
+	FVector ForwardVector = GetActorForwardVector();
+	FVector End = Start + (ForwardVector * 200.0f); // 200 유닛 거리 내에 있는 액터 찾기
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params))
+	{
+		// 아이템 액터를 찾으면 상호작용 실행
+		AC_ItemBase* HitItem = Cast<AC_ItemBase>(HitResult.GetActor());
+	
+		if (HitItem)
+		{
+			InteractWithItem(HitItem);
+		}
+	}
+}
+
 
 
 

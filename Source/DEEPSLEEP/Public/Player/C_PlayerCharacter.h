@@ -7,6 +7,8 @@
 #include "ActorComponent/C_StateComponent.h"
 #include "C_PlayerCharacter.generated.h"
 
+class AC_ItemBase;
+class UC_InventoryComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -179,4 +181,16 @@ private:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UC_HealthComponent* HealthComponent;
+
+
+	//-----------------Inventory------------------------
+private:
+	UPROPERTY(VisibleAnywhere)
+	UC_InventoryComponent* InventoryComponent;
+
+	void InteractWithItem(AC_ItemBase* Item);
+	void TryPickupItem();
+	
+
+	
 };
