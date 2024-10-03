@@ -2,10 +2,18 @@
 
 
 #include "Player/C_PlayerCharacter.h"
+#include "Player/C_DashGhost.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ActorComponent/C_DashComponent.h"
+#include "Player/ActorComponent/C_TargetComponent.h"
+#include "Player/ActorComponent/C_InputComponent.h"
+#include "Player/ActorComponent/C_HealthComponent.h"
+#include "Player/ActorComponent/C_InventoryComponent.h"
+#include "Player/Weapons/C_BaseWeapon.h"
+#include "Item/C_ItemBase.h"
 #include "Util/Global.h"
 
 AC_PlayerCharacter::AC_PlayerCharacter()
@@ -13,6 +21,11 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent<UC_DashComponent>(this, &DashComponent, "Dash");
+	CHelpers::CreateActorComponent<UC_StateComponent>(this, &State, "State");
+	CHelpers::CreateActorComponent<UC_TargetComponent>(this, &TargetComponent, "Target");
+	CHelpers::CreateActorComponent<UC_InputComponent>(this, &Input, "Input");
+	CHelpers::CreateActorComponent<UC_HealthComponent>(this, &HealthComponent, "Health");
+	CHelpers::CreateActorComponent<UC_InventoryComponent>(this, &InventoryComponent, "Inventory");
 	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -20,6 +33,7 @@ AC_PlayerCharacter::AC_PlayerCharacter()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
+	SpringArm->bEnableCameraLag = true;
 	bWantsToZoom = false;
 	bisSprint = false;
 }
@@ -30,11 +44,14 @@ void AC_PlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	DefaultFOV = PlayerCamera->FieldOfView;
-
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-	
-	//Movement->EndSprint();
-	//Movement->DisableControlRotation();
+
+	//Player State
+	State->OnMovementTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnMovementTypeChanged);
+	State->OnSelfStateTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnSelfStateTypeChanged);
+	State->OnWeaponTypeChanged.AddDynamic(this, &AC_PlayerCharacter::OnWeaponTypeChanged);
+
+	BaseWeapon = Cast<AC_BaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), AC_BaseWeapon::StaticClass()));
 }
 
 void AC_PlayerCharacter::Tick(float DeltaTime)
@@ -47,7 +64,7 @@ void AC_PlayerCharacter::Tick(float DeltaTime)
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 
 	PlayerCamera->SetFieldOfView(NewFOV);
-
+	
 }
 
 void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -55,9 +72,7 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//--------------------------------KeyBoard----------------------------------------
 	
 	// Bind jump events
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	
+	PlayerInputComponent->BindAction("Jumping", IE_Pressed, Input, &UC_InputComponent::SpaceBar);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AC_PlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AC_PlayerCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AC_PlayerCharacter::AddControllerPitchInput);
@@ -68,10 +83,17 @@ void AC_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AC_PlayerCharacter::EndSprint);
 	
 	
-	PlayerInputComponent->BindAction("CameraZoom", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
-	PlayerInputComponent->BindAction("CameraZoom", IE_Released, this, &AC_PlayerCharacter::EndZoom);
+	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &AC_PlayerCharacter::BeginZoom);
+	PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &AC_PlayerCharacter::EndZoom);
 
-	PlayerInputComponent->BindAction("Dash",IE_Pressed, DashComponent, &UC_DashComponent::BeginDash);
+	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &AC_PlayerCharacter::CallOnFire);
+	PlayerInputComponent->BindAction("I_Key", IE_Pressed, this, &AC_PlayerCharacter::TryPickupItem);
+	PlayerInputComponent->BindAction("T_Key",IE_Pressed, Input, &UC_InputComponent::T_key);
+	PlayerInputComponent->BindAction("C_Key",IE_Pressed, Input, &UC_InputComponent::C_key);
+	PlayerInputComponent->BindAction("R_Key",IE_Pressed, Input, &UC_InputComponent::R_key);
+	PlayerInputComponent->BindAction("Key_1",IE_Pressed, Input, &UC_InputComponent::key_1);
+	PlayerInputComponent->BindAction("Key_2",IE_Pressed, Input, &UC_InputComponent::key_2);
+
 
 	//--------------------------------KeyBoard----------------------------------------
 }
@@ -89,6 +111,63 @@ FVector AC_PlayerCharacter::GetPawnViewLocation() const
 	return Super::GetPawnViewLocation();
 }
 
+void AC_PlayerCharacter::CallOnFire()
+{
+	if (BaseWeapon)
+	{
+		BaseWeapon->OnFire(); // OtherActor의 함수 호출
+	}
+}
+void AC_PlayerCharacter::SpawnWeapon1()
+{
+	if(bSpawnWeapon == true)
+	{
+		State->SetHealthCoreState();
+		BaseWeapon->SetActorHiddenInGame(false);
+		BaseWeapon->SetActorEnableCollision(true);
+		BaseWeapon->SetActorTickEnabled(true);
+	}
+	else if (BaseWeapon == nullptr && BaseWeaponClass != nullptr)
+	{
+		if(State!=nullptr)
+		{
+			//UC_StateComponent 클래스의 SetWeaponState를 호출하여 Enum 값 변경.
+			State->SetHealthCoreState();
+			bEquipWeapon = true;
+			bSpawnWeapon = true;
+			BaseWeapon = GetWorld()->SpawnActor<AC_BaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+			if(BaseWeapon)
+			{
+				BaseWeapon->SetOwner(this);
+				BaseWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket");
+			}
+		}
+	}
+}
+
+void AC_PlayerCharacter::HideWeapon1()
+{
+	if(BaseWeapon != nullptr)
+		if(State!=nullptr)
+		{
+			State->SetHandsState();
+			bEquipWeapon = false;
+			BaseWeapon -> SetActorHiddenInGame(true);
+			BaseWeapon -> SetActorEnableCollision(false);
+			BaseWeapon -> SetActorTickEnabled(false);
+		}
+}
+
+void AC_PlayerCharacter::SwitchToWeapon()
+{
+	// 현재 무기 숨기기
+	HideWeapon1();
+    
+	// 새 무기가 이미 생성되어 있는지 확인
+	
+}
+
+
 void AC_PlayerCharacter::BeginZoom()
 {
 	if(bisSprint == true)
@@ -96,6 +175,7 @@ void AC_PlayerCharacter::BeginZoom()
 	
 	bWantsToZoom = true;
 	SpringArm->bEnableCameraLag = false;
+	
 }
 
 void AC_PlayerCharacter::EndZoom()
@@ -103,7 +183,7 @@ void AC_PlayerCharacter::EndZoom()
 	bWantsToZoom = false;
 	SpringArm->bEnableCameraLag = true;
 }
-//-----------------Camera------------------------------
+
 
 
 
@@ -120,7 +200,6 @@ void AC_PlayerCharacter::MoveForward(float Value)
 		AddMovementInput(GetActorForwardVector() * Value);
 	}
 }
-
 
 void AC_PlayerCharacter::MoveRight(float Value)
 {
@@ -151,5 +230,114 @@ void AC_PlayerCharacter::OnWalk()
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 }
 
-//-----------------Movement----------------------------
+void AC_PlayerCharacter::StartDashGhost()
+{
+	//OnDashGhostEvent.Broadcast();
+	
+	if(!!DashGhostClass)
+	{
+		FVector location = this->GetActorLocation();
+		location.Z -= this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+
+		FActorSpawnParameters params;
+		params.Owner = this;
+		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		FTransform transform;
+		transform.SetTranslation(location);
+
+		DashGhost = this->GetWorld()->SpawnActor<AC_DashGhost>(DashGhostClass, transform,params);
+	}
+}
+
+void AC_PlayerCharacter::EndDashGhost()
+{
+   if(!!DashGhost)
+   		DashGhost->Destroy();
+	
+}
+
+
+
+
+
+
+//-----------------Player State----------------------------
+
+void AC_PlayerCharacter::OnMovementTypeChanged(EMovementState InPrevType, EMovementState InNewType)
+{
+}
+
+void AC_PlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType)
+{
+}
+
+void AC_PlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
+{
+	/*switch (InNewType)
+	{
+	case EWeaponState::Hands:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::HealthCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::OblivionCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::UtilCore:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	case EWeaponState::Max:
+		{
+			InPrevType = EWeaponState::Hands;
+			break;
+		}
+	}*/
+}
+
+void AC_PlayerCharacter::InteractWithItem(AC_ItemBase* Item)
+{
+	if (Item || AC_ItemBase::StaticClass())
+	{
+		// 아이템의 정보를 가져와 인벤토리에 추가
+		InventoryComponent->AddItem(Item->GetItemInfo());
+
+		// 아이템을 주운 후 액터에서 처리 (예: 파괴)
+		Item->OnPickedUp();
+	}}
+
+void AC_PlayerCharacter::TryPickupItem()
+{
+	// 레이캐스트를 통해 플레이어 앞의 아이템을 찾음
+	FHitResult HitResult;
+	FVector Start = GetActorLocation();
+	FVector ForwardVector = GetActorForwardVector();
+	FVector End = Start + (ForwardVector * 200.0f); // 200 유닛 거리 내에 있는 액터 찾기
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params))
+	{
+		// 아이템 액터를 찾으면 상호작용 실행
+		AC_ItemBase* HitItem = Cast<AC_ItemBase>(HitResult.GetActor());
+	
+		if (HitItem)
+		{
+			InteractWithItem(HitItem);
+		}
+	}
+}
+
+
+
 
