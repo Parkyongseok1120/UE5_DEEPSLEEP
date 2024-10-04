@@ -50,6 +50,7 @@ void UC_HealthComponent::AutoRecoveryHP()
 
 void UC_HealthComponent::AutoRecoveryWillpower()
 {
+	
 }
 
 void UC_HealthComponent::AutoRecoveryMental()

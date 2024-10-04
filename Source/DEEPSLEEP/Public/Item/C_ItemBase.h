@@ -8,6 +8,9 @@
 #include "C_ItemBase.generated.h"
 
 class UC_InventoryComponent;
+class UStaticMeshComponent;
+class USphereComponent;
+
 UCLASS()
 class DEEPSLEEP_API AC_ItemBase : public AActor
 {
@@ -29,10 +32,22 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory")
 	FInventoryItem ItemInfo;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UStaticMeshComponent* ItemMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	USphereComponent* ItemSphere;
+
+	UFUNCTION()
+	virtual void UsingItem(){}
+
+
+	
+
 public:
 	// 아이템을 플레이어가 획득할 때 호출되는 함수
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void OnPickedUp();
-
+	
 	FInventoryItem GetItemInfo(){return ItemInfo;}
 };

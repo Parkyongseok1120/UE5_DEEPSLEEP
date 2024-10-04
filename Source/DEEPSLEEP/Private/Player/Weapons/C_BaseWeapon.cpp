@@ -112,20 +112,9 @@ void AC_BaseWeapon::PlayFireAnimMontage(UAnimMontage* MontageToPlay)
 {
 	if(OwnerCharacter)
 	{
-		OwnerMesh = OwnerCharacter->GetMesh();
-		if (!MontageToPlay)
+		if (MontageToPlay)
 		{
-			UE_LOG(LogTemp, Error, TEXT("YourActorComponent: MontageToPlay is null"));
-		
-		}
-		if (!OwnerMesh)
-		{
-			UE_LOG(LogTemp, Error, TEXT("YourActorComponent: OwnerMesh is null when trying to play montage"));
-	
-		}
-		else
-		{
-			OwnerMesh->GetAnimInstance()->Montage_Play(MontageToPlay);
+			OwnerCharacter->GetMesh()->GetAnimInstance()->Montage_Play(MontageToPlay);
 			CLog::Print("Montage_Play");
 		}
 	}

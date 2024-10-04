@@ -2,6 +2,8 @@
 
 
 #include "Item/C_ItemBase.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Util/Global.h"
 
 // Sets default values
@@ -9,7 +11,14 @@ AC_ItemBase::AC_ItemBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	CHelpers::CreateComponent<UStaticMeshComponent>(this, &ItemMesh, "ItemMesh");
+	CHelpers::CreateComponent<USphereComponent>(this, &ItemSphere, "ItemSphere", ItemMesh);
 
+	
+	ItemMesh->SetRelativeScale3D(FVector(1));
+	ItemSphere->SetRelativeLocation(FVector(0,0,+45));
+	ItemSphere->SetRelativeScale3D(FVector(2));
+	
 	// 아이템 기본 정보 설정
 	ItemInfo.ItemName = TEXT("Default Item");
 	ItemInfo.ItemID = 0;
