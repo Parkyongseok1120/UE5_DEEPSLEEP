@@ -23,7 +23,9 @@ AC_BaseWeapon::AC_BaseWeapon()
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Pistol.Darkness_Pistol'");
 	Mesh->SetSkeletalMesh(mesh);
-	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
+	Mesh->SetCollisionProfileName(TEXT("NoCollision"))
+
+	
 
 	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	MuzzleLocation->SetupAttachment(Mesh);
@@ -114,7 +116,7 @@ void AC_BaseWeapon::PlayFireAnimMontage(UAnimMontage* MontageToPlay)
 	{
 		if (MontageToPlay)
 		{
-			OwnerCharacter->GetMesh()->GetAnimInstance()->Montage_Play(MontageToPlay);
+			OwnerCharacter->PlayAnimMontage(MontageToPlay, 1);
 			CLog::Print("Montage_Play");
 		}
 	}
