@@ -23,7 +23,7 @@ AC_BaseWeapon::AC_BaseWeapon()
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Pistol.Darkness_Pistol'");
 	Mesh->SetSkeletalMesh(mesh);
-	Mesh->SetCollisionProfileName(TEXT("NoCollision"))
+    Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 	
 
