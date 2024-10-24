@@ -5,24 +5,18 @@ UC_HealthSkillComponent::UC_HealthSkillComponent()
 {
 
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
 void UC_HealthSkillComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	
 }
 
 void UC_HealthSkillComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UC_HealthSkillComponent::ExecuteSkill()
@@ -56,6 +50,14 @@ void UC_HealthSkillComponent::ExecuteSkill()
 		CooldownTime,
 		false
 	);
+}
+
+void UC_HealthSkillComponent::SpawnFireballProjectile()
+{
+}
+
+void UC_HealthSkillComponent::ApplyFireDamage()
+{
 }
 
 
