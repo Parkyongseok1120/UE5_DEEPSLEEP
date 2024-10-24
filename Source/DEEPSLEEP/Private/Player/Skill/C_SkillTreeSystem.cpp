@@ -27,16 +27,11 @@ void UC_SkillTreeSystem::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 bool UC_SkillTreeSystem::GetbisActiveSkill()
 {
 
-	return this;
+    return true;
 }
 
 bool UC_SkillTreeSystem::SetbisActiveSkill()
 {
-	switch(bisActive_SkillName1)
-	{
-	case true:
-		return true;
-		break;
-	}
+    return true;
 }
 
