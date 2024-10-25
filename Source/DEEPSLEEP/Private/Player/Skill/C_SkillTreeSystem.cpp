@@ -24,14 +24,25 @@ void UC_SkillTreeSystem::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	
 }
 
-bool UC_SkillTreeSystem::GetbisActiveSkill()
+void UC_SkillTreeSystem::AssignSkill()
 {
-
-    return true;
+	bisActive = true;
 }
 
-bool UC_SkillTreeSystem::SetbisActiveSkill()
+void UC_SkillTreeSystem::SetActiveSkill()
 {
-    return true;
+}
+
+void UC_SkillTreeSystem::SkillUpgrade()
+{
+}
+
+void UC_SkillTreeSystem::SetTraPoint()
+{
+	
+}
+
+void UC_SkillTreeSystem::GetActiveSkill()
+{
 }
 
