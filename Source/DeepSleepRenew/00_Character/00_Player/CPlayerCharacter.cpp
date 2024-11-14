@@ -36,6 +36,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 	bWantsToZoom = false;
 	bisSprint = false;
 	bCanDoubleJump = true;
+	bCanFire = false;
 }
 
 void ACPlayerCharacter::DashStart()
@@ -89,6 +90,7 @@ void ACPlayerCharacter::SpawnWeapon1()
 			StateComponent->SetHealthCoreState();
 			bEquipWeapon = true;
 			bSpawnWeapon = true;
+			bCanFire = true;
 			Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
 			if(Weapon)
 			{
@@ -107,22 +109,24 @@ void ACPlayerCharacter::SpawnWeapon1()
 void ACPlayerCharacter::HideWeapon1()
 {
 	if(Weapon != nullptr)
+	{
 		if(StateComponent!=nullptr)
 		{
 			StateComponent->SetHandsState();
+			CLog::Print("HandsState");
 			bEquipWeapon = false;
+			bCanFire = false;
 			Weapon -> SetActorHiddenInGame(true);
 			Weapon -> SetActorEnableCollision(false);
 			Weapon -> SetActorTickEnabled(false);
 		}
+	}
 }
 
 void ACPlayerCharacter::CallOnFire()
 {
-	if (Weapon != nullptr)
+	if (Weapon != nullptr && bCanFire == true)
 	{
-		CLog::Print("Continue Fire");
-
 		Weapon->OnFire(); // OtherActor의 함수 호출
 	}
 	else
