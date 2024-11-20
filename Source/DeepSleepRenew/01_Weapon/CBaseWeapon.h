@@ -10,6 +10,7 @@ class ACPlayerCharacter;
 class USkeletalMesh;
 class ACProjectile;
 class UCReloadComponent;
+class UParticleSystemComponent;
 
 UCLASS()
 class DEEPSLEEPRENEW_API ACBaseWeapon : public AActor
@@ -57,10 +58,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector GunOffset;
-	
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UAnimMontage* FireAnimMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystemComponent* ParticleComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystem* CoreParticle;
 public:
 	UFUNCTION()
 	void OnFire();

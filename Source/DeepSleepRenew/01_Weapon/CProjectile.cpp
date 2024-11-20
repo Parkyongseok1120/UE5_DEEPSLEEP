@@ -22,8 +22,9 @@ ACProjectile::ACProjectile()
 	UStaticMesh* mesh;
 	CHelpers::GetAsset<UStaticMesh>(&mesh, "/Script/Engine.StaticMesh'/Game/VFX_Toolkit_V1/StaticMeshes/Various/SM_Meteora.SM_Meteora'");
 	Mesh->SetStaticMesh(mesh);
-	Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
-	
+	//Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
+
+
 	CollisionComp->InitSphereRadius(5.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &ACProjectile::OnHit);

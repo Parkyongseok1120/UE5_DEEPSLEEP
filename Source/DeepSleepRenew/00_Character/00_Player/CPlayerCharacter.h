@@ -13,6 +13,8 @@ class UCStateComponent;
 class UCInventoryComponent;
 class UCTargetComponent;
 class USkeletalMeshComponent;
+class UAnimMontage;
+class UParticleSystem;
 class ACBaseItem;
 
 UCLASS()
@@ -149,6 +151,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool bSpawnWeapon;
 
+	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
+	UAnimMontage* FireAnimMong;	
+
+
+
+
 public:
 	UFUNCTION()
 	void SpawnWeapon1();
@@ -158,5 +166,7 @@ public:
 	
 	UFUNCTION()
 	void CallOnFire();
+
+	
 	
 };

@@ -8,6 +8,7 @@
 #include "01_Weapon/CBaseWeapon.h"
 
 #include "02_Item/CBaseItem.h"
+#include "Animation/AnimMontage.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -77,7 +78,16 @@ void ACPlayerCharacter::CallOnFire()
 {
 	if (Weapon != nullptr && bEquipWeapon == true)
 	{
-		Weapon->OnFire(); // OtherActor의 함수 호출
+		UAnimMontage* MontageToPlay = Cast<UAnimMontage>(FireAnimMong);
+		if(MontageToPlay != nullptr)
+		{
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+			if(AnimInstance != nullptr)
+			{
+				float PlaybackTime = AnimInstance->Montage_Play(MontageToPlay, 1.0f);
+				Weapon->OnFire(); // OtherActor의 함수 호출
+			}
+		}
 	}
 	else
 	{
@@ -94,7 +104,13 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 
 	//CurrentFOV : Current field of view
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
-
+	// 스폰된 액터가 있다면
+	if (Weapon)
+	{
+		// 소켓 위치로 직접 업데이트
+		FVector NewSocketLocation = GetMesh()->GetSocketLocation(FName("Weapons"));
+		Weapon->SetActorLocation(NewSocketLocation);
+	}
 	PlayerCamera->SetFieldOfView(NewFOV);
 }
 
