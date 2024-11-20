@@ -36,7 +36,6 @@ ACPlayerCharacter::ACPlayerCharacter()
 	bWantsToZoom = false;
 	bisSprint = false;
 	bCanDoubleJump = true;
-	bCanFire = false;
 }
 
 void ACPlayerCharacter::DashStart()
@@ -63,69 +62,20 @@ void ACPlayerCharacter::BeginPlay()
 
 }
 
-void ACPlayerCharacter::Keyboard1()
-{
-	HideWeapon1();
-}
-
-void ACPlayerCharacter::Keyboard2()
-{
-	SpawnWeapon1();
-}
-
 void ACPlayerCharacter::SpawnWeapon1()
 {
-	if(bSpawnWeapon == true)
-	{
-		StateComponent->SetHealthCoreState();
-		Weapon->SetActorHiddenInGame(false);
-		Weapon->SetActorEnableCollision(true);
-		Weapon->SetActorTickEnabled(true);
-	}
-	else if (Weapon == nullptr)
-	{
-		if(StateComponent!=nullptr)
-		{
-			//UC_StateComponent 클래스의 SetWeaponState를 호출하여 Enum 값 변경.
-			StateComponent->SetHealthCoreState();
-			bEquipWeapon = true;
-			bSpawnWeapon = true;
-			bCanFire = true;
-			Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
-			if(Weapon)
-			{
-				Weapon->SetOwner(this);
-				Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "Weapons");
-			}
-		}
-		else
-		{
-			CLog::Print("StateNULL");
-
-		}
-	}
+	StateComponent->SetHealthCoreState();
 }
 
 void ACPlayerCharacter::HideWeapon1()
 {
-	if(Weapon != nullptr)
-	{
-		if(StateComponent!=nullptr)
-		{
-			StateComponent->SetHandsState();
-			CLog::Print("HandsState");
-			bEquipWeapon = false;
-			bCanFire = false;
-			Weapon -> SetActorHiddenInGame(true);
-			Weapon -> SetActorEnableCollision(false);
-			Weapon -> SetActorTickEnabled(false);
-		}
-	}
+	StateComponent->SetHandsState();
+	bEquipWeapon = false;
 }
 
 void ACPlayerCharacter::CallOnFire()
 {
-	if (Weapon != nullptr && bCanFire == true)
+	if (Weapon != nullptr && bEquipWeapon == true)
 	{
 		Weapon->OnFire(); // OtherActor의 함수 호출
 	}
@@ -134,15 +84,6 @@ void ACPlayerCharacter::CallOnFire()
 		CLog::Print("Weapon Nullptr");
 	}
 
-}
-
-void ACPlayerCharacter::SwitchToWeapon()
-{
-	// 현재 무기 숨기기
-	HideWeapon1();
-    
-	// 새 무기가 이미 생성되어 있는지 확인
-	
 }
 
 void ACPlayerCharacter::Tick(float DeltaTime)
@@ -182,8 +123,8 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &ACPlayerCharacter::BeginSprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &ACPlayerCharacter::EndSprint);
 	PlayerInputComponent->BindAction("C_Key", IE_Pressed, this, &ACPlayerCharacter::DashStart);
-	PlayerInputComponent->BindAction("Key_1",IE_Pressed, this, &ACPlayerCharacter::Keyboard1);
-	PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::Keyboard2);
+	PlayerInputComponent->BindAction("Key_1",IE_Pressed, this, &ACPlayerCharacter::HideWeapon1);
+	PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::SpawnWeapon1);
 	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &ACPlayerCharacter::CallOnFire);
 	
 		
@@ -303,6 +244,40 @@ void ACPlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState
 
 void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
 {
+	switch(InNewType)
+	{
+	case EWeaponState::Hands:
+		{
+			if(Weapon != nullptr)
+			{
+				Weapon -> SetActorHiddenInGame(true);
+				Weapon -> SetActorEnableCollision(false);
+				Weapon -> SetActorTickEnabled(false);
+			}
+		}
+	case EWeaponState::HealthCore:
+		{
+			if(bSpawnWeapon == true)
+			{
+				Weapon->SetActorHiddenInGame(false);
+				Weapon->SetActorEnableCollision(true);
+				Weapon->SetActorTickEnabled(true);
+				bEquipWeapon = true;
+
+			}
+			else if (Weapon == nullptr)
+			{
+				bEquipWeapon = true;
+				bSpawnWeapon = true;
+				Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+				if(Weapon)
+				{
+					Weapon->SetOwner(this);
+					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "Weapons");
+				}
+			}
+		}
+	}
 }
 
 bool ACPlayerCharacter::IsGrounded() const

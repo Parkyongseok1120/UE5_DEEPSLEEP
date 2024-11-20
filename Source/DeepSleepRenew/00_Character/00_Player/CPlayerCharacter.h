@@ -22,9 +22,6 @@ class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
 public:
 	ACPlayerCharacter();
 
-	UFUNCTION(BlueprintCallable, Category="Character")
-	FORCEINLINE bool GetCanFire() const { return bCanFire; }
-
 private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Component")
@@ -146,18 +143,11 @@ private:
 	TSubclassOf<ACBaseWeapon> BaseWeaponClass;
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	bool bEquipWeapon;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
-	bool bCanFire;
+	bool bEquipWeapon;
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool bSpawnWeapon;
-
-	void Keyboard1();
-	void Keyboard2();
-
 
 public:
 	UFUNCTION()
@@ -165,9 +155,6 @@ public:
 
 	UFUNCTION()
 	void HideWeapon1();
-
-	UFUNCTION()
-	void SwitchToWeapon();
 	
 	UFUNCTION()
 	void CallOnFire();
