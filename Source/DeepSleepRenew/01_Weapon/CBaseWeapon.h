@@ -10,6 +10,7 @@ class ACPlayerCharacter;
 class USkeletalMesh;
 class ACProjectile;
 class UCReloadComponent;
+class UParticleSystemComponent;
 
 UCLASS()
 class DEEPSLEEPRENEW_API ACBaseWeapon : public AActor
@@ -34,7 +35,7 @@ protected:
 	AActor* OwnerActor;
 	
 	UPROPERTY()
-	ACPlayerCharacter* OwnerCharacter;
+	ACharacter* OwnerCharacter;
 	
 	UPROPERTY()
 	USkeletalMeshComponent* OwnerMesh;
@@ -57,10 +58,15 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector GunOffset;
-	
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UAnimMontage* FireAnimMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystemComponent* ParticleComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystem* CoreParticle;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configurations")
+	FTransform PlacementTransform; //무기의 위치를 표시하는 것이다.
 public:
 	UFUNCTION()
 	void OnFire();

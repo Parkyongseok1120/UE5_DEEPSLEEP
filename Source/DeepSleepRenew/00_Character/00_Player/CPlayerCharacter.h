@@ -13,6 +13,8 @@ class UCStateComponent;
 class UCInventoryComponent;
 class UCTargetComponent;
 class USkeletalMeshComponent;
+class UAnimMontage;
+class UParticleSystem;
 class ACBaseItem;
 
 UCLASS()
@@ -137,19 +139,18 @@ private:
 	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 	
 	//-----Weapon;
+	UPROPERTY()
 	class ACBaseWeapon* Weapon;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> BaseWeaponClass;
-
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	bool bEquipWeapon;
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool bSpawnWeapon;
 
-	void Keyboard1();
-	void Keyboard2();
+	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
+	UAnimMontage* FireAnimMong;	
 
 
 public:
@@ -158,11 +159,10 @@ public:
 
 	UFUNCTION()
 	void HideWeapon1();
-
-	UFUNCTION()
-	void SwitchToWeapon();
 	
 	UFUNCTION()
 	void CallOnFire();
+
+	
 	
 };

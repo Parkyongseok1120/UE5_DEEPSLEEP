@@ -61,6 +61,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponEffect")
 	UParticleSystem* DefaultImpactEffect;
+
+	UParticleSystemComponent* ParticleComponent;
+
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	float BaseDamage;

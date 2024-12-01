@@ -4,7 +4,10 @@
 #include "01_Weapon/CBaseWeapon.h"
 #include "Global.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystem.h"
 #include "00_Component/CReloadComponent.h"
+
 #include "CProjectile.h"
 #include "00_Character/00_Player/CPlayerCharacter.h"
 
@@ -13,17 +16,21 @@
 ACBaseWeapon::ACBaseWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	CHelpers::CreateActorComponent<UCReloadComponent>(this, &Reload, "Reload");
+	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
+	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "Particle", Mesh);
+	CHelpers::GetAsset<UParticleSystem>(&CoreParticle, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_SparCore_01.Par_SparCore_01'");
+	ParticleComponent->SetTemplate(CoreParticle);
+	ParticleComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
+;
 	USkeletalMesh* mesh;
-	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/VFX_Toolkit_V1/SkeletalMeshes/SKM_SparCore_core_01.SKM_SparCore_core_01'");
-	
+	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Knife.Darkness_Knife'");
+	Mesh->SetSkeletalMesh(mesh);
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	MuzzleLocation->SetupAttachment(Mesh);
 	MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
-
+	Mesh->SetVisibility(false);
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
@@ -36,7 +43,7 @@ void ACBaseWeapon::BeginPlay()
 	{
 		Projectile->AttachToComponent(Mesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Muzzle"));
 	}
-	Mesh->SetVisibility(false);
+
 }
 
 // Called every frame
@@ -61,7 +68,7 @@ void ACBaseWeapon::SetupOwnerCharacter()
 
 void ACBaseWeapon::OnFire()
 {
-	OwnerCharacter = Cast<ACPlayerCharacter>(GetOwner());
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	if (!OwnerCharacter)
 	{
 		CLog::Log("OnFire() called but OwnerCharacter is null. Attempting to set it up.");

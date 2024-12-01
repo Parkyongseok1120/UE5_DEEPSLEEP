@@ -180,3 +180,7 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/rider
 # End of https://www.toptal.com/developers/gitignore/api/unrealengine
+.idea/.idea.DeepSleepRenew/.idea/vcs.xml
+.idea/.idea.DeepSleepRenew/.idea/projectSettingsUpdater.xml
+.idea/.idea.DeepSleepRenew/.idea/indexLayout.xml
+.idea/.idea.DeepSleepRenew/.idea/.name

@@ -5,6 +5,8 @@
 #include "Global.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystem.h"
 #include "00_Component/CReloadComponent.h"
 #include "00_Character/01_Monster/CBaseMonster.h"
 #include "GameFramework/Character.h"
@@ -19,13 +21,22 @@ ACProjectile::ACProjectile()
 	CHelpers::CreateComponent<USphereComponent>(this, &CollisionComp, "SphereComp");
 	RootComponent = CollisionComp;
 	CHelpers::CreateComponent<UStaticMeshComponent>(this, &Mesh, "Mesh", CollisionComp);
+	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "FX", CollisionComp);
+	CHelpers::GetAsset<UParticleSystem>(&DefaultImpactEffect, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_MatraBoom_01.Par_MatraBoom_01'");
+	ParticleComponent->SetTemplate(DefaultImpactEffect);
+	ParticleComponent->bAutoActivate = false;
+	// 자동 실행 비활성화
+
+	
 	UStaticMesh* mesh;
 	CHelpers::GetAsset<UStaticMesh>(&mesh, "/Script/Engine.StaticMesh'/Game/VFX_Toolkit_V1/StaticMeshes/Various/SM_Meteora.SM_Meteora'");
 	Mesh->SetStaticMesh(mesh);
-	Mesh->SetRelativeScale3D(FVector(0.2f,0.2f,0.2f));
-	
+	Mesh->SetRelativeScale3D(FVector(0.5f,0.5f,0.5f));
+	Mesh->SetRelativeRotation(FRotator(-90.f,0,0));
+
+
 	CollisionComp->InitSphereRadius(5.0f);
-	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
+	CollisionComp->BodyInstance.SetCollisionProfileName("BlockAll");
 	CollisionComp->OnComponentHit.AddDynamic(this, &ACProjectile::OnHit);
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
@@ -84,6 +95,8 @@ void ACProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 		FVector TracerEndPoint = TracerEnd;
 		PlayImpactEffects(Hit.ImpactPoint);
 		TracerEndPoint = Hit.ImpactPoint;
+
+		
 	}
 	Destroy();
 	// Only add impulse and destroy projectile if we hit a physics
@@ -101,6 +114,17 @@ void ACProjectile::PlayImpactEffects(FVector ImpactPoint)
 	if(DefaultImpactEffect)
 	{
 		SelectedEffect = DefaultImpactEffect;
+	}
+	if (DefaultImpactEffect)
+	{
+		// 파티클 시스템을 캐릭터 위치에서 스폰
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			DefaultImpactEffect,
+			ImpactPoint,
+			FRotator::ZeroRotator,
+			true // bAutoDestroy: 파티클이 끝나면 자동 제거
+		);
 	}
 	if (SelectedEffect)
 	{

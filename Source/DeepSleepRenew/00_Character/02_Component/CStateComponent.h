@@ -84,6 +84,7 @@ private: //Enums
 	EWeaponState WeaponType;
 
 private:
+	UPROPERTY(VisibleAnywhere)
 	ACBaseCharacter* OwnerCharacter;
 	
 		

@@ -18,10 +18,7 @@ void UCStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACBaseCharacter>(GetOwner());
-
 }
-
-
 
 //-------------Movement-----------------
 void UCStateComponent::SetDefalutState()
