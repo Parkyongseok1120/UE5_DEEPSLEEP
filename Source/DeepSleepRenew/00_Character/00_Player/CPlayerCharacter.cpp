@@ -280,7 +280,7 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 				if(Weapon)
 				{
 					Weapon->SetOwner(this);
-					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "Hard_r");
+					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
 				}
 			}
 		}
