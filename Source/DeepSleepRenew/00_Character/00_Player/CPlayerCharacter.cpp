@@ -2,6 +2,7 @@
 
 
 #include "00_Character/00_Player/CPlayerCharacter.h"
+#include "GameFramework/Character.h"
 #include "00_Character/02_Component/CDashComponent.h"
 #include "00_Character/02_Component/CInventoryComponent.h"
 #include "00_Character/02_Component/CStateComponent.h"
@@ -16,6 +17,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Global.h"
+#include "00_Character/CAnimInstance.h"
 
 ACPlayerCharacter::ACPlayerCharacter()
 {
@@ -24,7 +26,6 @@ ACPlayerCharacter::ACPlayerCharacter()
 
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
-
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
@@ -78,15 +79,11 @@ void ACPlayerCharacter::CallOnFire()
 {
 	if (Weapon != nullptr && bEquipWeapon == true)
 	{
-		UAnimMontage* MontageToPlay = Cast<UAnimMontage>(FireAnimMong);
-		if(MontageToPlay != nullptr)
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if(AnimInstance && FireAnimMong)
 		{
-			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-			if(AnimInstance != nullptr)
-			{
-				float PlaybackTime = AnimInstance->Montage_Play(MontageToPlay, 1.0f);
-				Weapon->OnFire(); // OtherActor의 함수 호출
-			}
+			AnimInstance->Montage_Play(FireAnimMong);
+			Weapon->OnFire(); // OtherActor의 함수 호출
 		}
 	}
 	else
@@ -105,12 +102,6 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 	//CurrentFOV : Current field of view
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 	// 스폰된 액터가 있다면
-	if (Weapon)
-	{
-		// 소켓 위치로 직접 업데이트
-		FVector NewSocketLocation = GetMesh()->GetSocketLocation(FName("Weapons"));
-		Weapon->SetActorLocation(NewSocketLocation);
-	}
 	PlayerCamera->SetFieldOfView(NewFOV);
 }
 
@@ -289,7 +280,7 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 				if(Weapon)
 				{
 					Weapon->SetOwner(this);
-					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "Weapons");
+					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "Hard_r");
 				}
 			}
 		}

@@ -139,10 +139,8 @@ private:
 	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 	
 	//-----Weapon;
+	UPROPERTY()
 	class ACBaseWeapon* Weapon;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> BaseWeaponClass;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
@@ -153,8 +151,6 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
 	UAnimMontage* FireAnimMong;	
-
-
 
 
 public:
