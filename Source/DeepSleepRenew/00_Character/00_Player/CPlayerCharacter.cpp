@@ -72,13 +72,6 @@ void ACPlayerCharacter::SpawnWeapon1()
 void ACPlayerCharacter::HideWeapon1()
 {
 	StateComponent->SetHandsState();
-	if(Weapon)
-	{
-		Weapon -> SetActorHiddenInGame(true);
-		Weapon -> SetActorEnableCollision(false);
-		Weapon -> SetActorTickEnabled(false);
-	}
-	bEquipWeapon = false;
 }
 
 void ACPlayerCharacter::CallOnFire()
@@ -261,10 +254,21 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 	{
 	case EWeaponState::Hands:
 		{
-			
+			bEquipWeapon = false;
+
+			if(Weapon)
+			{
+				Weapon -> SetActorHiddenInGame(true);
+				Weapon -> SetActorEnableCollision(false);
+				Weapon -> SetActorTickEnabled(false);
+				CLog::Print("Hand State");
+			}
+			break;
 		}
 	case EWeaponState::HealthCore:
 		{
+			CLog::Print("HealthCore State");
+
 			if(bSpawnWeapon == true)
 			{
 				Weapon->SetActorHiddenInGame(false);
@@ -284,6 +288,7 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
 				}
 			}
+			break;
 		}
 	}
 }

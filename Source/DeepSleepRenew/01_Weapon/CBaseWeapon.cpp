@@ -21,7 +21,7 @@ ACBaseWeapon::ACBaseWeapon()
 	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "Particle", Mesh);
 	CHelpers::GetAsset<UParticleSystem>(&CoreParticle, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_SparCore_01.Par_SparCore_01'");
 	ParticleComponent->SetTemplate(CoreParticle);
-	ParticleComponent->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
+	ParticleComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 ;
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Knife.Darkness_Knife'");
@@ -30,7 +30,7 @@ ACBaseWeapon::ACBaseWeapon()
 	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	MuzzleLocation->SetupAttachment(Mesh);
 	MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
-	Mesh->SetVisibility(true);
+	Mesh->SetVisibility(false);
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
