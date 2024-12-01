@@ -61,7 +61,7 @@ void ACPlayerCharacter::BeginPlay()
 
 	Weapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
 
-
+	HideWeapon1();
 }
 
 void ACPlayerCharacter::SpawnWeapon1()
@@ -72,6 +72,12 @@ void ACPlayerCharacter::SpawnWeapon1()
 void ACPlayerCharacter::HideWeapon1()
 {
 	StateComponent->SetHandsState();
+	if(Weapon)
+	{
+		Weapon -> SetActorHiddenInGame(true);
+		Weapon -> SetActorEnableCollision(false);
+		Weapon -> SetActorTickEnabled(false);
+	}
 	bEquipWeapon = false;
 }
 
@@ -255,12 +261,7 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 	{
 	case EWeaponState::Hands:
 		{
-			if(Weapon != nullptr)
-			{
-				Weapon -> SetActorHiddenInGame(true);
-				Weapon -> SetActorEnableCollision(false);
-				Weapon -> SetActorTickEnabled(false);
-			}
+			
 		}
 	case EWeaponState::HealthCore:
 		{
