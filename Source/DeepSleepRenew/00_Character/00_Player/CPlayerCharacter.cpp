@@ -2,13 +2,14 @@
 
 
 #include "00_Character/00_Player/CPlayerCharacter.h"
-#include "GameFramework/Character.h"
 #include "00_Character/02_Component/CDashComponent.h"
 #include "00_Character/02_Component/CInventoryComponent.h"
 #include "00_Character/02_Component/CStateComponent.h"
+#include "00_Character/CAnimInstance.h"
 #include "01_Weapon/CBaseWeapon.h"
-
 #include "02_Item/CBaseItem.h"
+
+#include "GameFramework/Character.h"
 #include "Animation/AnimMontage.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
@@ -17,7 +18,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Global.h"
-#include "00_Character/CAnimInstance.h"
 
 ACPlayerCharacter::ACPlayerCharacter()
 {
