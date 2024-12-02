@@ -2,21 +2,28 @@
 
 
 #include "01_Weapon/CBaseWeapon.h"
-#include "Global.h"
+#include "00_Component/CReloadComponent.h"
+#include "00_Component/CSkillManagement.h"
+#include "00_Component/CBaseSkillComponent.h"
+#include "00_Character/02_Component/CStateComponent.h"
+#include "00_Character/00_Player/CPlayerCharacter.h"
+#include "CProjectile.h"
+
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
-#include "00_Component/CReloadComponent.h"
 
-#include "CProjectile.h"
-#include "00_Character/00_Player/CPlayerCharacter.h"
+#include "Global.h"
+
 
 
 // Sets default values
 ACBaseWeapon::ACBaseWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	CHelpers::CreateActorComponent<UCReloadComponent>(this, &Reload, "Reload");
+	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComponent, "StateComponent");
+	CHelpers::CreateActorComponent<UCBaseSkillComponent>(this, &BaseSkill, "BaseSkill");
+	CHelpers::CreateActorComponent<UCSkillManagement>(this, &SkillManagement, "SkillManagement");
+	CHelpers::CreateActorComponent<UCReloadComponent>(this, &Reload, "ReloadComponent");
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "Particle", Mesh);
 	CHelpers::GetAsset<UParticleSystem>(&CoreParticle, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_SparCore_01.Par_SparCore_01'");
@@ -43,7 +50,6 @@ void ACBaseWeapon::BeginPlay()
 	{
 		Projectile->AttachToComponent(Mesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Muzzle"));
 	}
-
 }
 
 // Called every frame

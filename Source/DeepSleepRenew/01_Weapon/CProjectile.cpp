@@ -24,8 +24,9 @@ ACProjectile::ACProjectile()
 	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "FX", CollisionComp);
 	CHelpers::GetAsset<UParticleSystem>(&DefaultImpactEffect, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_MatraBoom_01.Par_MatraBoom_01'");
 	ParticleComponent->SetTemplate(DefaultImpactEffect);
-	ParticleComponent->bAutoActivate = false;
 	// 자동 실행 비활성화
+	ParticleComponent->bAutoActivate = false;
+	
 
 	
 	UStaticMesh* mesh;

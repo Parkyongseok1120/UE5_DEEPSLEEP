@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "CBaseWeapon.generated.h"
 
+class UCBaseSkillComponent;
+class UCSkillManagement;
+class UCStateComponent;
 class ACPlayerCharacter;
 class USkeletalMesh;
 class ACProjectile;
@@ -64,9 +67,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
 	UParticleSystem* CoreParticle;
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configurations")
-	FTransform PlacementTransform; //무기의 위치를 표시하는 것이다.
+	
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UCStateComponent* StateComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UCSkillManagement* SkillManagement;
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UCBaseSkillComponent* BaseSkill;
+
 public:
 	UFUNCTION()
 	void OnFire();
