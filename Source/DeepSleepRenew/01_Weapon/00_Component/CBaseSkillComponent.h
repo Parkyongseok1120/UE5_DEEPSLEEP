@@ -1,10 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "CBaseSkillComponent.generated.h"
+
+class UCStateComponent;
+class UCSkillManagement;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEPRENEW_API UCBaseSkillComponent : public UActorComponent
@@ -32,10 +35,12 @@ private:
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
-	class UCStateComponent* PlayerStateComponent;
+	UCStateComponent* PlayerStateComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	class UCSkillManagement* SkillManagement;
+	UCSkillManagement* SkillManagement;
+
+	//아래 자식 클래스에 SkillManagement Enum 델리게이트 추가해야함.
 
 	bool bIsUsingSkill = false;
 	bool bisActive = false;
