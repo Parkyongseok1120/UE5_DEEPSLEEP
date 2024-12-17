@@ -27,10 +27,6 @@ void UCBaseSkillComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UCBaseSkillComponent::SetOwnerWeapon()
-{
-	OwnerWeapon = Cast<ACBaseWeapon>(GetOwner());
-}
 
 void UCBaseSkillComponent::GetOwnerComponent()
 {

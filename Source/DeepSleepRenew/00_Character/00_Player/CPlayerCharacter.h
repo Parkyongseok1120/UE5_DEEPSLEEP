@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "00_Character/CBaseCharacter.h"
+#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
 #include "CPlayerCharacter.generated.h"
 
+class ACHealthCore;
 class UCInputComponent;
 class UCDashComponent;
 class UCHealthComponent;
@@ -143,6 +145,10 @@ private:
 	class ACBaseWeapon* Weapon;
 
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<ACBaseWeapon> HealthCoreClass;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	bool bEquipWeapon;
 

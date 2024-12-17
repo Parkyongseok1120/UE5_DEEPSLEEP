@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "01_Weapon/00_Component/CSkillManagement.h"
+#include "01_Weapon/00_Component/CBaseSkillComponent.h"
 #include "CHealthSkillComponent.generated.h"
 
 
 UCLASS()
-class DEEPSLEEPRENEW_API UCHealthSkillComponent : public UCSkillManagement
+class DEEPSLEEPRENEW_API UCHealthSkillComponent : public UCBaseSkillComponent
 {
 	GENERATED_BODY()
 
@@ -17,6 +17,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetOwnerWeapon() override;
 
 private:
 	

@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "CBaseWeapon.generated.h"
 
+
+
 class UCBaseSkillComponent;
 class UCSkillManagement;
 class UCStateComponent;
@@ -74,13 +76,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UCSkillManagement* SkillManagement;
 
-private:
-	UPROPERTY(VisibleAnywhere, Category = "Component")
-	UCBaseSkillComponent* BaseSkill;
 
 public:
 	UFUNCTION()
-	void OnFire();
+	virtual void OnFire();
+
+private:
 	void SetupOwnerCharacter();
 	
 };

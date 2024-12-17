@@ -7,6 +7,7 @@
 #include "CHealthCore.generated.h"
 
 
+class UCHealthSkillComponent;
 UCLASS()
 class DEEPSLEEPRENEW_API ACHealthCore : public ACBaseWeapon
 {
@@ -14,11 +15,15 @@ class DEEPSLEEPRENEW_API ACHealthCore : public ACBaseWeapon
 
 public:
 	ACHealthCore();
+	virtual void OnFire() override;
 
 protected:
 	virtual void BeginPlay() override;
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
+	
+	UPROPERTY()
+	UCHealthSkillComponent* HealthSkillComponent;
 	
 };

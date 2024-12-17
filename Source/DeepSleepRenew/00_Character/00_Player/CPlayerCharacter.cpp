@@ -18,6 +18,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Global.h"
+#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
 
 ACPlayerCharacter::ACPlayerCharacter()
 {
@@ -59,7 +60,9 @@ void ACPlayerCharacter::BeginPlay()
 	StateComponent->OnMovementTypeChanged.AddDynamic(this, &ACPlayerCharacter::OnMovementTypeChanged);
 	StateComponent->OnWeaponTypeChanged.AddDynamic(this, &ACPlayerCharacter::OnWeaponTypeChanged);
 
+
 	Weapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
+	
 
 	HideWeapon1();
 }
@@ -275,13 +278,12 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 				Weapon->SetActorEnableCollision(true);
 				Weapon->SetActorTickEnabled(true);
 				bEquipWeapon = true;
-
 			}
 			else if (Weapon == nullptr)
 			{
 				bEquipWeapon = true;
 				bSpawnWeapon = true;
-				Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+				Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(HealthCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
 				if(Weapon)
 				{
 					Weapon->SetOwner(this);
@@ -289,6 +291,11 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 				}
 			}
 			break;
+		}
+
+	case EWeaponState::OblivionCore:
+		{
+			
 		}
 	}
 }

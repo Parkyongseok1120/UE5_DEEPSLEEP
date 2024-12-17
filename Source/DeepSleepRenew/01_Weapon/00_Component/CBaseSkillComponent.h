@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
 #include "Components/ActorComponent.h"
 #include "CBaseSkillComponent.generated.h"
 
@@ -29,11 +30,11 @@ public:
 	virtual FORCEINLINE bool CheckisUsing() const { return bIsUsingSkill; }
 	virtual FORCEINLINE bool CheckisActive() const { return bisActive; }
 	
-private:
-	UPROPERTY(VisibleAnywhere)
-	class ACBaseWeapon* OwnerWeapon;
-	
+
 protected:
+	UPROPERTY(EditAnywhere)
+	class ACBaseWeapon* OwnerWeapon;
+    	
 	UPROPERTY(VisibleAnywhere)
 	UCStateComponent* PlayerStateComponent;
 
@@ -49,7 +50,7 @@ protected:
 	virtual void DoSkillAction(){};
 
 	UFUNCTION()
-	virtual void SetOwnerWeapon();
+	virtual void SetOwnerWeapon(){};
 
 	UFUNCTION()
 	virtual void GetOwnerComponent();
