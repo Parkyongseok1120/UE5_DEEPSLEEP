@@ -64,4 +64,5 @@ void UCReloadComponent::AmmoCounting()
 {
 	UsingAmmoCount++;
 	RemainAmmoCount = MaxAmmo - UsingAmmoCount;
+	BulletInfo.Broadcast(RemainAmmoCount, UsingAmmoCount);
 }
