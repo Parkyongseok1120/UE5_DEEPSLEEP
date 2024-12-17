@@ -50,7 +50,7 @@ void UCReloadComponent::Reloading()
 	GetWorld()->GetTimerManager().SetTimer(ReloadingTimerHandle, FTimerDelegate::CreateLambda([&]()
 	{
 		UsingAmmoCount = 0;
-		RemainAmmoCount = 30;
+		RemainAmmoCount = MaxAmmo;
 		bisStopShooting = false;
 		bReloading = false;
 		// TimerHandle 초기화
@@ -65,4 +65,5 @@ void UCReloadComponent::AmmoCounting()
 	UsingAmmoCount++;
 	RemainAmmoCount = MaxAmmo - UsingAmmoCount;
 	BulletInfo.Broadcast(RemainAmmoCount, UsingAmmoCount);
+
 }

@@ -12,7 +12,7 @@ void UCPlayerWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	AActor* OwnerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ACPlayerCharacter::StaticClass());
+	AActor* OwnerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass());
 	if (OwnerActor)
 	{
 		ReloadComponent = OwnerActor->FindComponentByClass<UCReloadComponent>();
@@ -20,8 +20,15 @@ void UCPlayerWidget::NativeConstruct()
 		{
 			// 델리게이트 바인딩
 			ReloadComponent->BulletInfo.AddDynamic(this, &UCPlayerWidget::SetBullet);
+			if(CurrentBullet)
+				CurrentBullet->SetText(FText::AsNumber(CurrentBul));  // 초기 값: 0
+
+			if(MaxBullet)
+				MaxBullet->SetText(FText::AsNumber(MaxBul));
 		}
 	}
+
+	
 
 	
 }
@@ -29,12 +36,7 @@ void UCPlayerWidget::NativeConstruct()
 void UCPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	
-	if(CurrentBullet)
-		CurrentBullet-> SetText(FText::AsNumber(CurrentBul));
-
-	if(MaxBullet)
-		MaxBullet->SetText(FText::AsNumber(MaxBul));
+		
 }
 
 void UCPlayerWidget::SetBullet(int32 Current, int32 Max)
