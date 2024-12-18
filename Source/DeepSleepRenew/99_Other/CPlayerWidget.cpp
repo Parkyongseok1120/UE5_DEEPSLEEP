@@ -5,6 +5,7 @@
 #include "Global.h"
 #include "00_Character/00_Player/CPlayerCharacter.h"
 #include "01_Weapon/00_Component/CReloadComponent.h"
+#include "01_Weapon/CBaseWeapon.h"
 #include "AnimNodes/AnimNode_RandomPlayer.h"
 #include "Components/TextBlock.h"
 
@@ -20,11 +21,6 @@ void UCPlayerWidget::NativeConstruct()
 		{
 			// 델리게이트 바인딩
 			ReloadComponent->BulletInfo.AddDynamic(this, &UCPlayerWidget::SetBullet);
-			if(CurrentBullet)
-				CurrentBullet->SetText(FText::AsNumber(CurrentBul));  // 초기 값: 0
-
-			if(MaxBullet)
-				MaxBullet->SetText(FText::AsNumber(MaxBul));
 		}
 	}
 
@@ -39,8 +35,13 @@ void UCPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		
 }
 
-void UCPlayerWidget::SetBullet(int32 Current, int32 Max)
+void UCPlayerWidget::Init(int32 remainAmmoCount, int32 maxAmmoCount) const
 {
-	CurrentBul = Current;
-	MaxBul = Max;
+	SetBullet(remainAmmoCount, maxAmmoCount);
+}
+
+void UCPlayerWidget::SetBullet(int32 Current, int32 Max) const
+{
+	FString string = FString::Printf(TEXT("%d/%d"), Current, Max);
+	CurrentBullet->SetText(FText::FromString(string));
 }

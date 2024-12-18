@@ -349,3 +349,22 @@ void ACPlayerCharacter::Jump()
 		bCanDoubleJump = true;
 	}
 }
+
+void ACPlayerCharacter::CreateHUD()
+{
+ if (PlayerWidgetClass)
+ 	{
+ 		PlayerWidget = Cast<UCPlayerWidget>(CreateWidget(GetWorld(), PlayerWidgetClass));
+ 
+ 		if (PlayerWidget)
+ 		{
+ 			PlayerWidget->AddToViewport();
+ 			PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+ 
+ 			int AmmoRemainCount = Weapon ? Weapon->GetAmmoRemainCount() : 0;
+ 			int AmmoMaxCount = Weapon ? Weapon->GetAmmoMaxCount() : 0;
+ 
+ 			PlayerWidget->Init(AmmoRemainCount, AmmoMaxCount);
+ 		}
+ 	}
+}

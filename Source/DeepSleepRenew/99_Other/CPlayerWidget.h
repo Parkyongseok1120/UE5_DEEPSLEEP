@@ -20,22 +20,17 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UFUNCTION()
-	void SetBullet(int32 Current, int32 Max);
+	void SetBullet(int32 Current, int32 Max)const;
 
+	void Init(int32 remainAmmoCount, int32 maxAmmoCount) const;
+	
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock *CurrentBullet;
-	int32 CurrentBul;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock *MaxBullet;
-	int32 MaxBul;
+	UPROPERTY(BlueprintReadOnly,Category ="TEXT", meta = (BindWidget, AllowPrivateAccess = "true"))
+	UTextBlock* CurrentBullet;
 
 	UPROPERTY()
 	UCReloadComponent* ReloadComponent;
-
-
 	
 	
 	

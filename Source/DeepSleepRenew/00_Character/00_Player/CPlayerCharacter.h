@@ -168,7 +168,13 @@ public:
 	
 	UFUNCTION()
 	void CallOnFire();
-
 	
-	
+private: 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    	TSubclassOf<UUserWidget> PlayerWidgetClass;
+    
+    UPROPERTY(VisibleAnywhere, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+    class UCPlayerWidget* PlayerWidget;
+    
+    void CreateHUD();
 };
