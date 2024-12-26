@@ -10,7 +10,11 @@ UCLASS(minimalapi)
 class ACPlayerGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> PlayerWidgetClass;
+    
 public:
 	ACPlayerGameMode();
 	virtual void BeginPlay() override;

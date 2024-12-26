@@ -34,7 +34,7 @@ ACHealthCore::ACHealthCore()
 	MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
 	Mesh->SetVisibility(false);
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
-
+	MaxAmmo = 30;
 }
 
 void ACHealthCore::OnFire()
@@ -48,7 +48,6 @@ void ACHealthCore::OnFire()
 		}
 		else
 		{
-			
 			if (ProjectileClass != nullptr)
 			{
 				const FRotator SpawnRotation =  OwnerCharacter->GetControlRotation();
@@ -63,23 +62,41 @@ void ACHealthCore::OnFire()
 
 					World->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 				}
-				Reload->AmmoCounting();
-			
+				GetAmmoRemainCount();
 			}
 		}
-	}
-	else if(Reload->GetRemainAmmoCount() <= 0)
-	{
-		Reload->Reloading();
 	}
 }
 
 void ACHealthCore::BeginPlay()
 {
 	Super::BeginPlay();
+	Reload->SetMaxAmmo(MaxAmmo);
 }
 
 void ACHealthCore::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+}
+
+void ACHealthCore::GetAmmoRemainCount()
+{
+	Reload->AmmoCounting();
+	CurrentAmmo = Reload->GetRemainAmmoCount();
+	BroadcastAmmoInfo(CurrentAmmo, MaxAmmo);
+	UE_LOG(LogTemp, Log, TEXT("AmmoInfo.Broadcast called: %d/%d"), CurrentAmmo, MaxAmmo);
+	if(CurrentAmmo <= 0)
+	{
+		Reload->Reloading();
+		BroadcastAmmoInfo(CurrentAmmo, MaxAmmo);
+		UE_LOG(LogTemp, Log, TEXT("AmmoInfo.Broadcast called: %d/%d"), CurrentAmmo, MaxAmmo);
+	}
+}
+
+void ACHealthCore::BroadcastAmmoInfo(int32 Current, int32 Max)
+{
+	if (AmmoInfo.IsBound())
+	{
+		AmmoInfo.Broadcast(CurrentAmmo, MaxAmmo);
+	}
 }

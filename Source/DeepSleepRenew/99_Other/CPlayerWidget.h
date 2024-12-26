@@ -20,9 +20,9 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UFUNCTION()
-	void SetBullet(int32 Current, int32 Max)const;
+	void SetBullet(int32 Current, int32 Max);
 
-	void Init(int32 remainAmmoCount, int32 maxAmmoCount) const;
+	void Init(int32 remainAmmoCount, int32 maxAmmoCount);
 	
 
 protected:
@@ -30,7 +30,10 @@ protected:
 	UTextBlock* CurrentBullet;
 
 	UPROPERTY()
-	UCReloadComponent* ReloadComponent;
+	class ACBaseWeapon *Weapon;
+
+	UPROPERTY()
+	class ACPlayerCharacter* OwnerCharacter;
 	
 	
 	

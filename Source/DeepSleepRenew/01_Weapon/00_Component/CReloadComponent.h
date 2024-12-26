@@ -10,8 +10,6 @@ class ACharacter;
 class ACBaseWeapon;
 class UCPlayerWidget;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReceiveBulletInfo, int32, CurrentBullet, int32, MaxBullet );
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEPRENEW_API UCReloadComponent : public UActorComponent
 {
@@ -19,11 +17,8 @@ class DEEPSLEEPRENEW_API UCReloadComponent : public UActorComponent
 	
 public:
 	FORCEINLINE bool GetbReloading() {return bReloading;}
-	FORCEINLINE int GetRemainAmmoCount() {return RemainAmmoCount;}
+	FORCEINLINE int32 GetRemainAmmoCount() {return RemainAmmoCount;}
 
-	// 델리게이트 인스턴스
-	UPROPERTY(BlueprintAssignable, Category = "Delegate")
-	FReceiveBulletInfo BulletInfo;;
 public:	
 	// Sets default values for this component's properties
 	UCReloadComponent();
@@ -66,4 +61,5 @@ protected:
 public:
 	void Reloading();
 	void AmmoCounting();
+	void SetMaxAmmo(int32 CoreSetMaxAmmo);
 };

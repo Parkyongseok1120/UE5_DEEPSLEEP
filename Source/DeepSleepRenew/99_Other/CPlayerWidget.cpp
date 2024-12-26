@@ -2,32 +2,31 @@
 
 
 #include "99_Other/CPlayerWidget.h"
-#include "Global.h"
 #include "00_Character/00_Player/CPlayerCharacter.h"
-#include "01_Weapon/00_Component/CReloadComponent.h"
 #include "01_Weapon/CBaseWeapon.h"
+
 #include "AnimNodes/AnimNode_RandomPlayer.h"
 #include "Components/TextBlock.h"
+
+#include "Global.h"
+
 
 void UCPlayerWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	AActor* OwnerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass());
-	if (OwnerActor)
+	Weapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
+	if (Weapon)
 	{
-		ReloadComponent = OwnerActor->FindComponentByClass<UCReloadComponent>();
-		if (ReloadComponent)
-		{
-			// 델리게이트 바인딩
-			ReloadComponent->BulletInfo.AddDynamic(this, &UCPlayerWidget::SetBullet);
-		}
+		Weapon->AmmoInfo.AddDynamic(this, &UCPlayerWidget::SetBullet);
+		UE_LOG(LogTemp, Log, TEXT("Weapon found and AmmoInfo bound"));
 	}
-
-	
-
-	
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Weapon not found"));
+	}
 }
+
 
 void UCPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -35,13 +34,14 @@ void UCPlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		
 }
 
-void UCPlayerWidget::Init(int32 remainAmmoCount, int32 maxAmmoCount) const
+void UCPlayerWidget::Init(int32 remainAmmoCount, int32 maxAmmoCount)
 {
 	SetBullet(remainAmmoCount, maxAmmoCount);
 }
 
-void UCPlayerWidget::SetBullet(int32 Current, int32 Max) const
+void UCPlayerWidget::SetBullet(int32 Current, int32 Max)
 {
 	FString string = FString::Printf(TEXT("%d/%d"), Current, Max);
+	UE_LOG(LogTemp, Log, TEXT("SetBullet called: %s"), *string);
 	CurrentBullet->SetText(FText::FromString(string));
 }

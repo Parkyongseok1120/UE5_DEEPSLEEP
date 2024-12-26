@@ -16,6 +16,9 @@ class DEEPSLEEPRENEW_API ACHealthCore : public ACBaseWeapon
 public:
 	ACHealthCore();
 	virtual void OnFire() override;
+	// 델리게이트 인스턴스
+	
+	virtual void GetAmmoRemainCount() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -25,5 +28,15 @@ public:
 	
 	UPROPERTY()
 	UCHealthSkillComponent* HealthSkillComponent;
-	
+
+private:
+
+	UPROPERTY()
+	int32 MaxAmmo;
+
+	UPROPERTY()
+	int32 CurrentAmmo;
+
+	UFUNCTION()
+	void BroadcastAmmoInfo(int32 Current, int32 Max);
 };

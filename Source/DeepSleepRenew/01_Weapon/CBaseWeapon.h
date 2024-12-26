@@ -17,6 +17,9 @@ class ACProjectile;
 class UCReloadComponent;
 class UParticleSystemComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReceiveAmmoInfo, int32, CurrentAmmo, int32, MaxAmmo );
+
+
 UCLASS()
 class DEEPSLEEPRENEW_API ACBaseWeapon : public AActor
 {
@@ -29,10 +32,11 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(BlueprintAssignable, Category = "AmmoDelegate")
+	FReceiveAmmoInfo AmmoInfo;
 
 		
 protected:
@@ -75,6 +79,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UCSkillManagement* SkillManagement;
+
+
+	UFUNCTION()
+	virtual void GetAmmoRemainCount(){};
 
 
 public:

@@ -7,7 +7,9 @@
 #include "00_Character/02_Component/CStateComponent.h"
 #include "00_Character/CAnimInstance.h"
 #include "01_Weapon/CBaseWeapon.h"
+#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
 #include "02_Item/CBaseItem.h"
+#include "99_Other/CPlayerWidget.h"
 
 #include "GameFramework/Character.h"
 #include "Animation/AnimMontage.h"
@@ -16,9 +18,9 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Blueprint/UserWidget.h"
 
 #include "Global.h"
-#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
 
 ACPlayerCharacter::ACPlayerCharacter()
 {
@@ -70,6 +72,7 @@ void ACPlayerCharacter::BeginPlay()
 void ACPlayerCharacter::SpawnWeapon1()
 {
 	StateComponent->SetHealthCoreState();
+	CreateHUD();
 }
 
 void ACPlayerCharacter::HideWeapon1()
@@ -352,19 +355,14 @@ void ACPlayerCharacter::Jump()
 
 void ACPlayerCharacter::CreateHUD()
 {
- if (PlayerWidgetClass)
- 	{
- 		PlayerWidget = Cast<UCPlayerWidget>(CreateWidget(GetWorld(), PlayerWidgetClass));
- 
- 		if (PlayerWidget)
- 		{
- 			PlayerWidget->AddToViewport();
- 			PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
- 
- 			int AmmoRemainCount = Weapon ? Weapon->GetAmmoRemainCount() : 0;
- 			int AmmoMaxCount = Weapon ? Weapon->GetAmmoMaxCount() : 0;
- 
- 			PlayerWidget->Init(AmmoRemainCount, AmmoMaxCount);
- 		}
- 	}
+	if (PlayerWidgetClass)
+	{
+		PlayerWidget = CreateWidget<UCPlayerWidget>(GetWorld(), PlayerWidgetClass); // 수정된 부분
+
+		if (PlayerWidget)
+		{
+			PlayerWidget->AddToViewport();
+			PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		}
+	}
 }
