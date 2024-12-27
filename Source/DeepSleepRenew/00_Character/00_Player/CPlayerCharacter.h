@@ -144,23 +144,10 @@ private:
 	UPROPERTY()
 	class ACBaseWeapon* Weapon;
 
+	UPROPERTY()
+	class UCWeaponManagement* WeaponManagement;
+
 protected:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> HealthCoreClass;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> OblivionCoreClass;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
-	bool HealthbEquipWeapon;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
-	bool OblivionEquipWeapon;
-
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	bool bSpawnWeapon;
-
 	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
 	UAnimMontage* FireAnimMong;	
 
@@ -177,15 +164,5 @@ public:
 	
 	UFUNCTION()
 	void CallOnFire();
-
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UUserWidget> PlayerWidgetClass;
-
 	
-private: 
-        UPROPERTY(VisibleAnywhere, Category = "Widget", meta = (AllowPrivateAccess = "true"))
-    class UCPlayerWidget* PlayerWidget;
-    
-    void CreateHUD();
 };

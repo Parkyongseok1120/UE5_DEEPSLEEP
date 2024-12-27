@@ -9,6 +9,7 @@
 #include "01_Weapon/CBaseWeapon.h"
 #include "01_Weapon/01_CoreWeapon/CHealthCore.h"
 #include "02_Item/CBaseItem.h"
+#include "01_Weapon/00_Component/CWeaponManagement.h"
 #include "99_Other/CPlayerWidget.h"
 
 #include "GameFramework/Character.h"
@@ -26,7 +27,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 {
 	CHelpers::CreateActorComponent<UCDashComponent>(this, &DashComponent, "Dash");
 	CHelpers::CreateActorComponent<UCInventoryComponent>(this, &InventoryComponent, "Inventory");
-
+	CHelpers::CreateActorComponent<UCWeaponManagement>(this, &WeaponManagement, "WeaponManagement");
 	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
@@ -86,6 +87,9 @@ void ACPlayerCharacter::HideWeapon1()
 
 void ACPlayerCharacter::CallOnFire()
 {
+	bool HealthbEquipWeapon = WeaponManagement->GetHeatlthEquipWeapon();
+	bool OblivionEquipWeapon = WeaponManagement->GetOblivionEquipWeapon();
+	
 	if (Weapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -265,99 +269,6 @@ void ACPlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState
 
 void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
 {
-	switch(InNewType)
-	{
-	case EWeaponState::Hands:
-		{
-			HealthbEquipWeapon = false;
-			OblivionEquipWeapon = false;
-
-			if(Weapon)
-			{
-				Weapon -> SetActorHiddenInGame(true);
-				Weapon -> SetActorEnableCollision(false);
-				Weapon -> SetActorTickEnabled(false);
-				CLog::Print("Hand State");
-				if (PlayerWidget)
-				{
-					PlayerWidget->SetVisibility(ESlateVisibility::Hidden);
-				}
-			}
-			break;
-		}
-	case EWeaponState::HealthCore:
-		{
-			CLog::Print("HealthCore State");
-
-			if(bSpawnWeapon == true)
-			{
-				if (OblivionEquipWeapon == true)
-					OblivionEquipWeapon = false;
-				
-				Weapon->SetActorHiddenInGame(false);
-				Weapon->SetActorEnableCollision(true);
-				Weapon->SetActorTickEnabled(true);
-				HealthbEquipWeapon = true;
-				if (PlayerWidget)
-				{
-					PlayerWidget->SetVisibility(ESlateVisibility::Visible);
-				}
-			}
-			else if (Weapon == nullptr)
-			{
-				if (OblivionEquipWeapon == true)
-					OblivionEquipWeapon = false;
-				
-				HealthbEquipWeapon = true;
-				bSpawnWeapon = true;
-				Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(HealthCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
-				CreateHUD();
-				
-				if(Weapon)
-				{
-					Weapon->SetOwner(this);
-					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
-				}
-			}
-			break;
-		}
-
-	case EWeaponState::OblivionCore:
-		{
-			if(bSpawnWeapon == true)
-			{
-				if (HealthbEquipWeapon == true)
-					HealthbEquipWeapon = false;
-				
-				Weapon->SetActorHiddenInGame(false);
-				Weapon->SetActorEnableCollision(true);
-				Weapon->SetActorTickEnabled(true);
-				OblivionEquipWeapon = true;
-				if (PlayerWidget)
-				{
-					PlayerWidget->SetVisibility(ESlateVisibility::Visible);
-				}
-			}
-			else if (Weapon == nullptr)
-			{
-				if (HealthbEquipWeapon == true)
-					HealthbEquipWeapon = false;
-				
-				OblivionEquipWeapon = true;
-				bSpawnWeapon = true;
-				Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(OblivionCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
-				CreateHUD();
-				
-				if(Weapon)
-				{
-					Weapon->SetOwner(this);
-					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
-				}
-			}
-			break;
-		
-		}
-	}
 }
 
 bool ACPlayerCharacter::IsGrounded() const
@@ -410,24 +321,4 @@ void ACPlayerCharacter::Jump()
 	}
 }
 
-void ACPlayerCharacter::CreateHUD()
-{
-	if (PlayerWidgetClass)
-	{
-		PlayerWidget = CreateWidget<UCPlayerWidget>(GetWorld(), PlayerWidgetClass); // 수정된 부분
 
-		if (PlayerWidget)
-		{
-			ACHealthCore* HealthCore = NewObject<ACHealthCore>(this);
-			int32 Current= HealthCore->GetCurrentAmmo();
-			int32 Max = HealthCore->GetMaxAmmo();
-
-			CLog::Print(Current);
-			CLog::Print(Max);
-
-			PlayerWidget->Init(Current,Max);
-			PlayerWidget->AddToViewport();
-			PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
-		}
-	}
-}
