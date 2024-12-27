@@ -57,6 +57,14 @@ void ACBaseWeapon::OnFire()
 	}
 }
 
+void ACBaseWeapon::BroadcastAmmoInfo(int32 Current, int32 Max)
+{
+	if (AmmoInfo.IsBound())
+	{
+		AmmoInfo.Broadcast(CurrentAmmo, MaxAmmo);
+	}
+}
+
 void ACBaseWeapon::SetupOwnerCharacter()
 {
 	OwnerCharacter = Cast<ACharacter>(GetOwner());

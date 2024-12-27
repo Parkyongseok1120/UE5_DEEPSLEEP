@@ -69,10 +69,14 @@ void ACPlayerCharacter::BeginPlay()
 	HideWeapon1();
 }
 
-void ACPlayerCharacter::SpawnWeapon1()
+void ACPlayerCharacter::SpawnHealthCore()
 {
 	StateComponent->SetHealthCoreState();
-	CreateHUD();
+}
+
+void ACPlayerCharacter::SpawnOblivionCore()
+{
+	StateComponent->SetOblivionCoreState();
 }
 
 void ACPlayerCharacter::HideWeapon1()
@@ -82,13 +86,16 @@ void ACPlayerCharacter::HideWeapon1()
 
 void ACPlayerCharacter::CallOnFire()
 {
-	if (Weapon != nullptr && bEquipWeapon == true)
+	if (Weapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance && FireAnimMong)
 		{
-			AnimInstance->Montage_Play(FireAnimMong);
-			Weapon->OnFire(); // OtherActor의 함수 호출
+			if (Weapon->GetbisReloading() != true)
+			{
+				AnimInstance->Montage_Play(FireAnimMong);
+				Weapon->OnFire(); 
+			}
 		}
 	}
 	else
@@ -136,7 +143,9 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &ACPlayerCharacter::EndSprint);
 	PlayerInputComponent->BindAction("C_Key", IE_Pressed, this, &ACPlayerCharacter::DashStart);
 	PlayerInputComponent->BindAction("Key_1",IE_Pressed, this, &ACPlayerCharacter::HideWeapon1);
-	PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::SpawnWeapon1);
+	PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::SpawnHealthCore);
+	PlayerInputComponent->BindAction("Key_3",IE_Pressed, this, &ACPlayerCharacter::SpawnOblivionCore);
+
 	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &ACPlayerCharacter::CallOnFire);
 	
 		
@@ -260,7 +269,8 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 	{
 	case EWeaponState::Hands:
 		{
-			bEquipWeapon = false;
+			HealthbEquipWeapon = false;
+			OblivionEquipWeapon = false;
 
 			if(Weapon)
 			{
@@ -268,6 +278,10 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 				Weapon -> SetActorEnableCollision(false);
 				Weapon -> SetActorTickEnabled(false);
 				CLog::Print("Hand State");
+				if (PlayerWidget)
+				{
+					PlayerWidget->SetVisibility(ESlateVisibility::Hidden);
+				}
 			}
 			break;
 		}
@@ -277,16 +291,28 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 
 			if(bSpawnWeapon == true)
 			{
+				if (OblivionEquipWeapon == true)
+					OblivionEquipWeapon = false;
+				
 				Weapon->SetActorHiddenInGame(false);
 				Weapon->SetActorEnableCollision(true);
 				Weapon->SetActorTickEnabled(true);
-				bEquipWeapon = true;
+				HealthbEquipWeapon = true;
+				if (PlayerWidget)
+				{
+					PlayerWidget->SetVisibility(ESlateVisibility::Visible);
+				}
 			}
 			else if (Weapon == nullptr)
 			{
-				bEquipWeapon = true;
+				if (OblivionEquipWeapon == true)
+					OblivionEquipWeapon = false;
+				
+				HealthbEquipWeapon = true;
 				bSpawnWeapon = true;
 				Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(HealthCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
+				CreateHUD();
+				
 				if(Weapon)
 				{
 					Weapon->SetOwner(this);
@@ -298,7 +324,38 @@ void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponStat
 
 	case EWeaponState::OblivionCore:
 		{
-			
+			if(bSpawnWeapon == true)
+			{
+				if (HealthbEquipWeapon == true)
+					HealthbEquipWeapon = false;
+				
+				Weapon->SetActorHiddenInGame(false);
+				Weapon->SetActorEnableCollision(true);
+				Weapon->SetActorTickEnabled(true);
+				OblivionEquipWeapon = true;
+				if (PlayerWidget)
+				{
+					PlayerWidget->SetVisibility(ESlateVisibility::Visible);
+				}
+			}
+			else if (Weapon == nullptr)
+			{
+				if (HealthbEquipWeapon == true)
+					HealthbEquipWeapon = false;
+				
+				OblivionEquipWeapon = true;
+				bSpawnWeapon = true;
+				Weapon = GetWorld()->SpawnActor<ACBaseWeapon>(OblivionCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
+				CreateHUD();
+				
+				if(Weapon)
+				{
+					Weapon->SetOwner(this);
+					Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
+				}
+			}
+			break;
+		
 		}
 	}
 }
@@ -361,6 +418,14 @@ void ACPlayerCharacter::CreateHUD()
 
 		if (PlayerWidget)
 		{
+			ACHealthCore* HealthCore = NewObject<ACHealthCore>(this);
+			int32 Current= HealthCore->GetCurrentAmmo();
+			int32 Max = HealthCore->GetMaxAmmo();
+
+			CLog::Print(Current);
+			CLog::Print(Max);
+
+			PlayerWidget->Init(Current,Max);
 			PlayerWidget->AddToViewport();
 			PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 		}

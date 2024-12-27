@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
+#include "01_Weapon/01_CoreWeapon/COblivionCore.h"
 #include "00_Character/00_Player/CPlayerCharacter.h"
 #include "01_Weapon/CProjectile.h"
-#include "01_Weapon/00_Component/00_Skill/CHealthSkillComponent.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -12,12 +11,13 @@
 
 #include "Global.h"
 
-ACHealthCore::ACHealthCore()
+// Sets default values
+ACOblivionCore::ACOblivionCore()
 {
-	CHelpers::CreateActorComponent<UCHealthSkillComponent>(this, &HealthSkillComponent, "SkillComponent");
+	PrimaryActorTick.bCanEverTick = true;
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "Particle", Mesh);
-	CHelpers::GetAsset<UParticleSystem>(&CoreParticle, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_SparCore_01.Par_SparCore_01'");
+	CHelpers::GetAsset<UParticleSystem>(&CoreParticle, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_VecFielder_01.Par_VecFielder_01'");
 	ParticleComponent->SetTemplate(CoreParticle);
 	ParticleComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 	
@@ -32,7 +32,7 @@ ACHealthCore::ACHealthCore()
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
-void ACHealthCore::OnFire()
+void ACOblivionCore::OnFire()
 {
 	Super::OnFire();
 	if(Reload->GetRemainAmmoCount() > 0 && Reload->GetbReloading() != true)
@@ -63,18 +63,7 @@ void ACHealthCore::OnFire()
 	}
 }
 
-void ACHealthCore::BeginPlay()
-{
-	Super::BeginPlay();
-	Reload->SetMaxAmmo(MaxAmmo);
-}
-
-void ACHealthCore::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-}
-
-void ACHealthCore::GetAmmoRemainCount()
+void ACOblivionCore::GetAmmoRemainCount()
 {
 	Reload->AmmoCounting();
 	CurrentAmmo = Reload->GetRemainAmmoCount();
@@ -86,3 +75,19 @@ void ACHealthCore::GetAmmoRemainCount()
 		UE_LOG(LogTemp, Log, TEXT("AmmoInfo.Broadcast called: %d/%d"), CurrentAmmo, MaxAmmo);
 	}
 }
+
+// Called when the game starts or when spawned
+void ACOblivionCore::BeginPlay()
+{
+	Super::BeginPlay();
+	Reload->SetMaxAmmo(MaxAmmo);
+
+}
+
+// Called every frame
+void ACOblivionCore::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+

@@ -148,9 +148,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<ACBaseWeapon> HealthCoreClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<ACBaseWeapon> OblivionCoreClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
-	bool bEquipWeapon;
+	bool HealthbEquipWeapon;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	bool OblivionEquipWeapon;
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool bSpawnWeapon;
@@ -161,7 +167,10 @@ protected:
 
 public:
 	UFUNCTION()
-	void SpawnWeapon1();
+	void SpawnHealthCore();
+	
+	UFUNCTION()
+	void SpawnOblivionCore();
 
 	UFUNCTION()
 	void HideWeapon1();
@@ -172,7 +181,7 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> PlayerWidgetClass;
-    
+
 	
 private: 
         UPROPERTY(VisibleAnywhere, Category = "Widget", meta = (AllowPrivateAccess = "true"))

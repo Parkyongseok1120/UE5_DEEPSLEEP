@@ -5,32 +5,31 @@
 #include "CoreMinimal.h"
 #include "01_Weapon/CBaseWeapon.h"
 #include "01_Weapon/00_Component/CReloadComponent.h"
-#include "CHealthCore.generated.h"
 
+#include "COblivionCore.generated.h"
 
-class UCHealthSkillComponent;
 UCLASS()
-class DEEPSLEEPRENEW_API ACHealthCore : public ACBaseWeapon
+class DEEPSLEEPRENEW_API ACOblivionCore : public ACBaseWeapon
 {
 	GENERATED_BODY()
+
 public:
 	FORCEINLINE int32 GetMaxAmmo() override {return MaxAmmo;} 
 	FORCEINLINE int32 GetCurrentAmmo() override {return CurrentAmmo;}
 	FORCEINLINE bool GetbisReloading()override {return Reload->GetbReloading();}
 
-	
-	ACHealthCore();
+	ACOblivionCore();
+
 	virtual void OnFire() override;
 	
 	virtual void GetAmmoRemainCount() override;
 
 protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	virtual void Tick(float DeltaSeconds) override;
-	
-	UPROPERTY()
-	UCHealthSkillComponent* HealthSkillComponent;
-	
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 };

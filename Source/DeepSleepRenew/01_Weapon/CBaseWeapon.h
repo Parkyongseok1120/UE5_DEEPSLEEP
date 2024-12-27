@@ -25,7 +25,13 @@ class DEEPSLEEPRENEW_API ACBaseWeapon : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
+
+	UFUNCTION()
+	virtual FORCEINLINE int32 GetMaxAmmo(){ check(false); return 0; }
+	virtual FORCEINLINE int32 GetCurrentAmmo(){ check(false); return 0; }
+	virtual FORCEINLINE bool GetbisReloading(){check(false); return 0;}
+	
 	// Sets default values for this actor's properties
 	ACBaseWeapon();
 
@@ -80,6 +86,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UCSkillManagement* SkillManagement;
 
+	UPROPERTY()
+	int32 MaxAmmo = 30;
+
+	UPROPERTY()
+	int32 CurrentAmmo = MaxAmmo;
 
 	UFUNCTION()
 	virtual void GetAmmoRemainCount(){};
@@ -88,6 +99,9 @@ protected:
 public:
 	UFUNCTION()
 	virtual void OnFire();
+	
+	UFUNCTION()
+	void BroadcastAmmoInfo(int32 Current, int32 Max);
 
 private:
 	void SetupOwnerCharacter();

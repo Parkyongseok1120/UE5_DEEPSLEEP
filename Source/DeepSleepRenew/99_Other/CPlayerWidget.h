@@ -18,9 +18,7 @@ public:
 	virtual void NativeConstruct() override;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
-	UFUNCTION()
-	void SetBullet(int32 Current, int32 Max);
+	
 
 	void Init(int32 remainAmmoCount, int32 maxAmmoCount);
 	
@@ -28,6 +26,9 @@ public:
 protected:
 	UPROPERTY(BlueprintReadOnly,Category ="TEXT", meta = (BindWidget, AllowPrivateAccess = "true"))
 	UTextBlock* CurrentBullet;
+
+	UFUNCTION()
+	void SetBullet(int32 Current, int32 Max);
 
 	UPROPERTY()
 	class ACBaseWeapon *Weapon;
