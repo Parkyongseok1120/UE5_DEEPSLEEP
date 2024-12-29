@@ -77,6 +77,9 @@ private:
 	void SetVisibleWeapon();
 
 	UFUNCTION()
+	void SetActiveCore();
+
+	UFUNCTION()
 	void SpawnWeapon();
 	
 public:

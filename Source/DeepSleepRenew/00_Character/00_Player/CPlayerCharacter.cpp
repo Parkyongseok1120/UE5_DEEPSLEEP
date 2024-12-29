@@ -6,21 +6,16 @@
 #include "00_Character/02_Component/CInventoryComponent.h"
 #include "00_Character/02_Component/CStateComponent.h"
 #include "00_Character/CAnimInstance.h"
-#include "01_Weapon/CBaseWeapon.h"
-#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
 
 #include "02_Item/CBaseItem.h"
 #include "01_Weapon/00_Component/CWeaponManagement.h"
-#include "99_Other/CPlayerWidget.h"
 
 #include "GameFramework/Character.h"
 #include "Animation/AnimMontage.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Blueprint/UserWidget.h"
 
 #include "Global.h"
 

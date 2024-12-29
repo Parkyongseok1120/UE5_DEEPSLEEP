@@ -40,7 +40,7 @@ class DEEPSLEEPRENEW_API UCStateComponent : public UActorComponent
 public:
 	FORCEINLINE bool IsDefaultMode() { return MovementType == EMovementState::Default; }
 	FORCEINLINE bool IsDeadMode() { return SelfStateType == ESelfState::Dead; }
-	
+	FORCEINLINE bool CheckWeaponState(uint8 num){if (num == static_cast<uint8>(WeaponType)) return true; else return false; }
 	// Sets default values for this component's properties
 	UCStateComponent();
 

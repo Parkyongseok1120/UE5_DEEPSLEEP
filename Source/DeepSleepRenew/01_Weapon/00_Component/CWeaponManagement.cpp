@@ -15,6 +15,7 @@ UCWeaponManagement::UCWeaponManagement()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	Player = Cast<ACPlayerCharacter>(GetOwner());
+	
 	if (Player)
 		PlayerStateComponent = Player->FindComponentByClass<UCStateComponent>();
 }
@@ -27,11 +28,9 @@ void UCWeaponManagement::BeginPlay()
 		PlayerStateComponent->OnWeaponTypeChanged.AddDynamic(this, &UCWeaponManagement::OnWeaponTypeChanged);
 		CLog::Print("WeaponManagement : Loading Success! - Player State Component ");
 	}
-
 	else
-	{
 		CLog::Print("WeaponManagement : Player State Component NULL");
-	}
+	
 	BaseWeapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
 }
 
@@ -40,14 +39,59 @@ void UCWeaponManagement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-
 void UCWeaponManagement::SetVisibleWeapon()
 {
+	if (PlayerStateComponent->CheckWeaponState(0) == true) //현재 HandState인지 확인.
+	{
+		BaseWeapon -> SetActorHiddenInGame(true);
+		BaseWeapon -> SetActorEnableCollision(false);
+		BaseWeapon -> SetActorTickEnabled(false);
+		if (PlayerWidget)
+		{
+			PlayerWidget->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	else
+	{
+		BaseWeapon->SetActorHiddenInGame(false);
+		BaseWeapon->SetActorEnableCollision(true);
+		BaseWeapon->SetActorTickEnabled(true);
+		
+		if (PlayerWidget)
+			PlayerWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
 
-	BaseWeapon->SetActorHiddenInGame(false);
-	BaseWeapon->SetActorEnableCollision(true);
-	BaseWeapon->SetActorTickEnabled(true);
-	
+void UCWeaponManagement::SetActiveCore()
+{
+	if (PlayerStateComponent->CheckWeaponState(0) == true)
+	{
+		HealthbEquipWeapon = false;
+		OblivionEquipWeapon = false;
+		CLog::Print("Hand State");
+	}
+	else if (PlayerStateComponent->CheckWeaponState(1) == true)
+	{
+		HealthbEquipWeapon = true;
+		CLog::Print("HealthCore State");
+
+		if (OblivionEquipWeapon == true)
+		{
+			OblivionEquipWeapon = false;
+			HealthbEquipWeapon = true;
+		}
+	}
+	else if (PlayerStateComponent->CheckWeaponState(2) == true)
+	{
+		OblivionEquipWeapon = true;
+		CLog::Print("Oblivion State");
+
+		if (HealthbEquipWeapon == true)
+		{
+			HealthbEquipWeapon = false;
+			OblivionEquipWeapon = true;
+		}
+	}
 }
 
 void UCWeaponManagement::SpawnWeapon()
@@ -65,7 +109,7 @@ void UCWeaponManagement::SpawnWeapon()
 
 void UCWeaponManagement::CallOnFire()
 {
-	if (BaseWeapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon)
+	if (BaseWeapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon == true)
 	{
 		UAnimInstance* AnimInstance = Player->GetMesh()->GetAnimInstance();
 		UAnimMontage* AnimMontage = Player->GetAnimMontage();
@@ -79,88 +123,42 @@ void UCWeaponManagement::CallOnFire()
 		}
 	}
 	else
-	{
 		CLog::Print("Weapon Nullptr");
-	}
-
 }
 
 void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
 {
-
 	switch(InNewType)
 	{
 	case EWeaponState::Hands:
 		{
-			HealthbEquipWeapon = false;
-			OblivionEquipWeapon = false;
-
+			SetActiveCore();
 			if(BaseWeapon)
-			{
-				BaseWeapon -> SetActorHiddenInGame(true);
-				BaseWeapon -> SetActorEnableCollision(false);
-				BaseWeapon -> SetActorTickEnabled(false);
-				CLog::Print("Hand State");
-				if (PlayerWidget)
-				{
-					PlayerWidget->SetVisibility(ESlateVisibility::Hidden);
-				}
-			}
+				SetVisibleWeapon();
+			
 			break;
 		}
 	case EWeaponState::HealthCore:
 		{
-			CLog::Print("HealthCore State");
-
+			SetActiveCore();
 			if(bSpawnWeapon == true && BaseWeapon)
-			{
-				if (OblivionEquipWeapon == true)
-					OblivionEquipWeapon = false;
-				
 				SetVisibleWeapon();
-				HealthbEquipWeapon = true;
-				if (PlayerWidget)
-				{
-					PlayerWidget->SetVisibility(ESlateVisibility::Visible);
-				}
-			}
-			else if (BaseWeapon == nullptr)
-			{
-				if (OblivionEquipWeapon == true)
-					OblivionEquipWeapon = false;
-				
-				HealthbEquipWeapon = true;
-				bSpawnWeapon = true;
-
+			else if (bSpawnWeapon == false && BaseWeapon == nullptr)
 				SpawnWeapon();
-			}
+			
 			break;
 		}
 
 	case EWeaponState::OblivionCore:
 		{
-			if(bSpawnWeapon == true)
-			{
-				if (HealthbEquipWeapon == true)
-					HealthbEquipWeapon = false;
-				
+			SetActiveCore();
+
+			if(bSpawnWeapon == true && BaseWeapon)
 				SetVisibleWeapon();
-				OblivionEquipWeapon = true;
-				if (PlayerWidget)
-				{
-					PlayerWidget->SetVisibility(ESlateVisibility::Visible);
-				}
-			}
-			else if (BaseWeapon == nullptr)
-			{
-				if (HealthbEquipWeapon == true)
-					HealthbEquipWeapon = false;
-				
-				OblivionEquipWeapon = true;
+			else if (bSpawnWeapon == false && BaseWeapon == nullptr)
 				SpawnWeapon();
-			}
+			
 			break;
-		
 		}
 	}
 }
