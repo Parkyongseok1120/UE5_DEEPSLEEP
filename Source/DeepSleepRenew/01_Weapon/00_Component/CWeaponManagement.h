@@ -32,8 +32,7 @@ public:
 
 
 private:
-
-	UPROPERTY()
+	
 	class ACPlayerCharacter* Player;
 
 	UPROPERTY()
@@ -59,13 +58,13 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	class UCPlayerWidget* PlayerWidget;
-	
+
 	
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> PlayerWidgetClass;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<ACBaseWeapon> HealthCoreClass;
 	
@@ -73,18 +72,19 @@ protected:
 	TSubclassOf<ACBaseWeapon> OblivionCoreClass;
 
 
-
 private:
 	UFUNCTION()
-	void SpawnWeapon();
+	void SetVisibleWeapon();
 
 	UFUNCTION()
-	void SetVisibleWeapon();
+	void SpawnWeapon();
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 
 	void CreateHUD();
+
+	void CallOnFire();
 
 };

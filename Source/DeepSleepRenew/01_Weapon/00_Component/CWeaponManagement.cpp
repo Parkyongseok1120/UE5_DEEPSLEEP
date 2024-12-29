@@ -7,7 +7,6 @@
 #include "00_Character/00_Player/CPlayerCharacter.h"
 #include "00_Character/02_Component/CStateComponent.h"
 
-
 #include "Global.h"
 #include "99_Other/CPlayerWidget.h"
 
@@ -17,18 +16,38 @@ UCWeaponManagement::UCWeaponManagement()
 	PrimaryComponentTick.bCanEverTick = true;
 	Player = Cast<ACPlayerCharacter>(GetOwner());
 	if (Player)
-	PlayerStateComponent = Player->FindComponentByClass<UCStateComponent>();
+		PlayerStateComponent = Player->FindComponentByClass<UCStateComponent>();
 }
 
 void UCWeaponManagement::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (PlayerStateComponent)
+	{
+		PlayerStateComponent->OnWeaponTypeChanged.AddDynamic(this, &UCWeaponManagement::OnWeaponTypeChanged);
+		CLog::Print("WeaponManagement : Loading Success! - Player State Component ");
+	}
+
+	else
+	{
+		CLog::Print("WeaponManagement : Player State Component NULL");
+	}
+	BaseWeapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
 }
 
 void UCWeaponManagement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+
+void UCWeaponManagement::SetVisibleWeapon()
+{
+
+	BaseWeapon->SetActorHiddenInGame(false);
+	BaseWeapon->SetActorEnableCollision(true);
+	BaseWeapon->SetActorTickEnabled(true);
+	
 }
 
 void UCWeaponManagement::SpawnWeapon()
@@ -44,11 +63,26 @@ void UCWeaponManagement::SpawnWeapon()
 	}
 }
 
-void UCWeaponManagement::SetVisibleWeapon()
+void UCWeaponManagement::CallOnFire()
 {
-	BaseWeapon->SetActorHiddenInGame(false);
-	BaseWeapon->SetActorEnableCollision(true);
-	BaseWeapon->SetActorTickEnabled(true);
+	if (BaseWeapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon)
+	{
+		UAnimInstance* AnimInstance = Player->GetMesh()->GetAnimInstance();
+		UAnimMontage* AnimMontage = Player->GetAnimMontage();
+		if(AnimInstance && AnimMontage)
+		{
+			if (BaseWeapon->GetbisReloading() != true)
+			{
+				AnimInstance->Montage_Play(AnimMontage);
+				BaseWeapon->OnFire(); 
+			}
+		}
+	}
+	else
+	{
+		CLog::Print("Weapon Nullptr");
+	}
+
 }
 
 void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
@@ -78,7 +112,7 @@ void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 		{
 			CLog::Print("HealthCore State");
 
-			if(bSpawnWeapon == true)
+			if(bSpawnWeapon == true && BaseWeapon)
 			{
 				if (OblivionEquipWeapon == true)
 					OblivionEquipWeapon = false;
@@ -97,6 +131,7 @@ void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 				
 				HealthbEquipWeapon = true;
 				bSpawnWeapon = true;
+
 				SpawnWeapon();
 			}
 			break;

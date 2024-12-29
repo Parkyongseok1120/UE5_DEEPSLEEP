@@ -8,6 +8,7 @@
 #include "00_Character/CAnimInstance.h"
 #include "01_Weapon/CBaseWeapon.h"
 #include "01_Weapon/01_CoreWeapon/CHealthCore.h"
+
 #include "02_Item/CBaseItem.h"
 #include "01_Weapon/00_Component/CWeaponManagement.h"
 #include "99_Other/CPlayerWidget.h"
@@ -59,13 +60,7 @@ void ACPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	DefaultFOV = PlayerCamera->FieldOfView;
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-
 	StateComponent->OnMovementTypeChanged.AddDynamic(this, &ACPlayerCharacter::OnMovementTypeChanged);
-	StateComponent->OnWeaponTypeChanged.AddDynamic(this, &ACPlayerCharacter::OnWeaponTypeChanged);
-
-
-	Weapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
-	
 
 	HideWeapon1();
 }
@@ -85,29 +80,6 @@ void ACPlayerCharacter::HideWeapon1()
 	StateComponent->SetHandsState();
 }
 
-void ACPlayerCharacter::CallOnFire()
-{
-	bool HealthbEquipWeapon = WeaponManagement->GetHeatlthEquipWeapon();
-	bool OblivionEquipWeapon = WeaponManagement->GetOblivionEquipWeapon();
-	
-	if (Weapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon)
-	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if(AnimInstance && FireAnimMong)
-		{
-			if (Weapon->GetbisReloading() != true)
-			{
-				AnimInstance->Montage_Play(FireAnimMong);
-				Weapon->OnFire(); 
-			}
-		}
-	}
-	else
-	{
-		CLog::Print("Weapon Nullptr");
-	}
-
-}
 
 void ACPlayerCharacter::Tick(float DeltaTime)
 {
@@ -150,7 +122,7 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::SpawnHealthCore);
 	PlayerInputComponent->BindAction("Key_3",IE_Pressed, this, &ACPlayerCharacter::SpawnOblivionCore);
 
-	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &ACPlayerCharacter::CallOnFire);
+	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, WeaponManagement, &UCWeaponManagement::CallOnFire);
 	
 		
 	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &ACPlayerCharacter::BeginZoom);
@@ -223,6 +195,55 @@ void ACPlayerCharacter::OnWalk()
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 }
 
+void ACPlayerCharacter::Jump()
+{
+	// 첫 번째 점프
+	Super::Jump();
+	if (IsGrounded() != true && bCanDoubleJump == true)
+	{
+		// 더블 점프
+		LaunchCharacter(FVector(0.0f, 0.0f, JumpForce), false, true);
+		bCanDoubleJump = false;
+	}
+	
+	if(IsGrounded() == true)
+	{
+		bCanDoubleJump = true;
+	}
+}
+
+bool ACPlayerCharacter::IsGrounded() const
+{
+	FVector Start = GetActorLocation();
+	FVector End = Start - FVector(0, 0, 100.0f);  // 발 아래 100 유닛까지 체크
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);  // 자기 자신은 무시
+
+	// Line Trace 실행
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		ECC_Visibility,  // 또는 커스텀 트레이스 채널
+		QueryParams
+	);
+
+	// 디버그 표시 (개발 중에 유용)
+	DrawDebugLine(
+		GetWorld(),
+		Start,
+		End,
+		FColor::Red,
+		false,
+		1.0f,
+		0,
+		1.0f
+	);
+	return bHit;
+}
+
 
 void ACPlayerCharacter::InteractWithItem(ACBaseItem* Item)
 {
@@ -267,58 +288,8 @@ void ACPlayerCharacter::OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState
 {
 }
 
-void ACPlayerCharacter::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
-{
-}
-
-bool ACPlayerCharacter::IsGrounded() const
-{
-	FVector Start = GetActorLocation();
-	FVector End = Start - FVector(0, 0, 100.0f);  // 발 아래 100 유닛까지 체크
-
-	FHitResult HitResult;
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);  // 자기 자신은 무시
-
-	// Line Trace 실행
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		Start,
-		End,
-		ECC_Visibility,  // 또는 커스텀 트레이스 채널
-		QueryParams
-	);
-
-	// 디버그 표시 (개발 중에 유용)
-	DrawDebugLine(
-		GetWorld(),
-		Start,
-		End,
-		FColor::Red,
-		false,
-		1.0f,
-		0,
-		1.0f
-	);
-	return bHit;
-}
 
 
-void ACPlayerCharacter::Jump()
-{
-// 첫 번째 점프
-	Super::Jump();
-	if (IsGrounded() != true && bCanDoubleJump == true)
-	{
-		// 더블 점프
-		LaunchCharacter(FVector(0.0f, 0.0f, JumpForce), false, true);
-		bCanDoubleJump = false;
-	}
-	
-	if(IsGrounded() == true)
-	{
-		bCanDoubleJump = true;
-	}
-}
+
 
 

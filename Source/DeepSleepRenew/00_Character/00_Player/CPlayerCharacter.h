@@ -15,9 +15,11 @@ class UCStateComponent;
 class UCInventoryComponent;
 class UCTargetComponent;
 class USkeletalMeshComponent;
+class UCWeaponManagement;
 class UAnimMontage;
 class UParticleSystem;
 class ACBaseItem;
+class ACBaseWeapon;
 
 UCLASS()
 class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
@@ -25,6 +27,8 @@ class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
 	GENERATED_BODY()
 public:
 	ACPlayerCharacter();
+
+	FORCEINLINE UAnimMontage* GetAnimMontage(){return FireAnimMong;}
 
 private:
 	
@@ -137,15 +141,15 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
 
-	UFUNCTION(BlueprintCallable, Category = "State")
-	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
+	//UFUNCTION(BlueprintCallable, Category = "State")
+	//void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 	
 	//-----Weapon;
 	UPROPERTY()
-	class ACBaseWeapon* Weapon;
-
-	UPROPERTY()
-	class UCWeaponManagement* WeaponManagement;
+	ACBaseWeapon* BaseWeapon;
+	
+	UPROPERTY(VisibleAnywhere)
+	UCWeaponManagement* WeaponManagement;
 
 protected:
 	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
@@ -162,7 +166,7 @@ public:
 	UFUNCTION()
 	void HideWeapon1();
 	
-	UFUNCTION()
-	void CallOnFire();
+	
+	
 	
 };

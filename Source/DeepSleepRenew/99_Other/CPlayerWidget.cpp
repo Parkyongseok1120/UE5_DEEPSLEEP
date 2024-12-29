@@ -16,6 +16,19 @@ void UCPlayerWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	Weapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
+	CurrentBullet = Cast<UTextBlock>(GetWidgetFromName(TEXT("CurrentBullet")));
+
+	// 디버깅용 로그 추가
+	if(CurrentBullet)
+	{
+		UE_LOG(LogTemp, Log, TEXT("CurrentBullet initialized successfully"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CurrentBullet is nullptr"));
+	}
+		
+
 	if (Weapon)
 	{
 		Weapon->AmmoInfo.AddDynamic(this, &UCPlayerWidget::SetBullet);
@@ -41,6 +54,11 @@ void UCPlayerWidget::Init(int32 remainAmmoCount, int32 maxAmmoCount)
 
 void UCPlayerWidget::SetBullet(int32 Current, int32 Max)
 {
+	if(!CurrentBullet)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CurrentBullet is nullptr"));
+		return;
+	}
 	FString string = FString::Printf(TEXT("%d/%d"), Current, Max);
 	UE_LOG(LogTemp, Log, TEXT("SetBullet called: %s"), *string);
 	CurrentBullet->SetText(FText::FromString(string));
