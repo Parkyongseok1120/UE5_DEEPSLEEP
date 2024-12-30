@@ -4,6 +4,7 @@
 #include "01_Weapon/01_CoreWeapon/COblivionCore.h"
 #include "00_Character/00_Player/CPlayerCharacter.h"
 #include "01_Weapon/CProjectile.h"
+#include "01_Weapon/00_Component/00_Skill/CHealthSkillComponent.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -11,10 +12,14 @@
 
 #include "Global.h"
 
-// Sets default values
 ACOblivionCore::ACOblivionCore()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	// HealthReloadComponent를 한 번만 생성
+	OblivionReloadComponent = CreateDefaultSubobject<UCReloadComponent>(TEXT("HealthReloadComponent"));
+	OblivionReloadComponent->SetMaxAmmo(MaxAmmo);
+
+	// ReloadComponents 배열에 추가 (다중 재장전 컴포넌트 관리용)
+	ReloadComponents.Add(OblivionReloadComponent);
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Knife.Darkness_Knife'");
@@ -30,7 +35,7 @@ ACOblivionCore::ACOblivionCore()
 void ACOblivionCore::OnFire()
 {
 	Super::OnFire();
-	if(Reload->GetRemainAmmoCount() > 0 && Reload->GetbReloading() != true)
+	if (OblivionReloadComponent && OblivionReloadComponent->GetRemainAmmoCount() > 0 && !OblivionReloadComponent->GetbReloading())
 	{
 		if (OwnerCharacter == nullptr)
 		{
@@ -56,33 +61,58 @@ void ACOblivionCore::OnFire()
 			}
 		}
 	}
-}
-
-void ACOblivionCore::GetAmmoRemainCount()
-{
-	Reload->AmmoCounting();
-	CurrentAmmo = Reload->GetRemainAmmoCount();
-	BroadcastAmmoInfo(CurrentAmmo, MaxAmmo);
-	UE_LOG(LogTemp, Log, TEXT("AmmoInfo.Broadcast called: %d/%d"), CurrentAmmo, MaxAmmo);
-	if(CurrentAmmo <= 0)
+	else if (OblivionReloadComponent && OblivionReloadComponent->GetRemainAmmoCount() <= 0 && !OblivionReloadComponent->GetbReloading())
 	{
-		Reload->Reloading();
-		UE_LOG(LogTemp, Log, TEXT("AmmoInfo.Broadcast called: %d/%d"), CurrentAmmo, MaxAmmo);
+		// 탄약이 없을 경우 자동으로 재장전 호출
+		ReloadWeapon();
 	}
 }
 
-// Called when the game starts or when spawned
+
 void ACOblivionCore::BeginPlay()
 {
 	Super::BeginPlay();
-	Reload->SetMaxAmmo(MaxAmmo);
-
+	
 }
 
-// Called every frame
-void ACOblivionCore::Tick(float DeltaTime)
+void ACOblivionCore::ReloadWeapon()
 {
-	Super::Tick(DeltaTime);
+	// HealthReloadComponent를 바로 사용
+	if (OblivionReloadComponent && !OblivionReloadComponent->GetbReloading())
+	{
+		// HealthReloadComponent에서 재장전 로직 호출
+		OblivionReloadComponent->Reloading();
+	}
+}
 
+void ACOblivionCore::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+}
+
+void ACOblivionCore::BroadcastAmmoInfo(int32 Current, int32 Max)
+{
+	Super::BroadcastAmmoInfo(Current, Max);
+	
+	if (this->AmmoInfo.IsBound())
+	{
+		this->AmmoInfo.Broadcast(CurrentAmmo, MaxAmmo);
+	}
+}
+
+
+void ACOblivionCore::GetAmmoRemainCount()
+{
+	OblivionReloadComponent->AmmoCounting();
+	CurrentAmmo = OblivionReloadComponent->GetRemainAmmoCount();
+	BroadcastAmmoInfo(CurrentAmmo, MaxAmmo);
+	UE_LOG(LogTemp, Log, TEXT("AmmoInfo.Broadcast called: %d/%d"), CurrentAmmo, MaxAmmo);
+
+	// 탄약이 없을 경우 재장전 호출
+	if (CurrentAmmo <= 0 && !OblivionReloadComponent->GetbReloading())
+	{
+		OblivionReloadComponent->Reloading();
+		UE_LOG(LogTemp, Log, TEXT("AmmoInfo.Broadcast called: %d/%d"), CurrentAmmo, MaxAmmo);
+	}
 }
 

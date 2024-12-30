@@ -23,8 +23,7 @@ ACBaseWeapon::ACBaseWeapon()
 {
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComponent, "StateComponent");
 	CHelpers::CreateActorComponent<UCSkillManagement>(this, &SkillManagement, "SkillManagement");
-	CHelpers::CreateActorComponent<UCReloadComponent>(this, &Reload, "ReloadComponent");
-	
+
 }
 
 // Called when the game starts or when spawned
@@ -60,13 +59,6 @@ void ACBaseWeapon::OnFire()
 	}
 }
 
-void ACBaseWeapon::BroadcastAmmoInfo(int32 Current, int32 Max)
-{
-	if (AmmoInfo.IsBound())
-	{
-		AmmoInfo.Broadcast(CurrentAmmo, MaxAmmo);
-	}
-}
 
 void ACBaseWeapon::SetupOwnerCharacter()
 {

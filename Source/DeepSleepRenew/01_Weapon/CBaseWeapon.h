@@ -66,7 +66,7 @@ protected:
 	TSubclassOf<ACProjectile> ProjectileClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Reload")
-	UCReloadComponent* Reload;
+	TArray<UCReloadComponent*> ReloadComponents;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USceneComponent* MuzzleLocation;
@@ -89,14 +89,16 @@ protected:
 	UFUNCTION()
 	virtual void GetAmmoRemainCount(){};
 
+	// ReloadComponent에 접근하기 위한 함수
+	virtual void ReloadWeapon(){};
+
 
 public:
 	UFUNCTION()
 	virtual void OnFire();
 	
 	UFUNCTION()
-	void BroadcastAmmoInfo(int32 Current, int32 Max);
-
+	virtual	void BroadcastAmmoInfo(int32 Current, int32 Max){};
 private:
 	void SetupOwnerCharacter();
 	

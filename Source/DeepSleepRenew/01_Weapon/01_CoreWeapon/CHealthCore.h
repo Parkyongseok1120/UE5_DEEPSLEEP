@@ -16,7 +16,7 @@ class DEEPSLEEPRENEW_API ACHealthCore : public ACBaseWeapon
 public:
 	FORCEINLINE int32 GetMaxAmmo() override {return MaxAmmo;} 
 	FORCEINLINE int32 GetCurrentAmmo() override {return CurrentAmmo;}
-	FORCEINLINE bool GetbisReloading()override {return Reload->GetbReloading();}
+	FORCEINLINE bool GetbisReloading()override {return HealthReloadComponent->GetbReloading();}
 
 	
 	ACHealthCore();
@@ -26,6 +26,13 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void ReloadWeapon() override;
+	virtual void BroadcastAmmoInfo(int32 Current, int32 Max) override;
+
+private:
+	UPROPERTY()
+	UCReloadComponent* HealthReloadComponent;
+
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
