@@ -9,6 +9,7 @@
 
 #include "Global.h"
 #include "99_Other/CPlayerWidget.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values for this component's properties
 UCWeaponManagement::UCWeaponManagement()
@@ -96,8 +97,16 @@ void UCWeaponManagement::SetActiveCore()
 
 void UCWeaponManagement::SpawnWeapon()
 {
+	
 	bSpawnWeapon = true;
-	BaseWeapon = GetWorld()->SpawnActor<ACBaseWeapon>(HealthCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
+	if (PlayerStateComponent->CheckWeaponState(1) == true)
+	{
+		BaseWeapon = GetWorld()->SpawnActor<ACBaseWeapon>(HealthCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (PlayerStateComponent->CheckWeaponState(2) == true)
+	{
+		BaseWeapon = GetWorld()->SpawnActor<ACBaseWeapon>(OblivionCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
+	}
 	CreateHUD();
 				
 	if(BaseWeapon)
@@ -145,7 +154,8 @@ void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 				SetVisibleWeapon();
 			else if (bSpawnWeapon == false && BaseWeapon == nullptr)
 				SpawnWeapon();
-			
+			ChangeWeaponParticleEffect(EWeaponState::HealthCore);
+
 			break;
 		}
 
@@ -157,7 +167,8 @@ void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 				SetVisibleWeapon();
 			else if (bSpawnWeapon == false && BaseWeapon == nullptr)
 				SpawnWeapon();
-			
+			ChangeWeaponParticleEffect(EWeaponState::OblivionCore);
+
 			break;
 		}
 	}
@@ -171,20 +182,85 @@ void UCWeaponManagement::CreateHUD()
 
 		if (PlayerWidget)
 		{
-			HealthCore = NewObject<ACHealthCore>(this);
-			int32 Current= HealthCore->GetCurrentAmmo();
-			int32 Max = HealthCore->GetMaxAmmo();
+			
+			if (PlayerStateComponent->CheckWeaponState(1) == true)
+			{
+				HealthCore = NewObject<ACHealthCore>(this);
+				int32 HealthCoreCurrent= HealthCore->GetCurrentAmmo();
+				int32 HealthCoreMax = HealthCore->GetMaxAmmo();
 
-			CLog::Print(Current);
-			CLog::Print(Max);
+				CLog::Print(HealthCoreCurrent);
+				CLog::Print(HealthCoreMax);
 
-			PlayerWidget->Init(Current,Max);
-			PlayerWidget->AddToViewport();
-			PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+				PlayerWidget->Init(HealthCoreCurrent, HealthCoreMax);
+				PlayerWidget->AddToViewport();
+				PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+			}
+
+			else if (PlayerStateComponent->CheckWeaponState(2) == true)
+			{
+				OblivionCore = NewObject<ACOblivionCore>(this);
+				int32 OblivionCoreCurrent = OblivionCore->GetCurrentAmmo();
+				int32 OblivionCoreMax = OblivionCore->GetMaxAmmo();
+				
+				CLog::Print(OblivionCoreCurrent);
+				CLog::Print(OblivionCoreMax);
+
+				PlayerWidget->Init(OblivionCoreCurrent, OblivionCoreMax);
+				PlayerWidget->AddToViewport();
+				PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+			}
 		}
 	}
 }
 
+void UCWeaponManagement::ChangeWeaponParticleEffect(EWeaponState WeaponState)
+{
+	// 이전 파티클 시스템 제거
+	if (CurrentParticleComponent)
+	{
+		CurrentParticleComponent->DestroyComponent();
+	}
 
+	UParticleSystem* NewParticleEffect = nullptr;
 
+	// 파티클 효과 선택
+	switch (WeaponState)
+	{
+	case EWeaponState::Hands:
+		if (CurrentParticleComponent)
+		{
+			CurrentParticleComponent->DestroyComponent();
+		}
+		break;
+		
+	case EWeaponState::HealthCore:
+		NewParticleEffect = HealthCoreParticleEffect;
+		break;
+		
+	case EWeaponState::OblivionCore:
+		NewParticleEffect = OblivionCoreParticleEffect;
+		break;
+	default:
+		break;
+	}
 
+	// 파티클 효과 적용
+	if (NewParticleEffect)
+	{
+		// 파티클을 손에 부착 (예: 무기 소켓에 부착)
+		CurrentParticleComponent = UGameplayStatics::SpawnEmitterAttached(NewParticleEffect, BaseWeapon->GetWeaponMesh(), FName("MuzzleLocation"));
+		switch (WeaponState)
+		{
+		case EWeaponState::HealthCore:
+			CurrentParticleComponent->SetRelativeScale3D(FVector(0.1f,0.1f,0.1f));
+			break;
+			
+		case EWeaponState::OblivionCore:
+			CurrentParticleComponent->SetRelativeScale3D(FVector(0.4f,0.4f,0.4f));
+			break;
+		default:
+			break;
+		}
+	}
+}

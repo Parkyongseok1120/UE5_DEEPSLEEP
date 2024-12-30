@@ -70,8 +70,17 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<ACBaseWeapon> OblivionCoreClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	UParticleSystem* HealthCoreParticleEffect;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	UParticleSystem* OblivionCoreParticleEffect;
 
+	class UParticleSystemComponent* CurrentParticleComponent;
+
+	void ChangeWeaponParticleEffect(EWeaponState WeaponState);
+	
 private:
 	UFUNCTION()
 	void SetVisibleWeapon();

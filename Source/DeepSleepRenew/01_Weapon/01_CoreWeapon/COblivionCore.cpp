@@ -16,11 +16,6 @@ ACOblivionCore::ACOblivionCore()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
-	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "Particle", Mesh);
-	CHelpers::GetAsset<UParticleSystem>(&CoreParticle, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_VecFielder_01.Par_VecFielder_01'");
-	ParticleComponent->SetTemplate(CoreParticle);
-	ParticleComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
-	
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Knife.Darkness_Knife'");
 	Mesh->SetSkeletalMesh(mesh);

@@ -31,7 +31,7 @@ public:
 	virtual FORCEINLINE int32 GetMaxAmmo(){ check(false); return 0; }
 	virtual FORCEINLINE int32 GetCurrentAmmo(){ check(false); return 0; }
 	virtual FORCEINLINE bool GetbisReloading(){check(false); return 0;}
-	
+	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const;
 	// Sets default values for this actor's properties
 	ACBaseWeapon();
 
@@ -73,12 +73,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector GunOffset;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effects")
-	UParticleSystemComponent* ParticleComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
-	UParticleSystem* CoreParticle;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UCStateComponent* StateComponent;
