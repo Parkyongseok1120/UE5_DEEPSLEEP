@@ -31,7 +31,7 @@ protected:
 	void SetBullet(int32 Current, int32 Max);
 
 	UPROPERTY()
-	class ACBaseWeapon *Weapon;
+	class ACCoreWeapon *CoreWeapon;
 
 	UPROPERTY()
 	class ACPlayerCharacter* OwnerCharacter;

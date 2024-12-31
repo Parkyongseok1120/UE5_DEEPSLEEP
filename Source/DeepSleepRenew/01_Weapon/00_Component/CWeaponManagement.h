@@ -39,10 +39,7 @@ private:
 	class ACBaseWeapon* BaseWeapon;
 	
 	UPROPERTY(VisibleDefaultsOnly)
-	class ACHealthCore* HealthCore;
-
-	UPROPERTY(VisibleDefaultsOnly)
-	class ACOblivionCore* OblivionCore;
+	class ACCoreWeapon* CoreWeapon;
 
 	UPROPERTY()
 	class UCStateComponent* PlayerStateComponent;
@@ -66,10 +63,7 @@ protected:
 	TSubclassOf<UUserWidget> PlayerWidgetClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> HealthCoreClass;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> OblivionCoreClass;
+	TSubclassOf<ACBaseWeapon> CoreWeaponClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	UParticleSystem* HealthCoreParticleEffect;

@@ -2,8 +2,7 @@
 
 
 #include "01_Weapon/00_Component/CWeaponManagement.h"
-#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
-#include "01_Weapon/01_CoreWeapon/COblivionCore.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 #include "00_Character/00_Player/CPlayerCharacter.h"
 #include "00_Character/02_Component/CStateComponent.h"
 
@@ -99,20 +98,15 @@ void UCWeaponManagement::SpawnWeapon()
 {
 	
 	bSpawnWeapon = true;
-	if (PlayerStateComponent->CheckWeaponState(1) == true)
+	if (PlayerStateComponent->CheckWeaponState(1) == true || PlayerStateComponent->CheckWeaponState(2) == true)
 	{
-		BaseWeapon = GetWorld()->SpawnActor<ACBaseWeapon>(HealthCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
+		BaseWeapon = GetWorld()->SpawnActor<ACBaseWeapon>(CoreWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator);
 	}
-	else if (PlayerStateComponent->CheckWeaponState(2) == true)
-	{
-		BaseWeapon = GetWorld()->SpawnActor<ACBaseWeapon>(OblivionCoreClass, FVector::ZeroVector, FRotator::ZeroRotator);
-	}
-	CreateHUD();
-				
 	if(BaseWeapon)
 	{
 		BaseWeapon->SetOwner(Player);
 		BaseWeapon->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
+		CreateHUD();
 	}
 }
 
@@ -183,11 +177,11 @@ void UCWeaponManagement::CreateHUD()
 		if (PlayerWidget)
 		{
 			
-			if (PlayerStateComponent->CheckWeaponState(1) == true)
+			if (PlayerStateComponent->CheckWeaponState(1) == true || PlayerStateComponent->CheckWeaponState(2) == true)
 			{
-				HealthCore = NewObject<ACHealthCore>(this);
-				int32 HealthCoreCurrent= HealthCore->GetCurrentAmmo();
-				int32 HealthCoreMax = HealthCore->GetMaxAmmo();
+				CoreWeapon = NewObject<ACCoreWeapon>(this);
+				int32 HealthCoreCurrent= CoreWeapon->GetCurrentAmmo();
+				int32 HealthCoreMax = CoreWeapon->GetMaxAmmo();
 
 				CLog::Print(HealthCoreCurrent);
 				CLog::Print(HealthCoreMax);
@@ -196,21 +190,11 @@ void UCWeaponManagement::CreateHUD()
 				PlayerWidget->AddToViewport();
 				PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 			}
-
-			else if (PlayerStateComponent->CheckWeaponState(2) == true)
-			{
-				OblivionCore = NewObject<ACOblivionCore>(this);
-				int32 OblivionCoreCurrent = OblivionCore->GetCurrentAmmo();
-				int32 OblivionCoreMax = OblivionCore->GetMaxAmmo();
-				
-				CLog::Print(OblivionCoreCurrent);
-				CLog::Print(OblivionCoreMax);
-
-				PlayerWidget->Init(OblivionCoreCurrent, OblivionCoreMax);
-				PlayerWidget->AddToViewport();
-				PlayerWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
-			}
 		}
+	}
+	else
+	{
+		CLog::Print("No Player Widget Class");
 	}
 }
 

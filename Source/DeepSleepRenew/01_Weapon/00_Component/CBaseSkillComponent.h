@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 #include "Components/ActorComponent.h"
 #include "CBaseSkillComponent.generated.h"
 

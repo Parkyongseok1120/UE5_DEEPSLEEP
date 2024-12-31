@@ -2,8 +2,8 @@
 
 
 #include "01_Weapon/00_Component/CReloadComponent.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 
-#include "01_Weapon/CBaseWeapon.h"
 #include "Global.h"
 
 // Sets default values for this component's properties
@@ -11,8 +11,6 @@ UCReloadComponent::UCReloadComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	//CHelpers::GetAsset(&ReloadingSound, " ");
-	RemainAmmoCount = 30;
-	MaxAmmo = 30;
 	UsingAmmoCount = 0;
 	bReloading = false;
 }
@@ -22,7 +20,7 @@ UCReloadComponent::UCReloadComponent()
 void UCReloadComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	OwnerWeapon = Cast<ACBaseWeapon>(GetOwner());
+	CoreWeapon = Cast<ACCoreWeapon>(GetOwner());
 }
 
 
@@ -34,16 +32,15 @@ void UCReloadComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 }
 void UCReloadComponent::Reloading()
 {
-	CheckNull(OwnerWeapon);
+	CheckNull(CoreWeapon);
 
 	CLog::Print("Reloading");
 	bReloading = true;
 	
 	if (ReloadingSound != nullptr)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ReloadingSound, OwnerWeapon->GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, ReloadingSound, CoreWeapon->GetActorLocation());
 	}
-	bisStopShooting = true;
 	FTimerHandle ReloadingTimerHandle;
 	float ReloadingTime =3.f;
 
@@ -55,10 +52,12 @@ void UCReloadComponent::Reloading()
 		bReloading = false;
 		// TimerHandle 초기화
 		GetWorld()->GetTimerManager().ClearTimer(ReloadingTimerHandle);
-		
-	}), ReloadingTime, false); //반복도 여기서 추가 변수를 선언해 설정가능
-	 
+		CoreWeapon->ReloadComplete(RemainAmmoCount, MaxAmmo);
+	}),ReloadingTime, false);//반복도 여기서 추가 변수를 선언해 설정가능
+	
 }
+
+
 
 void UCReloadComponent::AmmoCounting()
 {
@@ -69,4 +68,5 @@ void UCReloadComponent::AmmoCounting()
 void UCReloadComponent::SetMaxAmmo(int32 CoreSetMaxAmmo)
 {
 	MaxAmmo = CoreSetMaxAmmo;
+	RemainAmmoCount = MaxAmmo;
 }

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "CReloadComponent.generated.h"
 
+class ACCoreWeapon;
 class ACharacter;
 class ACBaseWeapon;
 class UCPlayerWidget;
@@ -34,7 +35,7 @@ public:
 private:
 
 	UPROPERTY()
-	ACBaseWeapon* OwnerWeapon;
+	ACCoreWeapon* CoreWeapon;
 
 	UPROPERTY()
 	int32 MaxAmmo;
@@ -63,3 +64,4 @@ public:
 	void AmmoCounting();
 	void SetMaxAmmo(int32 CoreSetMaxAmmo);
 };
+

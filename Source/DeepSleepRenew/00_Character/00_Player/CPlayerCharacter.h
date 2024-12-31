@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "00_Character/CBaseCharacter.h"
-#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 #include "CPlayerCharacter.generated.h"
 
-class ACHealthCore;
+class ACCoreWeapon;
 class UCInputComponent;
 class UCDashComponent;
 class UCHealthComponent;

@@ -15,9 +15,6 @@
 #include "Global.h"
 
 
-USkeletalMeshComponent* ACBaseWeapon::GetWeaponMesh() const
-{return Mesh;}
-
 // Sets default values
 ACBaseWeapon::ACBaseWeapon()
 {

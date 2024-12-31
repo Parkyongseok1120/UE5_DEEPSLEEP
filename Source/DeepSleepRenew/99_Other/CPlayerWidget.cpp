@@ -2,10 +2,8 @@
 
 
 #include "99_Other/CPlayerWidget.h"
-#include "00_Character/00_Player/CPlayerCharacter.h"
-#include "01_Weapon/CBaseWeapon.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 
-#include "AnimNodes/AnimNode_RandomPlayer.h"
 #include "Components/TextBlock.h"
 
 #include "Global.h"
@@ -15,7 +13,7 @@ void UCPlayerWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	Weapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
+	CoreWeapon = Cast<ACCoreWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACCoreWeapon::StaticClass()));
 	CurrentBullet = Cast<UTextBlock>(GetWidgetFromName(TEXT("CurrentBullet")));
 
 	// 디버깅용 로그 추가
@@ -29,9 +27,9 @@ void UCPlayerWidget::NativeConstruct()
 	}
 		
 
-	if (Weapon)
+	if (CoreWeapon)
 	{
-		Weapon->AmmoInfo.AddDynamic(this, &UCPlayerWidget::SetBullet);
+		CoreWeapon->AmmoInfo.AddDynamic(this, &UCPlayerWidget::SetBullet);
 		UE_LOG(LogTemp, Log, TEXT("Weapon found and AmmoInfo bound"));
 	}
 	else

@@ -2,7 +2,7 @@
 
 
 #include "01_Weapon/00_Component/00_Skill/CHealthSkillComponent.h"
-#include "01_Weapon/01_CoreWeapon/CHealthCore.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 
 #include "Global.h"
 
@@ -18,5 +18,5 @@ void UCHealthSkillComponent::BeginPlay()
 
 void UCHealthSkillComponent::SetOwnerWeapon()
 {
-	OwnerWeapon = Cast<ACHealthCore>(GetOwner());
+	OwnerWeapon = Cast<ACCoreWeapon>(GetOwner());
 }
