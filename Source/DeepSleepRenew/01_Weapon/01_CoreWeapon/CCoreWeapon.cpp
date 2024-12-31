@@ -19,7 +19,7 @@ ACCoreWeapon::ACCoreWeapon()
 	CHelpers::CreateActorComponent<UCHealthSkillComponent>(this, &HealthSkillComponent, "SkillComponent");
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	USkeletalMesh* mesh;
-	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Mesh/SciFiWeapDark/Weapons/Darkness_Knife.Darkness_Knife'");
+	CHelpers::GetAsset<USkeletalMesh>(&mesh, "/Script/Engine.SkeletalMesh'/Game/Level/Mesh/SciFiWeapDark/Weapons/Darkness_Knife.Darkness_Knife'");
 	Mesh->SetSkeletalMesh(mesh);
 	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));

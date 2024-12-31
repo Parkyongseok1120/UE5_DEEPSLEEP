@@ -22,7 +22,7 @@ ACProjectile::ACProjectile()
 	RootComponent = CollisionComp;
 	CHelpers::CreateComponent<UStaticMeshComponent>(this, &Mesh, "Mesh", CollisionComp);
 	CHelpers::CreateComponent<UParticleSystemComponent>(this, &ParticleComponent, "FX", CollisionComp);
-	CHelpers::GetAsset<UParticleSystem>(&DefaultImpactEffect, "/Script/Engine.ParticleSystem'/Game/VFX_Toolkit_V1/ParticleSystems/356Days/Par_MatraBoom_01.Par_MatraBoom_01'");
+	CHelpers::GetAsset<UParticleSystem>(&DefaultImpactEffect, "/Script/Engine.ParticleSystem'/Game/GameAsset/VFX_Toolkit_V1/ParticleSystems/356Days/Par_MatraBoom_01.Par_MatraBoom_01'");
 	ParticleComponent->SetTemplate(DefaultImpactEffect);
 	// 자동 실행 비활성화
 	ParticleComponent->bAutoActivate = false;
@@ -30,7 +30,7 @@ ACProjectile::ACProjectile()
 
 	
 	UStaticMesh* mesh;
-	CHelpers::GetAsset<UStaticMesh>(&mesh, "/Script/Engine.StaticMesh'/Game/VFX_Toolkit_V1/StaticMeshes/Various/SM_Meteora.SM_Meteora'");
+	CHelpers::GetAsset<UStaticMesh>(&mesh, "/Script/Engine.StaticMesh'/Game/GameAsset/VFX_Toolkit_V1/StaticMeshes/Various/SM_Meteora.SM_Meteora'");
 	Mesh->SetStaticMesh(mesh);
 	Mesh->SetRelativeScale3D(FVector(0.5f,0.5f,0.5f));
 	Mesh->SetRelativeRotation(FRotator(-90.f,0,0));
