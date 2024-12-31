@@ -24,9 +24,6 @@ class DEEPSLEEPRENEW_API ACBaseWeapon : public AActor
 public:
 
 	UFUNCTION()
-	virtual FORCEINLINE int32 GetMaxAmmo(){ check(false); return 0; }
-	virtual FORCEINLINE int32 GetCurrentAmmo(){ check(false); return 0; }
-	virtual FORCEINLINE bool GetbisReloading(){check(false); return 0;}
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh(){return Mesh;}
 
 	// Sets default values for this actor's properties

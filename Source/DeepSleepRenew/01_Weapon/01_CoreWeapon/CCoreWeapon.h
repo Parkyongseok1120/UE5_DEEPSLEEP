@@ -18,9 +18,9 @@ class DEEPSLEEPRENEW_API ACCoreWeapon : public ACBaseWeapon
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE int32 GetMaxAmmo() override {return MaxAmmo;} 
-	FORCEINLINE int32 GetCurrentAmmo() override {return CurrentAmmo;}
-	FORCEINLINE bool GetbisReloading() override {return HealthReloadComponent->GetbReloading();}
+	FORCEINLINE int32 GetMaxAmmo() {return MaxAmmo;} 
+	FORCEINLINE int32 GetCurrentAmmo() {return CurrentAmmo;}
+	FORCEINLINE bool GetbisReloading() {return HealthReloadComponent->GetbReloading();}
 	FORCEINLINE void ReloadComplete(int32 ComCurrent, int32 ComMax){BroadcastAmmoInfo(ComCurrent,ComMax); CLog::Print(ComCurrent);}
 
 	

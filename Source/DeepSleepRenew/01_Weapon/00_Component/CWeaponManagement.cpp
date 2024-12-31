@@ -110,15 +110,15 @@ void UCWeaponManagement::SpawnWeapon()
 	}
 }
 
-void UCWeaponManagement::CallOnFire()
+void UCWeaponManagement::PlayerAtteck()
 {
-	if (BaseWeapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon == true)
+	if (CoreWeapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon == true)
 	{
 		UAnimInstance* AnimInstance = Player->GetMesh()->GetAnimInstance();
 		UAnimMontage* AnimMontage = Player->GetAnimMontage();
 		if(AnimInstance && AnimMontage)
 		{
-			if (BaseWeapon->GetbisReloading() != true)
+			if (CoreWeapon->GetbisReloading() != true)
 			{
 				AnimInstance->Montage_Play(AnimMontage);
 				BaseWeapon->OnFire(); 

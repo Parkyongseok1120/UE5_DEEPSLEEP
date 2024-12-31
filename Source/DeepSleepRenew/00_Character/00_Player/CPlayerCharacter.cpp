@@ -117,7 +117,7 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::SpawnHealthCore);
 	PlayerInputComponent->BindAction("Key_3",IE_Pressed, this, &ACPlayerCharacter::SpawnOblivionCore);
 
-	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, WeaponManagement, &UCWeaponManagement::CallOnFire);
+	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, WeaponManagement, &UCWeaponManagement::PlayerAtteck);
 	
 		
 	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &ACPlayerCharacter::BeginZoom);

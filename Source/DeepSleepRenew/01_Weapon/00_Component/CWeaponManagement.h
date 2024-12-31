@@ -91,6 +91,6 @@ public:
 
 	void CreateHUD();
 
-	void CallOnFire();
+	void PlayerAtteck();
 
 };
