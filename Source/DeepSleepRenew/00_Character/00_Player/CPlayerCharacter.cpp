@@ -9,6 +9,7 @@
 
 #include "02_Item/CBaseItem.h"
 #include "01_Weapon/00_Component/CWeaponManagement.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 
 #include "GameFramework/Character.h"
 #include "Animation/AnimMontage.h"
@@ -56,7 +57,7 @@ void ACPlayerCharacter::BeginPlay()
 	DefaultFOV = PlayerCamera->FieldOfView;
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 	StateComponent->OnMovementTypeChanged.AddDynamic(this, &ACPlayerCharacter::OnMovementTypeChanged);
-
+	
 	HideWeapon1();
 }
 

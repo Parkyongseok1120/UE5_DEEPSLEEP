@@ -18,6 +18,7 @@ public:
 	FORCEINLINE bool GetHeatlthEquipWeapon(){return HealthbEquipWeapon;}
 	FORCEINLINE bool GetOblivionEquipWeapon(){return OblivionEquipWeapon;}
 	
+	
 	// Sets default values for this component's properties
 	UCWeaponManagement();
 
@@ -31,30 +32,30 @@ public:
 
 
 
+
+
 private:
-	
-	class ACPlayerCharacter* Player;
 
-	UPROPERTY()
-	class ACBaseWeapon* BaseWeapon;
-	
-	UPROPERTY(VisibleDefaultsOnly)
 	class ACCoreWeapon* CoreWeapon;
-
-	UPROPERTY()
+	class ACPlayerCharacter* Player;
+	bool bIsCurrentlyReloading = false;
+	
 	class UCStateComponent* PlayerStateComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool HealthbEquipWeapon;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool OblivionEquipWeapon;
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	bool bSpawnWeapon;
+
+	bool bFireMongtagePlay = false;
+	bool bReloadMongtagePlay = false;
 
 	UPROPERTY(VisibleAnywhere, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	class UCPlayerWidget* PlayerWidget;
+
+	class UCReloadComponent* HealthReloadComponent;
+
 
 	
 
@@ -63,7 +64,7 @@ protected:
 	TSubclassOf<UUserWidget> PlayerWidgetClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> CoreWeaponClass;
+	TSubclassOf<ACCoreWeapon> CoreWeaponClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	UParticleSystem* HealthCoreParticleEffect;

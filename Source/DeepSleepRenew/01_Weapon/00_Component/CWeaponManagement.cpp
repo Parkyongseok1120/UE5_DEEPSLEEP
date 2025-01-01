@@ -5,24 +5,29 @@
 #include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 #include "00_Character/00_Player/CPlayerCharacter.h"
 #include "00_Character/02_Component/CStateComponent.h"
+#include "01_Weapon/00_Component/CReloadComponent.h"
 
 #include "Global.h"
 #include "99_Other/CPlayerWidget.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values for this component's properties
 UCWeaponManagement::UCWeaponManagement()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	Player = Cast<ACPlayerCharacter>(GetOwner());
 	
-	if (Player)
-		PlayerStateComponent = Player->FindComponentByClass<UCStateComponent>();
+
 }
 
 void UCWeaponManagement::BeginPlay()
 {
 	Super::BeginPlay();
+	Player = Cast<ACPlayerCharacter>(GetOwner());
+
+	if (Player)
+		PlayerStateComponent = GetOwner()->FindComponentByClass<UCStateComponent>();
+	
 	if (PlayerStateComponent)
 	{
 		PlayerStateComponent->OnWeaponTypeChanged.AddDynamic(this, &UCWeaponManagement::OnWeaponTypeChanged);
@@ -30,8 +35,8 @@ void UCWeaponManagement::BeginPlay()
 	}
 	else
 		CLog::Print("WeaponManagement : Player State Component NULL");
+	// ReloadComponent가 제대로 초기화되었는지 확인
 	
-	BaseWeapon = Cast<ACBaseWeapon>(UGameplayStatics::GetActorOfClass(GetWorld(), ACBaseWeapon::StaticClass()));
 }
 
 void UCWeaponManagement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -43,9 +48,9 @@ void UCWeaponManagement::SetVisibleWeapon()
 {
 	if (PlayerStateComponent->CheckWeaponState(0) == true) //현재 HandState인지 확인.
 	{
-		BaseWeapon -> SetActorHiddenInGame(true);
-		BaseWeapon -> SetActorEnableCollision(false);
-		BaseWeapon -> SetActorTickEnabled(false);
+		CoreWeapon -> SetActorHiddenInGame(true);
+		CoreWeapon -> SetActorEnableCollision(false);
+		CoreWeapon -> SetActorTickEnabled(false);
 		if (PlayerWidget)
 		{
 			PlayerWidget->SetVisibility(ESlateVisibility::Hidden);
@@ -53,9 +58,9 @@ void UCWeaponManagement::SetVisibleWeapon()
 	}
 	else
 	{
-		BaseWeapon->SetActorHiddenInGame(false);
-		BaseWeapon->SetActorEnableCollision(true);
-		BaseWeapon->SetActorTickEnabled(true);
+		CoreWeapon->SetActorHiddenInGame(false);
+		CoreWeapon->SetActorEnableCollision(true);
+		CoreWeapon->SetActorTickEnabled(true);
 		
 		if (PlayerWidget)
 			PlayerWidget->SetVisibility(ESlateVisibility::Visible);
@@ -96,37 +101,88 @@ void UCWeaponManagement::SetActiveCore()
 
 void UCWeaponManagement::SpawnWeapon()
 {
-	
 	bSpawnWeapon = true;
+
 	if (PlayerStateComponent->CheckWeaponState(1) == true || PlayerStateComponent->CheckWeaponState(2) == true)
 	{
-		BaseWeapon = GetWorld()->SpawnActor<ACBaseWeapon>(CoreWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator);
+		CoreWeapon = GetWorld()->SpawnActor<ACCoreWeapon>(CoreWeaponClass,FVector::ZeroVector, FRotator::ZeroRotator);
 	}
-	if(BaseWeapon)
+	if (CoreWeapon)
 	{
-		BaseWeapon->SetOwner(Player);
-		BaseWeapon->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
-		CreateHUD();
+		if (Player != nullptr)
+		{
+			CoreWeapon->SetOwner(Player);
+			if (CoreWeapon->GetOwner() == nullptr)
+			{
+				UE_LOG(LogTemp, Error, TEXT("CoreWeapon owner is NULL after SetOwner(Player)"));
+			}
+			else
+			{
+				UE_LOG(LogTemp, Log, TEXT("CoreWeapon owner set successfully"));
+			}
+		
+			CoreWeapon->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "FX_Hand_R1");
+			CreateHUD();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Player is NULL when setting owner for CoreWeapon"));
+		}
+		HealthReloadComponent = CoreWeapon->FindComponentByClass<UCReloadComponent>();
+
+		if (!HealthReloadComponent)
+		{
+			UE_LOG(LogTemp, Error, TEXT("ReloadComponent not found in CoreWeapon!"));
+		}
+		else
+		{
+			HealthReloadComponent->OnReloadStart.AddLambda([this]()
+			{
+				bIsCurrentlyReloading = true;
+			});
+
+			HealthReloadComponent->OnReloadEnd.AddLambda([this]()
+			{
+				bIsCurrentlyReloading = false;
+			});
+		}
 	}
+	
 }
 
 void UCWeaponManagement::PlayerAtteck()
 {
-	if (CoreWeapon != nullptr && HealthbEquipWeapon == true || OblivionEquipWeapon == true)
+	if (CoreWeapon)
 	{
-		UAnimInstance* AnimInstance = Player->GetMesh()->GetAnimInstance();
-		UAnimMontage* AnimMontage = Player->GetAnimMontage();
-		if(AnimInstance && AnimMontage)
+		if (Player)
 		{
-			if (CoreWeapon->GetbisReloading() != true)
+			UAnimInstance* AnimInstance = Player->GetMesh()->GetAnimInstance();
+			UAnimMontage* FireAnimMontage = Player->GetFireAnimMontage();
+			UAnimMontage* ReloadAnimMontage = Player->GetReloadAnimMontage();
+			if(AnimInstance && FireAnimMontage)
 			{
-				AnimInstance->Montage_Play(AnimMontage);
-				BaseWeapon->OnFire(); 
+				if (!bIsCurrentlyReloading)  // 로컬 변수로 상태 체크
+				{
+					CLog::Print("Weapon not Reloading");
+					AnimInstance->Montage_Play(FireAnimMontage);
+					CoreWeapon->OnFire(Player);
+				}
+				else
+				{
+					CLog::Print("Weapon Reloading");
+					if (AnimInstance && ReloadAnimMontage)
+					{
+						
+						AnimInstance->Montage_Play(ReloadAnimMontage);
+					}
+				}
 			}
 		}
 	}
 	else
-		CLog::Print("Weapon Nullptr");
+	{
+		CLog::Print("Weapon is nullptr in PlayerAtteck!");
+	}
 }
 
 void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType)
@@ -136,17 +192,18 @@ void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 	case EWeaponState::Hands:
 		{
 			SetActiveCore();
-			if(BaseWeapon)
+			if(CoreWeapon)
 				SetVisibleWeapon();
-			
+			ChangeWeaponParticleEffect(EWeaponState::Hands);
+
 			break;
 		}
 	case EWeaponState::HealthCore:
 		{
 			SetActiveCore();
-			if(bSpawnWeapon == true && BaseWeapon)
+			if(bSpawnWeapon == true && CoreWeapon)
 				SetVisibleWeapon();
-			else if (bSpawnWeapon == false && BaseWeapon == nullptr)
+			else if (bSpawnWeapon == false && CoreWeapon == nullptr)
 				SpawnWeapon();
 			ChangeWeaponParticleEffect(EWeaponState::HealthCore);
 
@@ -157,9 +214,9 @@ void UCWeaponManagement::OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponSta
 		{
 			SetActiveCore();
 
-			if(bSpawnWeapon == true && BaseWeapon)
+			if(bSpawnWeapon == true && CoreWeapon)
 				SetVisibleWeapon();
-			else if (bSpawnWeapon == false && BaseWeapon == nullptr)
+			else if (bSpawnWeapon == false && CoreWeapon == nullptr)
 				SpawnWeapon();
 			ChangeWeaponParticleEffect(EWeaponState::OblivionCore);
 
@@ -174,12 +231,11 @@ void UCWeaponManagement::CreateHUD()
 	{
 		PlayerWidget = CreateWidget<UCPlayerWidget>(GetWorld(), PlayerWidgetClass); // 수정된 부분
 
-		if (PlayerWidget)
+		if (PlayerWidget && CoreWeapon)  // 기존 CoreWeapon 사용
 		{
 			
 			if (PlayerStateComponent->CheckWeaponState(1) == true || PlayerStateComponent->CheckWeaponState(2) == true)
 			{
-				CoreWeapon = NewObject<ACCoreWeapon>(this);
 				int32 HealthCoreCurrent= CoreWeapon->GetCurrentAmmo();
 				int32 HealthCoreMax = CoreWeapon->GetMaxAmmo();
 
@@ -200,10 +256,23 @@ void UCWeaponManagement::CreateHUD()
 
 void UCWeaponManagement::ChangeWeaponParticleEffect(EWeaponState WeaponState)
 {
+	if (!CoreWeapon)
+	{
+		CLog::Print("CoreWeapon is null");
+		return;
+	}
+
+	if (!CoreWeapon->GetWeaponMesh())
+	{
+		CLog::Print("WeaponMesh is null");
+		return;
+	}
+
 	// 이전 파티클 시스템 제거
 	if (CurrentParticleComponent)
 	{
 		CurrentParticleComponent->DestroyComponent();
+		CLog::Print("Previous particle destroyed");
 	}
 
 	UParticleSystem* NewParticleEffect = nullptr;
@@ -211,29 +280,28 @@ void UCWeaponManagement::ChangeWeaponParticleEffect(EWeaponState WeaponState)
 	// 파티클 효과 선택
 	switch (WeaponState)
 	{
-	case EWeaponState::Hands:
-		if (CurrentParticleComponent)
-		{
-			CurrentParticleComponent->DestroyComponent();
-		}
-		break;
-		
 	case EWeaponState::HealthCore:
 		NewParticleEffect = HealthCoreParticleEffect;
+		if (!HealthCoreParticleEffect)
+			CLog::Print("HealthCoreParticleEffect is null");
 		break;
-		
+        
 	case EWeaponState::OblivionCore:
 		NewParticleEffect = OblivionCoreParticleEffect;
-		break;
-	default:
+		if (!OblivionCoreParticleEffect)
+			CLog::Print("OblivionCoreParticleEffect is null");
 		break;
 	}
 
 	// 파티클 효과 적용
 	if (NewParticleEffect)
 	{
-		// 파티클을 손에 부착 (예: 무기 소켓에 부착)
-		CurrentParticleComponent = UGameplayStatics::SpawnEmitterAttached(NewParticleEffect, BaseWeapon->GetWeaponMesh(), FName("MuzzleLocation"));
+		CurrentParticleComponent = UGameplayStatics::SpawnEmitterAttached(
+			NewParticleEffect, 
+			CoreWeapon->GetWeaponMesh(), 
+			FName("Muzzle")
+		);
+
 		switch (WeaponState)
 		{
 		case EWeaponState::HealthCore:
@@ -247,4 +315,5 @@ void UCWeaponManagement::ChangeWeaponParticleEffect(EWeaponState WeaponState)
 			break;
 		}
 	}
+	
 }

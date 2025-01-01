@@ -19,7 +19,6 @@ class UCWeaponManagement;
 class UAnimMontage;
 class UParticleSystem;
 class ACBaseItem;
-class ACBaseWeapon;
 
 UCLASS()
 class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
@@ -28,8 +27,8 @@ class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
 public:
 	ACPlayerCharacter();
 
-	FORCEINLINE UAnimMontage* GetAnimMontage(){return FireAnimMong;}
-
+	FORCEINLINE UAnimMontage* GetFireAnimMontage(){return FireAnimMong;}
+	FORCEINLINE UAnimMontage* GetReloadAnimMontage(){return ReloadAnimMong;}
 private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Component")
@@ -145,16 +144,18 @@ private:
 	//void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 	
 	//-----Weapon;
-	UPROPERTY()
-	ACBaseWeapon* BaseWeapon;
-	
-	UPROPERTY(VisibleAnywhere)
-	UCWeaponManagement* WeaponManagement;
+	ACCoreWeapon* CoreWeapon;
+
 
 protected:
 	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
 	UAnimMontage* FireAnimMong;	
 
+	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
+	UAnimMontage* ReloadAnimMong;	
+
+	UPROPERTY(VisibleAnywhere)
+	UCWeaponManagement* WeaponManagement;
 
 public:
 	UFUNCTION()

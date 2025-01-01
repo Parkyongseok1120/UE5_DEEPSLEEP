@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 #include "Components/ActorComponent.h"
 #include "CBaseSkillComponent.generated.h"
 
 class UCStateComponent;
 class UCSkillManagement;
+class ACCoreWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEPRENEW_API UCBaseSkillComponent : public UActorComponent
@@ -33,7 +33,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	class ACBaseWeapon* OwnerWeapon;
+	ACCoreWeapon* OwnerWeapon;
     	
 	UPROPERTY(VisibleAnywhere)
 	UCStateComponent* PlayerStateComponent;

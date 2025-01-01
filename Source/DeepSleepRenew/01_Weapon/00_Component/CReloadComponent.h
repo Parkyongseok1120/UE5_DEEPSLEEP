@@ -11,15 +11,22 @@ class ACharacter;
 class ACBaseWeapon;
 class UCPlayerWidget;
 
+DECLARE_MULTICAST_DELEGATE(FOnReloadStartDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnReloadEndDelegate);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEEPSLEEPRENEW_API UCReloadComponent : public UActorComponent
 {
 	GENERATED_BODY()
 	
 public:
-	FORCEINLINE bool GetbReloading() {return bReloading;}
 	FORCEINLINE int32 GetRemainAmmoCount() {return RemainAmmoCount;}
+	FOnReloadStartDelegate OnReloadStart;
+	FOnReloadEndDelegate OnReloadEnd;
 
+	UFUNCTION()
+	bool IsReloading() const { return bReloading; }
+	
 public:	
 	// Sets default values for this component's properties
 	UCReloadComponent();
@@ -31,7 +38,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 private:
 
 	UPROPERTY()
@@ -45,8 +51,7 @@ private:
 	
 	UPROPERTY()
 	int32 RemainAmmoCount;
-
-	UPROPERTY()
+	
 	bool bReloading;
 
 	UPROPERTY()

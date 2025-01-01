@@ -5,6 +5,8 @@
 #include "00_Character/00_Player/CPlayerCharacter.h"
 #include "01_Weapon/CProjectile.h"
 #include "01_Weapon/00_Component/00_Skill/CHealthSkillComponent.h"
+#include "00_Character/02_Component/CStateComponent.h"
+#include "01_Weapon/00_Component/CSkillManagement.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -15,6 +17,8 @@
 ACCoreWeapon::ACCoreWeapon()
 {
 	// HealthReloadComponent를 한 번만 생성
+	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComponent, "StateComponent");
+	CHelpers::CreateActorComponent<UCSkillManagement>(this, &SkillManagement, "SkillManagement");
 	CHelpers::CreateActorComponent<UCReloadComponent>(this, &HealthReloadComponent, "ReloadComponent");
 	CHelpers::CreateActorComponent<UCHealthSkillComponent>(this, &HealthSkillComponent, "SkillComponent");
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
@@ -30,22 +34,23 @@ ACCoreWeapon::ACCoreWeapon()
 	HealthReloadComponent->SetMaxAmmo(MaxAmmo);
 }
 
-void ACCoreWeapon::OnFire()
+void ACCoreWeapon::OnFire(ACPlayerCharacter* OwnerC)
 {
-	Super::OnFire();
-	if (HealthReloadComponent && HealthReloadComponent->GetRemainAmmoCount() > 0 && !HealthReloadComponent->GetbReloading())
+	OwnerCharacter = Cast<ACPlayerCharacter>(OwnerC);
+    
+	if (HealthReloadComponent && HealthReloadComponent->GetRemainAmmoCount() > 0 && !bIsCurrentlyReloading)
 	{
 		if (OwnerCharacter == nullptr)
 		{
-			CLog::Log("ACHealthCore::OnFire: OwnerCharacter is NULL");
+			UE_LOG(LogTemp, Error, TEXT("OwnerCharacter is NULL"));
 		}
 		else
 		{
 			if (ProjectileClass != nullptr)
 			{
-				const FRotator SpawnRotation =  OwnerCharacter->GetControlRotation();
+				const FRotator SpawnRotation = OwnerCharacter->GetControlRotation();
 				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
-	
+
 				UWorld* const World = GetWorld();
 				if (World != nullptr)
 				{
@@ -59,18 +64,45 @@ void ACCoreWeapon::OnFire()
 			}
 		}
 	}
-	else if (HealthReloadComponent && HealthReloadComponent->GetRemainAmmoCount() <= 0 && !HealthReloadComponent->GetbReloading())
+	else if (HealthReloadComponent && HealthReloadComponent->GetRemainAmmoCount() <= 0 && !bIsCurrentlyReloading)
 	{
 		// 탄약이 없을 경우 자동으로 재장전 호출
 		ReloadWeapon();
 	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot fire, weapon is reloading or out of ammo."));
+	}
 }
-
 
 
 void ACCoreWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ProjectileClass = ACProjectile::StaticClass();
+	if(Projectile)
+	{
+		Projectile->AttachToComponent(Mesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Muzzle"));
+	}
+
+	// ReloadComponent가 제대로 초기화되었는지 확인
+	if (!HealthReloadComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ReloadComponent not found in CoreWeapon!"));
+	}
+	else
+	{
+		HealthReloadComponent->OnReloadStart.AddLambda([this]()
+		{
+			bIsCurrentlyReloading = true;
+		});
+
+		HealthReloadComponent->OnReloadEnd.AddLambda([this]()
+		{
+			bIsCurrentlyReloading = false;
+		});
+	}
 }
 
 void ACCoreWeapon::ReloadWeapon()

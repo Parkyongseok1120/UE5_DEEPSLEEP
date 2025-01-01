@@ -2,7 +2,7 @@
 
 
 #include "01_Weapon/00_Component/CBaseSkillComponent.h"
-#include "01_Weapon/CBaseWeapon.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 #include "CSkillManagement.h"
 #include "00_Character/02_Component/CStateComponent.h"
 
