@@ -18,5 +18,7 @@ public:
 private:
 	UPROPERTY()
 	class ACPlayerCharacter* OwnerCharacter;
+
+	
 	
 };

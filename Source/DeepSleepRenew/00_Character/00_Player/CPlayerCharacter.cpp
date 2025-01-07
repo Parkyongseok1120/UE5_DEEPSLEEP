@@ -25,16 +25,20 @@ ACPlayerCharacter::ACPlayerCharacter()
 	CHelpers::CreateActorComponent<UCDashComponent>(this, &DashComponent, "Dash");
 	CHelpers::CreateActorComponent<UCInventoryComponent>(this, &InventoryComponent, "Inventory");
 	CHelpers::CreateActorComponent<UCWeaponManagement>(this, &WeaponManagement, "WeaponManagement");
-	CHelpers::CreateComponent<USpringArmComponent>(this, &SpringArm, "SpringArm", GetMesh());
-	CHelpers::CreateComponent<UCameraComponent>(this, &PlayerCamera, "Camera", SpringArm);
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(GetRootComponent());
+
+	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	PlayerCamera->SetupAttachment(SpringArm);
+	
 	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
-	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
-	SpringArm->SetRelativeLocation(FVector(-70,0,120));
+	SpringArm->SetRelativeRotation(FRotator(0, 0, 0));
+	SpringArm->SetRelativeLocation(FVector(-18,63,49));
 	
-	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	GetCharacterMovement()->bOrientRotationToMovement = false;
-
+	GetCharacterMovement()->bUseControllerDesiredRotation = false; 
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	
 	SpringArm->bEnableCameraLag = true;
 	bWantsToZoom = false;
 	bisSprint = false;
@@ -87,6 +91,7 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 	// 스폰된 액터가 있다면
 	PlayerCamera->SetFieldOfView(NewFOV);
+	
 }
 
 FVector ACPlayerCharacter::GetPawnViewLocation() const
@@ -155,19 +160,27 @@ void ACPlayerCharacter::EndZoom()
 
 void ACPlayerCharacter::MoveForward(float Value)
 {
-	if (Value != 0.0f)
+	if (Value != 0.0f && Controller != nullptr)
 	{
-		// add movement in that direction
-		AddMovementInput(GetActorForwardVector() * Value);
+		
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+		AddMovementInput(Direction, Value);
 	}
 }
 
 void ACPlayerCharacter::MoveRight(float Value)
 {
-	if (Value != 0.0f)
+	if (Value != 0.0f && Controller != nullptr)
 	{
-		// add movement in that direction
-		AddMovementInput(GetActorRightVector() * Value);
+		// 카메라의 rotation을 기준으로 right 방향 계산
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		
+		AddMovementInput(Direction, Value);
 	}
 }
 

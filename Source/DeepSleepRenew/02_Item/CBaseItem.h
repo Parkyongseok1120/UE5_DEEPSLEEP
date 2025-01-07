@@ -34,9 +34,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UStaticMeshComponent* ItemMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory")
 	USphereComponent* ItemSphere;
 
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Effect")
+	class UParticleSystemComponent* ItemParticleComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
+	class UParticleSystem* ItemParticleEffect;
+	
 	UFUNCTION()
 	virtual void UsingItem(){}
 
@@ -46,6 +53,16 @@ public:
 	void OnPickedUp();
 	
 	FInventoryItem GetItemInfo(){return ItemInfo;}
-	
+
+	// 오버랩 이벤트 처리 함수
+	UFUNCTION()
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
+					   AActor* OtherActor,
+					   UPrimitiveComponent* OtherComp,
+					   int32 OtherBodyIndex,
+					   bool bFromSweep,
+					   const FHitResult& SweepResult);
+
+
 
 };
