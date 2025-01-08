@@ -79,5 +79,7 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 			bFalling = PlayerCharacter->GetCharacterMovement()->IsFalling();
 		}
+
+		CLog::Print(C_Speed);
 	}
 }
