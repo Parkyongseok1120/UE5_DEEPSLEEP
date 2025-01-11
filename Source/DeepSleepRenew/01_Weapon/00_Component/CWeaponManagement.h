@@ -43,6 +43,8 @@ private:
 	
 	bool OblivionEquipWeapon;
 
+	bool bHandState;
+
 	bool bSpawnWeapon;
 
 	bool bFireMongtagePlay = false;

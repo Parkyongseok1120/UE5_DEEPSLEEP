@@ -36,7 +36,8 @@ void UCWeaponManagement::BeginPlay()
 	else
 		CLog::Print("WeaponManagement : Player State Component NULL");
 	// ReloadComponent가 제대로 초기화되었는지 확인
-	
+
+	bHandState = true;
 }
 
 void UCWeaponManagement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -51,6 +52,7 @@ void UCWeaponManagement::SetVisibleWeapon()
 		CoreWeapon -> SetActorHiddenInGame(true);
 		CoreWeapon -> SetActorEnableCollision(false);
 		CoreWeapon -> SetActorTickEnabled(false);
+		
 		if (PlayerWidget)
 		{
 			PlayerWidget->SetVisibility(ESlateVisibility::Hidden);
@@ -73,11 +75,15 @@ void UCWeaponManagement::SetActiveCore()
 	{
 		HealthbEquipWeapon = false;
 		OblivionEquipWeapon = false;
+		bHandState = true;
+		
 		CLog::Print("Hand State");
 	}
 	else if (PlayerStateComponent->CheckWeaponState(1) == true)
 	{
 		HealthbEquipWeapon = true;
+		bHandState = false;
+
 		CLog::Print("HealthCore State");
 
 		if (OblivionEquipWeapon == true)
@@ -89,6 +95,8 @@ void UCWeaponManagement::SetActiveCore()
 	else if (PlayerStateComponent->CheckWeaponState(2) == true)
 	{
 		OblivionEquipWeapon = true;
+		bHandState = false;
+
 		CLog::Print("Oblivion State");
 
 		if (HealthbEquipWeapon == true)
@@ -161,11 +169,15 @@ void UCWeaponManagement::PlayerAtteck()
 			UAnimMontage* ReloadAnimMontage = Player->GetReloadAnimMontage();
 			if(AnimInstance && FireAnimMontage)
 			{
-				if (!bIsCurrentlyReloading)  // 로컬 변수로 상태 체크
+				if (!bIsCurrentlyReloading )  // 로컬 변수로 상태 체크
 				{
-					CLog::Print("Weapon not Reloading");
-					AnimInstance->Montage_Play(FireAnimMontage);
-					CoreWeapon->OnFire(Player);
+					if(bHandState != true)
+					{
+						CLog::Print("Weapon not Reloading");
+						AnimInstance->Montage_Play(FireAnimMontage);
+						CoreWeapon->OnFire(Player);
+					}
+					
 				}
 				else
 				{

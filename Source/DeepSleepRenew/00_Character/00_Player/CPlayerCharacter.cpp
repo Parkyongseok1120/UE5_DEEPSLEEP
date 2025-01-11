@@ -39,7 +39,6 @@ ACPlayerCharacter::ACPlayerCharacter()
 	GetCharacterMovement()->bUseControllerDesiredRotation = false; 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
-	SpringArm->bEnableCameraLag = true;
 	bWantsToZoom = false;
 	bisSprint = false;
 	bCanDoubleJump = true;
@@ -61,7 +60,8 @@ void ACPlayerCharacter::BeginPlay()
 	DefaultFOV = PlayerCamera->FieldOfView;
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 	StateComponent->OnMovementTypeChanged.AddDynamic(this, &ACPlayerCharacter::OnMovementTypeChanged);
-	
+	SpringArm->bEnableCameraLag = true;
+
 	HideWeapon1();
 }
 
