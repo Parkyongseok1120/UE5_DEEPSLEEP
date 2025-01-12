@@ -3,26 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "EnhancedInputComponent.h"
+
 #include "CInputComponent.generated.h"
 
+class UEnhancedInputLocalPlayerSubsystem;
+class UInputAction;
+class UObject;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class DEEPSLEEPRENEW_API UCInputComponent : public UActorComponent
+UCLASS(Config = Input)
+class DEEPSLEEPRENEW_API UCInputComponent : public UEnhancedInputComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
+public:
 	UCInputComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };

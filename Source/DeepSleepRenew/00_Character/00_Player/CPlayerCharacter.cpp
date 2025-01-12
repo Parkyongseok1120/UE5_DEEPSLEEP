@@ -6,11 +6,14 @@
 #include "00_Character/02_Component/CInventoryComponent.h"
 #include "00_Character/02_Component/CStateComponent.h"
 #include "00_Character/CAnimInstance.h"
+#include "00_Character/02_Component/CEnhancedInputComponent.h"
+#include "00_Character/02_Component/CGameplayTags.h"
 
 #include "02_Item/CBaseItem.h"
 #include "01_Weapon/00_Component/CWeaponManagement.h"
 #include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 
+#include "EnhancedInput/Public/InputAction.h"
 #include "GameFramework/Character.h"
 #include "Animation/AnimMontage.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -106,7 +109,14 @@ FVector ACPlayerCharacter::GetPawnViewLocation() const
 
 void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	//Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	UCEnhancedInputComponent* CEnhancedInputComponent = Cast<UCEnhancedInputComponent>(PlayerInputComponent);
+	check(CEnhancedInputComponent);
+	const FCGameplayTags& GameplayTags = FCGameplayTags::Get();
+
+	CEnhancedInputComponent->BindActionByTag(InputConfig, GameplayTags.InputTag_Jump, ETriggerEvent::Triggered, this, &ACPlayerCharacter::Input_Jump);
+	//CEnhancedInputComponent->BindActionByTag(InputConfig, GameplayTags.InputTag);
 
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jumping", IE_Pressed, this, &ACPlayerCharacter::Jump);
@@ -128,6 +138,25 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		
 	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &ACPlayerCharacter::BeginZoom);
 	PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &ACPlayerCharacter::EndZoom);
+}
+
+
+void ACPlayerCharacter::Input_Jump(const FInputActionValue& InputActionValue)
+{
+	// 첫 번째 점프
+	UE_LOG(LogTemp, Warning, TEXT("Jump"));
+	Super::Jump();
+	if (IsGrounded() != true && bCanDoubleJump == true)
+	{
+		// 더블 점프
+		LaunchCharacter(FVector(0.0f, 0.0f, JumpForce), false, true);
+		bCanDoubleJump = false;
+	}
+
+	if (IsGrounded() == true)
+	{
+		bCanDoubleJump = true;
+	}
 }
 
 void ACPlayerCharacter::AttackEnemy(ACBaseCharacter* Target)
@@ -252,7 +281,6 @@ bool ACPlayerCharacter::IsGrounded() const
 	);
 	return bHit;
 }
-
 
 void ACPlayerCharacter::InteractWithItem(ACBaseItem* Item)
 {

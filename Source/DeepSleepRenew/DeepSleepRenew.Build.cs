@@ -18,7 +18,8 @@ public class DeepSleepRenew : ModuleRules
 			"EnhancedInput", 
 			"AnimGraphRuntime",  
 			"AIModule",
-			"DeepSleepRenew"
+			"DeepSleepRenew",
+			"GameplayTags"
 		});
 	}
 }

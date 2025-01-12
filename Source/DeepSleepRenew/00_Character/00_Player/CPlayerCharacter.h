@@ -19,6 +19,8 @@ class UCWeaponManagement;
 class UAnimMontage;
 class UParticleSystem;
 class ACBaseItem;
+class UCInputConfig;
+struct FInputActionValue;
 
 UCLASS()
 class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
@@ -120,7 +122,14 @@ public:
 	
 	virtual void AttackEnemy(ACBaseCharacter* Target) override;
 
+	//------input
 
+public:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UCInputConfig* InputConfig;
+
+	void Input_Jump(const FInputActionValue& InputActionValue);
 
 	//------item
 

@@ -3,6 +3,7 @@
 
 #include "00_Character/02_Component/CInputComponent.h"
 
+
 // Sets default values for this component's properties
 UCInputComponent::UCInputComponent()
 {
@@ -12,23 +13,3 @@ UCInputComponent::UCInputComponent()
 
 	// ...
 }
-
-
-// Called when the game starts
-void UCInputComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UCInputComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
