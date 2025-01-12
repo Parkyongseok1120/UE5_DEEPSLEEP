@@ -33,15 +33,15 @@ ACPlayerCharacter::ACPlayerCharacter()
 
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	PlayerCamera->SetupAttachment(SpringArm);
-	
-	GetMesh()->SetRelativeLocation(FVector(0,0, -90));
+
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 	SpringArm->SetRelativeRotation(FRotator(0, 0, 0));
-	SpringArm->SetRelativeLocation(FVector(-18,63,49));
-	
-	GetCharacterMovement()->bUseControllerDesiredRotation = false; 
+	SpringArm->SetRelativeLocation(FVector(-18, 63, 49));
+
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	
+
 	bWantsToZoom = false;
 	bisSprint = false;
 	bCanDoubleJump = true;
@@ -49,7 +49,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 
 void ACPlayerCharacter::DashStart()
 {
-	if(DashComponent)
+	if (DashComponent)
 		DashComponent->BeginDash();
 	else
 	{
@@ -87,14 +87,14 @@ void ACPlayerCharacter::HideWeapon1()
 void ACPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-		
+
 	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
 
 	//CurrentFOV : Current field of view
 	float NewFOV = FMath::FInterpTo(PlayerCamera->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 	// 스폰된 액터가 있다면
 	PlayerCamera->SetFieldOfView(NewFOV);
-	
+
 }
 
 FVector ACPlayerCharacter::GetPawnViewLocation() const
@@ -109,53 +109,79 @@ FVector ACPlayerCharacter::GetPawnViewLocation() const
 
 void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	//Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	UCEnhancedInputComponent* CEnhancedInputComponent = Cast<UCEnhancedInputComponent>(PlayerInputComponent);
 	check(CEnhancedInputComponent);
-	const FCGameplayTags& GameplayTags = FCGameplayTags::Get();
 
-	CEnhancedInputComponent->BindActionByTag(InputConfig, GameplayTags.InputTag_Jump, ETriggerEvent::Triggered, this, &ACPlayerCharacter::Input_Jump);
-	//CEnhancedInputComponent->BindActionByTag(InputConfig, GameplayTags.InputTag);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACPlayerCharacter::Input_Move);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACPlayerCharacter::Input_Look);
+
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Mouse_Left, ETriggerEvent::Started, WeaponManagement, &UCWeaponManagement::PlayerAtteck);
+
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Mouse_Right, ETriggerEvent::Started, this, &ACPlayerCharacter::BeginZoom);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Mouse_Right, ETriggerEvent::Completed, this, &ACPlayerCharacter::EndZoom);
+
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Jump, ETriggerEvent::Started, this, &ACPlayerCharacter::Jump);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Sprint, ETriggerEvent::Started, this, &ACPlayerCharacter::BeginSprint);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Sprint, ETriggerEvent::Completed, this, &ACPlayerCharacter::EndSprint);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Key_1, ETriggerEvent::Started, this, &ACPlayerCharacter::HideWeapon1);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Key_2, ETriggerEvent::Started, this, &ACPlayerCharacter::SpawnHealthCore);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Key_3, ETriggerEvent::Started, this, &ACPlayerCharacter::SpawnOblivionCore);
+	CEnhancedInputComponent->BindActionByTag(InputConfig, CGameplayTags::InputTag_Key_C, ETriggerEvent::Started, this, &ACPlayerCharacter::DashStart);
+
 
 	// Bind jump events
-	PlayerInputComponent->BindAction("Jumping", IE_Pressed, this, &ACPlayerCharacter::Jump);
-	PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayerCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ACPlayerCharacter::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp", this, &ACPlayerCharacter::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("Turn", this, &ACPlayerCharacter::AddControllerYawInput);
-	
-
-	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &ACPlayerCharacter::BeginSprint);
-	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &ACPlayerCharacter::EndSprint);
-	PlayerInputComponent->BindAction("C_Key", IE_Pressed, this, &ACPlayerCharacter::DashStart);
-	PlayerInputComponent->BindAction("Key_1",IE_Pressed, this, &ACPlayerCharacter::HideWeapon1);
-	PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::SpawnHealthCore);
-	PlayerInputComponent->BindAction("Key_3",IE_Pressed, this, &ACPlayerCharacter::SpawnOblivionCore);
-
-	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, WeaponManagement, &UCWeaponManagement::PlayerAtteck);
-	
-		
-	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &ACPlayerCharacter::BeginZoom);
-	PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &ACPlayerCharacter::EndZoom);
+	//PlayerInputComponent->BindAction("Jumping", IE_Pressed, this, &ACPlayerCharacter::Jump);
+	//PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayerCharacter::MoveForward);
+	//PlayerInputComponent->BindAxis("MoveRight", this, &ACPlayerCharacter::MoveRight);
+	//PlayerInputComponent->BindAxis("LookUp", this, &ACPlayerCharacter::AddControllerPitchInput);
+	//PlayerInputComponent->BindAxis("Turn", this, &ACPlayerCharacter::AddControllerYawInput);
+	//
+	//
+	//PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &ACPlayerCharacter::BeginSprint);
+	//PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &ACPlayerCharacter::EndSprint);
+	//PlayerInputComponent->BindAction("C_Key", IE_Pressed, this, &ACPlayerCharacter::DashStart);
+	//PlayerInputComponent->BindAction("Key_1",IE_Pressed, this, &ACPlayerCharacter::HideWeapon1);
+	//PlayerInputComponent->BindAction("Key_2",IE_Pressed, this, &ACPlayerCharacter::SpawnHealthCore);
+	//PlayerInputComponent->BindAction("Key_3",IE_Pressed, this, &ACPlayerCharacter::SpawnOblivionCore);
+	//
+	//PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, WeaponManagement, &UCWeaponManagement::PlayerAtteck);
+	//
+	//	
+	//PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &ACPlayerCharacter::BeginZoom);
+	//PlayerInputComponent->BindAction("MouseRight", IE_Released, this, &ACPlayerCharacter::EndZoom);
 }
 
-
-void ACPlayerCharacter::Input_Jump(const FInputActionValue& InputActionValue)
+void ACPlayerCharacter::Input_Move(const FInputActionValue& InputActionValue)
 {
-	// 첫 번째 점프
-	UE_LOG(LogTemp, Warning, TEXT("Jump"));
-	Super::Jump();
-	if (IsGrounded() != true && bCanDoubleJump == true)
-	{
-		// 더블 점프
-		LaunchCharacter(FVector(0.0f, 0.0f, JumpForce), false, true);
-		bCanDoubleJump = false;
-	}
+	// input is a Vector2D
+	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 
-	if (IsGrounded() == true)
+	if (Controller != nullptr)
 	{
-		bCanDoubleJump = true;
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		// add movement 
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+		AddMovementInput(RightDirection, MovementVector.X);
+	}
+}
+
+void ACPlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
+{
+	FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
+	
+	if (Controller != nullptr)
+	{
+		AddControllerYawInput(LookAxisVector.X / 5);
+		AddControllerPitchInput(LookAxisVector.Y / 5);
 	}
 }
 
@@ -173,12 +199,12 @@ void ACPlayerCharacter::AttackEnemy(ACBaseCharacter* Target)
 
 void ACPlayerCharacter::BeginZoom()
 {
-	if(bisSprint == true)
+	if (bisSprint == true)
 		EndSprint();
-	
+
 	bWantsToZoom = true;
 	SpringArm->bEnableCameraLag = false;
-	
+
 }
 
 void ACPlayerCharacter::EndZoom()
@@ -191,7 +217,7 @@ void ACPlayerCharacter::MoveForward(float Value)
 {
 	if (Value != 0.0f && Controller != nullptr)
 	{
-		
+
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
@@ -208,14 +234,14 @@ void ACPlayerCharacter::MoveRight(float Value)
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		
+
 		AddMovementInput(Direction, Value);
 	}
 }
 
 void ACPlayerCharacter::BeginSprint()
 {
-	if(bWantsToZoom == false)
+	if (bWantsToZoom == false)
 	{
 		bisSprint = true;
 		GetCharacterMovement()->MaxWalkSpeed = SprintingSpeed;
@@ -243,8 +269,8 @@ void ACPlayerCharacter::Jump()
 		LaunchCharacter(FVector(0.0f, 0.0f, JumpForce), false, true);
 		bCanDoubleJump = false;
 	}
-	
-	if(IsGrounded() == true)
+
+	if (IsGrounded() == true)
 	{
 		bCanDoubleJump = true;
 	}
@@ -309,7 +335,7 @@ void ACPlayerCharacter::TryPickupItem()
 	{
 		// 아이템 액터를 찾으면 상호작용 실행
 		ACBaseItem* HitItem = Cast<ACBaseItem>(HitResult.GetActor());
-	
+
 		if (HitItem)
 		{
 			InteractWithItem(HitItem);

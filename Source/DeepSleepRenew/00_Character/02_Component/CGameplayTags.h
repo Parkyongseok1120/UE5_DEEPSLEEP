@@ -1,40 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "NativeGameplayTags.h"
 
-class UGameplayTagsManager;
-
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Ju);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_M);
+namespace CGameplayTags
+{
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Look);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Mouse_Right);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Mouse_Left);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Jump);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Sprint);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Key_C);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Key_1);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Key_2);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Key_3);
+}
 
 struct DEEPSLEEPRENEW_API FCGameplayTags
 {
-public:
 
-	static const FCGameplayTags& Get() { return GameplayTags; }
-
-	static void InitializeNativeTags();
-
-	//Input Tags
-	FGameplayTag InputTag_Move;
-	FGameplayTag InputTag_Look_Mouse;
-	FGameplayTag InputTag_Look_Stick;
-	FGameplayTag InputTag_Jump;
-	FGameplayTag InputTag_Fire;
-
-protected:
-
-	//Registers all of the tags with the GameplayTags Manager
-	void AddAllTags(UGameplayTagsManager& Manager);
-
-	//Helper function used by AddAllTags to register a single tag with the GameplayTags Manager
-	void AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment);
-
-private:
-
-	static FCGameplayTags GameplayTags;
 };

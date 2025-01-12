@@ -122,14 +122,14 @@ public:
 	
 	virtual void AttackEnemy(ACBaseCharacter* Target) override;
 
-	//------input
-
+	//--------------------input------------------------------
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UCInputConfig* InputConfig;
 
-	void Input_Jump(const FInputActionValue& InputActionValue);
+	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_Look(const FInputActionValue& InputActionValue);
 
 	//------item
 

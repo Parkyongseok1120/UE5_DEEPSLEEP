@@ -1,35 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "00_Character/02_Component/CGameplayTags.h"
 
-#include "GameplayTagsManager.h"
-#include "Engine/EngineTypes.h"
-
-FCGameplayTags FCGameplayTags::GameplayTags;
-
-UE_DEFINE_GAMEPLAY_TAG(InputTag_Ju, "InputTag.Ju");
-UE_DEFINE_GAMEPLAY_TAG(InputTag_M, "InputTag.M");
-
-void FCGameplayTags::InitializeNativeTags()
+namespace CGameplayTags 
 {
-	UGameplayTagsManager& GameplayTagsManager = UGameplayTagsManager::Get();
-
-	GameplayTags.AddAllTags(GameplayTagsManager);
-
-	GameplayTagsManager.DoneAddingNativeTags();
-}
-
-void FCGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
-{
-	AddTag(InputTag_Move, "InputTag.Move", "Move input.");
-	AddTag(InputTag_Look_Mouse, "InputTag.Look.Mouse", "Look (mouse) input.");
-	AddTag(InputTag_Look_Stick, "InputTag.Look.Stick", "Look (stick) input.");
-	AddTag(InputTag_Jump, "InputTag.Jump", "Jump input");
-	AddTag(InputTag_Fire, "InputTag.Fire", "Fire input.");
-}
-
-void FCGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)
-{
-	OutTag = UGameplayTagsManager::Get().AddNativeGameplayTag(FName(TagName), FString(TEXT("(Native) ")) + FString(TagComment));
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Look, "InputTag.Look");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Mouse_Right, "InputTag.Mouse.Right");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Mouse_Left, "InputTag.Mouse.Left");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump, "InputTag.Jump");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Sprint, "InputTag.Sprint");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Key_C, "InputTag.Key_C");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Key_1, "InputTag.Key_1");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Key_2, "InputTag.Key_2");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Key_3, "InputTag.Key_3");
 }
