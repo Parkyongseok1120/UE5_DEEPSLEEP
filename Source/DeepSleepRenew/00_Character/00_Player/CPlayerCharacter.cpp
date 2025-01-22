@@ -181,7 +181,7 @@ void ACPlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 	if (Controller != nullptr)
 	{
 		AddControllerYawInput(LookAxisVector.X / 5);
-		AddControllerPitchInput(LookAxisVector.Y / 5);
+		AddControllerPitchInput(LookAxisVector.Y / -5);
 	}
 }
 
