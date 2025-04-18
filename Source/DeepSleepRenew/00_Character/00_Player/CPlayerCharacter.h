@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "00_Character/CBaseCharacter.h"
+#include "01_Weapon/01_CoreWeapon/CCoreWeapon.h"
 #include "CPlayerCharacter.generated.h"
 
+class ACCoreWeapon;
 class UCInputComponent;
 class UCDashComponent;
 class UCHealthComponent;
@@ -13,7 +15,12 @@ class UCStateComponent;
 class UCInventoryComponent;
 class UCTargetComponent;
 class USkeletalMeshComponent;
+class UCWeaponManagement;
+class UAnimMontage;
+class UParticleSystem;
 class ACBaseItem;
+class UCInputConfig;
+struct FInputActionValue;
 
 UCLASS()
 class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
@@ -22,6 +29,8 @@ class DEEPSLEEPRENEW_API ACPlayerCharacter : public ACBaseCharacter
 public:
 	ACPlayerCharacter();
 
+	FORCEINLINE UAnimMontage* GetFireAnimMontage(){return FireAnimMong;}
+	FORCEINLINE UAnimMontage* GetReloadAnimMontage(){return ReloadAnimMong;}
 private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Component")
@@ -113,7 +122,14 @@ public:
 	
 	virtual void AttackEnemy(ACBaseCharacter* Target) override;
 
+	//--------------------input------------------------------
+public:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UCInputConfig* InputConfig;
+
+	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_Look(const FInputActionValue& InputActionValue);
 
 	//------item
 
@@ -133,36 +149,34 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void OnSelfStateTypeChanged(ESelfState InPrevType, ESelfState InNewType);
 
-	UFUNCTION(BlueprintCallable, Category = "State")
-	void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
+	//UFUNCTION(BlueprintCallable, Category = "State")
+	//void OnWeaponTypeChanged(EWeaponState InPrevType, EWeaponState InNewType);
 	
 	//-----Weapon;
-	class ACBaseWeapon* Weapon;
+	ACCoreWeapon* CoreWeapon;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TSubclassOf<ACBaseWeapon> BaseWeaponClass;
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	bool bEquipWeapon;
+protected:
+	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
+	UAnimMontage* FireAnimMong;	
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	bool bSpawnWeapon;
+	UPROPERTY(EditAnywhere,Category = "FireAnimMongtage")
+	UAnimMontage* ReloadAnimMong;	
 
-	void Keyboard1();
-	void Keyboard2();
-
+	UPROPERTY(VisibleAnywhere)
+	UCWeaponManagement* WeaponManagement;
 
 public:
 	UFUNCTION()
-	void SpawnWeapon1();
+	void SpawnHealthCore();
+	
+	UFUNCTION()
+	void SpawnOblivionCore();
 
 	UFUNCTION()
 	void HideWeapon1();
-
-	UFUNCTION()
-	void SwitchToWeapon();
 	
-	UFUNCTION()
-	void CallOnFire();
+	
+	
 	
 };

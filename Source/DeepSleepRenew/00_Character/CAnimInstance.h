@@ -17,6 +17,14 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
 	float C_Direction;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
+	float C_Pitch;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
+	float C_Yaw;
+	UPROPERTY(BlueprintReadonly)
+	class UCharacterMovementComponent* MovementComponent;
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 	bool bFalling;
 
