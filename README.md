@@ -1,4 +1,6 @@
+
 # DEEPSLEEP by Unreal Engine 5.5.4
+
 
 
 
@@ -10,6 +12,8 @@
 -----------------------------------------------------------
 
 # 프로젝트 PC 최소사양
+- 컴파일이 시간이 상당히 소요될 수 있습니다.
+- 참고 : Mac Unreal Editor에서는 한글이 깨집니다. 영어로 진행해야 합니다.
 
 ### Windows
 1. OS : Windows 10 22H2 Build
@@ -20,16 +24,27 @@
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.4
 
-### Mac
+### Mac(애플실리콘)
 1. OS : macOS 14 Sonoma
 2. Processor : Apple M2(need to Nanite & Lumen)
 3. RAM : 16g
 4. IDE 1 : Xcode 15
 5. IDE 2 : Rider 2024.1.4
 
+### Mac(인텔)
+1. OS : macOS 14 Sonoma
+2. Model : Macbook 2017 15 inch
+3. CPU : i7 7820HQ - 4Core (2.4Ghz)
+4. RAM : 16g
+5. GPU : Radeon Pro 560
+6. IDE 1 : Xcode 15
+7. IDE 2 : Rider 2024.1.4
+
 -----------------------------------------------------------
 
 # 프로젝트 PC 권장사양
+- 스트레스 없이 개발이 가능한 PC 환경입니다.
+- 참고 : Mac Unreal Editor에서는 한글이 깨집니다. 영어로 진행해야 합니다.
 
 ### Windows
 1. OS : Windows 11 23H2 Build
@@ -40,12 +55,21 @@
 6. IDE 1 : Visual studio Version : 17.8(MSVC 14.38.33130)
 7. IDE 2 : Rider 2024.1.4
 
-### Mac
+### Mac(애플실리콘)
 1. OS : macOS 14 Sonoma
 2. Processor : Apple M3 pro (need to Nanite & Lumen - Hardware RTcore)
 3. RAM : 32g
 4. IDE 1 : Xcode 15
 5. IDE 2 : Rider 2024.1.4
+
+### Mac(인텔) - 현재 개발에 사용중인 워크스테이션 노트북입니다.
+1. OS : macOS 14 Sonoma
+2. Model : Macbook 2019 16 inch
+3. CPU : i9 9880H - 8Core (2.3Ghz)
+4. RAM : 32g
+5. GPU : Radeon Pro 5500m 4G
+6. IDE 1 : Xcode 15
+7. IDE 2 : Rider 2024.1.4
 
 -----------------------------------------------------------
 
@@ -78,14 +102,31 @@ Content(에셋 폴더) 다운로드는 SVN 서버를 사용하며,
 
 - Master 브랜치는 게임의 최종 빌드 버전이다.
 
+-----------------------------------------------------------
 
+# 코드 컨벤션 : 코드 규칙
+
+- PascalCase (파스칼 케이스) : 헤더파일에서 클래스, 함수, 변수 선언시 사용.
+
+첫글자와 이어지는 단어의 첫글자를 대문자로 표기하는 방법
+```
+예) GoodPerson, MyKakaoCake, IAmDeveloper
+```
+
+
+- camelCase (카멜 케이스) : CPP파일에서 멤버함수 내의 멤버 변수 선언시 사용.
+
+첫단어는 소문자로 표기하지만, 이어지는 단어의 첫글자는 대문자로 표기하는 방법
+```
+예) goodPerson, myKakaoCake, iAmDeveloper
+```
 
 
 -----------------------------------------------------------
 ### 참고 : 기존 SVN의 서버 주소도 변경되었습니다.
 - SVN 소스컨트롤 Nextday 서버주소
 ```
-https://nextday.iptime.org:443/svn/DEEPSLEEP_5.4/trunk
+https://nextday.iptime.org:443/svn/DEEPSLEEP
 ```
 - Github 레포지토리 주소
 ```
@@ -114,17 +155,22 @@ Github 쪽의 개발자용 언리얼 엔진을 사용합니다.
 
 # 프로젝트 실행을 위한 세팅
 
+
 ### 1. Gihtub Unreal engine 5.5.4 다운로드
 
 Github version Unreal Engine 5.5.4 Link(계정 엑세스 관리자 요청 필요)
+
+
 ```
 https://github.com/Parkyongseok1120/UnrealEngine
 ```
 
 
+
 해당 프로젝트에 참여하는 모든 인원은 GIthub 언리얼 엔진 페이지에서 Unreal engine 5.5.4 릴리즈 버전을 다운 받아주시길 바랍니다.
 
 엔진은 더이상 해당 버전에서 마이너 업데이트만 업데이트하고 (5.5.2~5.5.x)
+
 
 메이저 업데이트의 경우는 실시하지 않을 것입니다.(5.6.0~5.7.0등등)
 
@@ -134,7 +180,9 @@ https://github.com/Parkyongseok1120/UnrealEngine
 
 비주얼 스튜디오 버전은 17.8버전을 사용합니다.(현재 17.10이 최신버전)
 
+
 최신버전을 사용하지 않는 이유는 Github에서 클론하여 받은 언리얼 엔진 5.5.4 릴리즈 소스코드를 빌드할 떄 
+
 
 비주얼 스튜디오 컴파일러 msvc 버전이 14.38.33130 이어야 합니다.
 
