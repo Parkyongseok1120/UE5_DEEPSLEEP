@@ -9,16 +9,18 @@
 #include "00_Player/CPlayerCharacter.h"
 
 void UCAnimInstance::NativeBeginPlay()
+
 {
-	Super::NativeBeginPlay();
+  Super::NativeBeginPlay();
 
-	PlayerCharacter = Cast<ACPlayerCharacter>(TryGetPawnOwner());
+  PlayerCharacter = Cast<ACPlayerCharacter>(TryGetPawnOwner());
 
-	if (PlayerCharacter)
-	{
-		MovementComponent = PlayerCharacter->GetCharacterMovement();
-	}
+  if (PlayerCharacter)
+  {
+    MovementComponent = PlayerCharacter->GetCharacterMovement();
+  }
 }
+
 
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
