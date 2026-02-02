@@ -76,10 +76,7 @@ struct FCombatTypeTagsUtil
 		}
 
 		//일단 남아있는 태그 전부 지우기
-		Actor->Tags.Remove(FCombatTags::Player);
-		Actor->Tags.Remove(FCombatTags::Summon);
-		Actor->Tags.Remove(FCombatTags::Neutral);
-		Actor->Tags.Remove(FCombatTags::Enemy);
+		RemoveCombatTags(Actor);
 		
 		//새로운 태그가 GetTagFromType을 거쳐 어떤 타입인지 확인.
 		const FName NewTags = GetTagFromType(NewType);
@@ -95,7 +92,104 @@ struct FCombatTypeTagsUtil
 		return true;
 	}
 	
+	static FORCEINLINE void RemoveCombatTags(AActor* Actor)
+	{
+		if (!IsValid(Actor))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("액터가 존재하지 않음. - FCombatTypeTagsUtil::SetCombatType"))
+			return;
+		}
+
+		//일단 남아있는 태그 전부 지우기
+		Actor->Tags.Remove(FCombatTags::Player);
+		Actor->Tags.Remove(FCombatTags::Summon);
+		Actor->Tags.Remove(FCombatTags::Neutral);
+		Actor->Tags.Remove(FCombatTags::Enemy);
+	}
+	
 };
 
+USTRUCT(BlueprintType)
+struct FHitDetectionUtil
+{
+	GENERATED_BODY()
+	
+	static FORCEINLINE FName GetHitDetection(EHitDetection HitType)
+	{
+		switch (HitType)
+		{
+		case EHitDetection::Melee:
+			return FHitDetection::Melee;
+		case EHitDetection::Ranged:
+			return FHitDetection::Ranged;
+		case EHitDetection::AoE:
+			return FHitDetection::AoE;
+		case EHitDetection::Target:
+			return FHitDetection::Target;
+		}
+		
+		return NAME_None;
+	}
+	
+	static FORCEINLINE bool IsMelee(AActor* Actor)
+	{
+		if (!IsValid(Actor))
+			return false;
+		return Actor->ActorHasTag(FHitDetection::Melee);
+		//대충 리턴문 의미 (아래와 같다)
+		/*if (Actor->ActorHasTag(FHitDetection::Melee)) 
+		{
+			return true;
+		}
+		return false;*/
+	}
+	
+	static FORCEINLINE bool IsRanged(AActor* Actor)
+	{
+		if (!IsValid(Actor))
+			return false;
+		return Actor->ActorHasTag(FHitDetection::Ranged);
+	}
+	
+	static FORCEINLINE bool IsAoE(AActor* Actor)
+	{
+		if (!IsValid(Actor))
+			return false;
+		return Actor->ActorHasTag(FHitDetection::AoE);
+	}
+	
+	static FORCEINLINE bool IsTarget(AActor* Actor)
+	{
+		if (!IsValid(Actor))
+			return false;
+		return Actor->ActorHasTag(FHitDetection::Target);
+	}
+	
+	static FORCEINLINE bool SetHitTags(AActor* Actor, EHitDetection HitType)
+	{
+		if (!IsValid(Actor))
+			return false;
+		
+		RemoveHitTags(Actor);
+		
+		const FName NewTags = GetHitDetection(HitType);
+		if (NewTags.IsNone())
+			return false;
+		
+		Actor->Tags.AddUnique(NewTags);
+		return true;
+	}
+	
+	static FORCEINLINE void RemoveHitTags(AActor* Actor)
+	{
+		if (!IsValid(Actor))
+			return;
+		
+		Actor->Tags.Remove(FHitDetection::Melee);
+		Actor->Tags.Remove(FHitDetection::Ranged);
+		Actor->Tags.Remove(FHitDetection::AoE);
+		Actor->Tags.Remove(FHitDetection::Target);
+	}
+};
 
 

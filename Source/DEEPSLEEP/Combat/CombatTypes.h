@@ -12,7 +12,7 @@
 UENUM(BlueprintType)
 enum class ECombatType : uint8
 {
-	Player UMETA(DisplayName = "Player"),				//주인공 플레이어 캐릭터
+	Player UMETA(DisplayName = "Player"),			//주인공 플레이어 캐릭터
 	Enemy UMETA(DisplayName = "Enemies"),			//적들
 	Summon UMETA(DisplayName = "PlayerSummon"),	    //플레이어가 생성한 오브젝트(터렛등등)
 	Neutral UMETA(DisplayName = "Neutral")			//중립 NPC 및 오브젝트
