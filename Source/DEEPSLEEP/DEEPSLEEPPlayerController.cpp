@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// 에픽게임즈의 모든 권리 보유.
 
 
 #include "DEEPSLEEPPlayerController.h"
@@ -13,15 +13,15 @@ void ADEEPSLEEPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// only spawn touch controls on local player controllers
+	// only s폰 touch 제어s on 로컬 플레이어 제어lers
 	if (ShouldUseTouchControls() && IsLocalPlayerController())
 	{
-		// spawn the mobile controls widget
+		// s폰 mobile 제어s 위젯
 		MobileControlsWidget = CreateWidget<UUserWidget>(this, MobileControlsWidgetClass);
 
 		if (MobileControlsWidget)
 		{
-			// add the controls to the player screen
+			// add 제어s to 플레이어 screen
 			MobileControlsWidget->AddToPlayerScreen(0);
 
 		} else {
@@ -37,10 +37,10 @@ void ADEEPSLEEPPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	// only add IMCs for local player controllers
+	// only add 입력 매핑 컨텍스트s for 로컬 플레이어 제어lers
 	if (IsLocalPlayerController())
 	{
-		// Add Input Mapping Contexts
+		// Add Input Mapping 컨텍스트s
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
 			for (UInputMappingContext* CurrentContext : DefaultMappingContexts)
@@ -48,7 +48,7 @@ void ADEEPSLEEPPlayerController::SetupInputComponent()
 				Subsystem->AddMappingContext(CurrentContext, 0);
 			}
 
-			// only add these IMCs if we're not using mobile touch input
+			// only add these 입력 매핑 컨텍스트s if we're not using mobile touch 입력
 			if (!ShouldUseTouchControls())
 			{
 				for (UInputMappingContext* CurrentContext : MobileExcludedMappingContexts)

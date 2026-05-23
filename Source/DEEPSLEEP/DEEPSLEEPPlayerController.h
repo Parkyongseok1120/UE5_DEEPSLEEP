@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// 에픽게임즈의 모든 권리 보유.
 
 #pragma once
 
@@ -10,8 +10,8 @@ class UInputMappingContext;
 class UUserWidget;
 
 /**
- *  Basic PlayerController class for a third person game
- *  Manages input mappings
+ *  3인칭 게임용 기본 플레이어 컨트롤러 클래스
+ *  Manages 입력 mappings
  */
 UCLASS(abstract)
 class ADEEPSLEEPPlayerController : public APlayerController
@@ -20,33 +20,33 @@ class ADEEPSLEEPPlayerController : public APlayerController
 	
 protected:
 
-	/** Input Mapping Contexts */
+	/** Input Mapping 컨텍스트s */
 	UPROPERTY(EditAnywhere, Category ="Input|Input Mappings")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
 
-	/** Input Mapping Contexts */
+	/** Input Mapping 컨텍스트s */
 	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
 	TArray<UInputMappingContext*> MobileExcludedMappingContexts;
 
-	/** Mobile controls widget to spawn */
+	/** Mobile 제어s 위젯 to s폰 */
 	UPROPERTY(EditAnywhere, Category="Input|Touch Controls")
 	TSubclassOf<UUserWidget> MobileControlsWidgetClass;
 
-	/** Pointer to the mobile controls widget */
+	/** Pointer to mobile 제어s 위젯 */
 	UPROPERTY()
 	TObjectPtr<UUserWidget> MobileControlsWidget;
 
-	/** If true, the player will use UMG touch controls even if not playing on mobile platforms */
+	/** If true, 플레이어 will use 터치 인터페이스 touch 제어s even if not playing on mobile platforms */
 	UPROPERTY(EditAnywhere, Config, Category = "Input|Touch Controls")
 	bool bForceTouchControls = false;
 
-	/** Gameplay initialization */
+	/** 게임플레이 초기화 */
 	virtual void BeginPlay() override;
 
-	/** Input mapping context setup */
+	/** Input 매핑 컨텍스트 setup */
 	virtual void SetupInputComponent() override;
 
-	/** Returns true if the player should use UMG touch controls */
+	/** true if 플레이어 should use 터치 인터페이스 touch 제어s를 반환합니다. */
 	bool ShouldUseTouchControls() const;
 
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// 프로젝트 설정의 설명 페이지에서 저작권 고지를 작성하세요.
 
 
 #include "Combat/CombatFNameTags.h"

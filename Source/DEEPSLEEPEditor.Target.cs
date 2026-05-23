@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// 에픽게임즈의 모든 권리 보유.
 
 using UnrealBuildTool;
 using System.Collections.Generic;

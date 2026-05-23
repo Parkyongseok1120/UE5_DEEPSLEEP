@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// 에픽게임즈의 모든 권리 보유.
 
 #pragma once
 
@@ -7,7 +7,7 @@
 #include "DEEPSLEEPGameMode.generated.h"
 
 /**
- *  Simple GameMode for a third person game
+ *  3인칭 게임용 단순 게임 모드
  */
 UCLASS(abstract)
 class ADEEPSLEEPGameMode : public AGameModeBase
@@ -16,7 +16,7 @@ class ADEEPSLEEPGameMode : public AGameModeBase
 
 public:
 	
-	/** Constructor */
+	/** 생성자 */
 	ADEEPSLEEPGameMode();
 };
 

@@ -5,6 +5,9 @@
 # Visual Studio 2015 user specific files
 .vs/
 .svn/
+.vscode/
+.idea/
+
 
 # Compiled Object files
 *.slo
@@ -13,6 +16,8 @@
 *.obj
 .DS_Store
 .vsconfig
+.code-workspace
+.ignore
 
 # Precompiled Headers
 *.gch
